@@ -31,26 +31,33 @@ const generatedClientRoot = path.join(
 
 (async () => {
   // installs dependencies.
-  await spawnProcess("yarn", [], { cwd: generatedClientRoot });
+  await spawnProcess("npm", ["install"], { cwd: generatedClientRoot });
   // builds the client artifact.
-  await spawnProcess("yarn", ["build"], { cwd: generatedClientRoot });
+  await spawnProcess("npm", ["run", "build"], { cwd: generatedClientRoot });
 
   // create a bundle of the client.
-
   const buildOptions = {
-    platform: "browser",
-    target: ["chrome120"],
+    platform: "node",
+    target: ["es2020"],
     bundle: true,
-    format: "esm",
-    mainFields: ["module", "browser", "main"],
+    format: "cjs",
+    mainFields: ["main"],
     allowOverwrite: true,
     entryPoints: [path.join(generatedClientRoot, "dist-es", "index.js")],
     supported: {
       //   "dynamic-import": false,
     },
     outfile: path.join(root, "generated-clients", "example-client.js"),
-    packages: "external",
+    // packages: "external",
     external: [],
+  };
+
+  const buildOptionsBrowser = {
+    ...buildOptions,
+    platform: "browser",
+    target: ["chrome120"],
+    mainFields: ["module", "browser", "main"],
+    format: "esm",
   };
 
   await esbuild.build(buildOptions);
