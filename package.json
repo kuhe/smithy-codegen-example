@@ -1,0 +1,15 @@
+{
+  "name": "smithy-codegen-example",
+  "version": "0.0.1",
+  "description": "generate a client with Smithy TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "esbuild": "^0.24.0",
+    "prettier": "^3.3.3"
+  }
+}

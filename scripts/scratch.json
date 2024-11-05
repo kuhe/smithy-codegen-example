@@ -1,0 +1,111 @@
+{
+  "version": 3,
+  "id": "690a74be-4726-4a97-bef9-c3c5dab0a377",
+  "type": "RELEASE",
+  "changesArtifact": {
+    "bucket": "arn:aws:s3:us-west-2:101241358407:accesspoint/trebuchet-prod",
+    "key": "releases/690a74be-4726-4a97-bef9-c3c5dab0a377/changes.json"
+  },
+  "release": {
+    "id": "690a74be-4726-4a97-bef9-c3c5dab0a377",
+    "features": [
+      {
+        "shippedC2jModelsS3Object": null,
+        "featureArn": "arn:aws:trebuchet:::feature:v2:18d84e57-57fa-4579-b418-eca475fe8228",
+        "modelsRevision": 16,
+        "featureName": "S3 ListBuckets API support for filtering by region and prefix",
+        "shippedSmithyModelsS3Object": null,
+        "sdkBuildParameters": {
+          "PowerShell": {
+            "customizationInvolved": "No"
+          },
+          "cpp1": {
+            "customizationInvolved": "Yes"
+          },
+          "Java": {
+            "v1PreviewBuild": "true",
+            "v1Release": "true",
+            "customizationInvolved": "Yes"
+          },
+          "CPP": {
+            "customizationInvolved": "No"
+          },
+          "Ruby3": {
+            "customizationInvolved": "No"
+          },
+          "DotNet3": {
+            "customizationInvolved": "Yes"
+          },
+          "Awscli2": {
+            "customizations": "{\"aws-cli\":\"s3-prefix-customization:cb830e37ecf451316dbca88e9cce673d98957fd5\"}",
+            "customizationInvolved": "Yes"
+          },
+          "Go": {
+            "customizationInvolved": "No"
+          },
+          "JS": {
+            "customizationInvolved": "No"
+          },
+          "cfn": {
+            "serviceOwner": "krshvik",
+            "isSupported": "true",
+            "releaseDate": "2024-10-16",
+            "customizationInvolved": "No"
+          },
+          "go2": {
+            "customizationInvolved": "No"
+          },
+          "DotNet": {
+            "customizationInvolved": "No"
+          },
+          "JavaScript-v3": {
+            "customizationInvolved": "No"
+          },
+          "Php": {
+            "customizationInvolved": "No"
+          },
+          "Boto3": {
+            "customizations": "{\"botocore\":\"s3-list-buckets-pagination-customization:c4e74d9e69295578deac8f1ba6a8569bf9d20967\"}",
+            "customizationInvolved": "Yes"
+          },
+          "StarFort": {
+            "customizationInvolved": "No"
+          },
+          "swift": {
+            "customizationInvolved": "No"
+          }
+        },
+        "c2jModelsS3Object": {
+          "bucket": "arn:aws:s3:us-west-2:101241358407:accesspoint/trebuchet-prod",
+          "key": "features/18d84e57-57fa-4579-b418-eca475fe8228/16/change_artifacts/S3_c2j.zip"
+        },
+        "customizationInvolved": "Yes",
+        "releaseNotes": "Add support for the new optional bucket-region and prefix query parameters in the ListBuckets API. For ListBuckets requests that express pagination, Amazon S3 will now return both the bucket names and associated AWS regions in the response.",
+        "inputModelS3Object": {
+          "bucket": "arn:aws:s3:us-west-2:101241358407:accesspoint/trebuchet-prod",
+          "key": "features/18d84e57-57fa-4579-b418-eca475fe8228/16/change_artifacts/input_model.zip"
+        },
+        "c2jModelsRevision": 16,
+        "featureType": "NEW_FEATURE",
+        "smithyModelsS3Object": {
+          "bucket": "arn:aws:s3:us-west-2:101241358407:accesspoint/trebuchet-prod",
+          "key": "features/18d84e57-57fa-4579-b418-eca475fe8228/16/change_artifacts/S3_smithy.zip"
+        },
+        "inputType": "CORAL",
+        "serviceId": "s3"
+      }
+    ],
+    "endpointsS3Object": {
+      "bucket": "arn:aws:s3:us-east-1:101241358407:accesspoint/trebuchet-shipped-endpoints",
+      "key": "endpoints.json"
+    },
+    "sdkDefaultConfigurationS3Object": {
+      "bucket": "arn:aws:s3:us-west-2:527577116207:accesspoint/trebuchet-shipped-sdk-config-bucket-pdx-prod",
+      "key": "sdk-default-configuration.json"
+    },
+    "partitionsS3Object": {
+      "bucket": "arn:aws:s3:us-east-1:101241358407:accesspoint/trebuchet-endpoints-partition-bucket-prod",
+      "key": "partitions.json"
+    }
+  }
+}
