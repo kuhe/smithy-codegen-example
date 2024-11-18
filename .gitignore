@@ -22,6 +22,8 @@ bin/
 
 # Ignore Gradle build output directory
 build
+!build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/src
+!build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/package.json
 
 smithy-install
 node_modules
