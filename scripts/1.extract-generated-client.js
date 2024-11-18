@@ -30,10 +30,12 @@ const generatedClientRoot = path.join(
 );
 
 (async () => {
+  await spawnProcess("touch", ["yarn.lock"], { cwd: generatedClientRoot });
+
   // installs dependencies.
-  await spawnProcess("npm", ["install"], { cwd: generatedClientRoot });
+  await spawnProcess("yarn", ["install"], { cwd: generatedClientRoot });
   // builds the client artifact.
-  await spawnProcess("npm", ["run", "build"], { cwd: generatedClientRoot });
+  await spawnProcess("yarn", ["build"], { cwd: generatedClientRoot });
 
   // create a bundle of the client.
   const buildOptions = {
