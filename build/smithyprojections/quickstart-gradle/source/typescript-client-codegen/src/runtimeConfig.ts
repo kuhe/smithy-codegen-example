@@ -2,7 +2,10 @@
 // @ts-ignore: package.json will be imported from dist folders
 import packageInfo from "../package.json"; // eslint-disable-line
 
-import { defaultUserAgent } from "@aws-sdk/util-user-agent-node";
+import {
+  NODE_APP_ID_CONFIG_OPTIONS,
+  createDefaultUserAgentProvider,
+} from "@aws-sdk/util-user-agent-node";
 import { Hash } from "@smithy/hash-node";
 import {
   NODE_MAX_ATTEMPT_CONFIG_OPTIONS,
@@ -35,11 +38,12 @@ export const getRuntimeConfig = (config: WeatherClientConfig) => {
     runtime: "node",
     defaultsMode,
     bodyLengthChecker: config?.bodyLengthChecker ?? calculateBodyLength,
-    defaultUserAgentProvider: config?.defaultUserAgentProvider ?? defaultUserAgent({clientVersion: packageInfo.version}),
+    defaultUserAgentProvider: config?.defaultUserAgentProvider ?? createDefaultUserAgentProvider({clientVersion: packageInfo.version}),
     maxAttempts: config?.maxAttempts ?? loadNodeConfig(NODE_MAX_ATTEMPT_CONFIG_OPTIONS),
     requestHandler: RequestHandler.create(config?.requestHandler ?? defaultConfigProvider),
     retryMode: config?.retryMode ?? loadNodeConfig({...NODE_RETRY_MODE_CONFIG_OPTIONS,default: async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE,}),
     sha256: config?.sha256 ?? Hash.bind(null, "sha256"),
     streamCollector: config?.streamCollector ?? streamCollector,
+    userAgentAppId: config?.userAgentAppId ?? loadNodeConfig(NODE_APP_ID_CONFIG_OPTIONS),
   };
 };

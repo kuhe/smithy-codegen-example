@@ -21,7 +21,7 @@ export interface GetForecastInput {
  * @public
  */
 export interface GetForecastOutput {
-  chanceOfRain?: number;
+  chanceOfRain?: number | undefined;
 }
 
 /**
@@ -64,8 +64,8 @@ export class NoSuchResource extends __BaseException {
  * @public
  */
 export interface ListCitiesInput {
-  nextToken?: string;
-  pageSize?: number;
+  nextToken?: string | undefined;
+  pageSize?: number | undefined;
 }
 
 /**
@@ -80,7 +80,7 @@ export interface CitySummary {
  * @public
  */
 export interface ListCitiesOutput {
-  nextToken?: string;
+  nextToken?: string | undefined;
   items: (CitySummary)[] | undefined;
 }
 
