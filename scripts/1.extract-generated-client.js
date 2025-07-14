@@ -37,6 +37,17 @@ const generatedClientRoot = path.join(
   // builds the client artifact.
   await spawnProcess("yarn", ["build"], { cwd: generatedClientRoot });
 
+  fs.writeFileSync(
+    path.join(generatedClientRoot, "test-app.js"),
+    `import {GetCityCommand, WeatherClient} from './dist-es/index';
+
+export {
+    WeatherClient,
+    GetCityCommand
+}`,
+    "utf-8"
+  );
+
   // create a bundle of the client.
   const buildOptions = {
     platform: "node",
@@ -45,7 +56,7 @@ const generatedClientRoot = path.join(
     format: "cjs",
     mainFields: ["main"],
     allowOverwrite: true,
-    entryPoints: [path.join(generatedClientRoot, "dist-es", "index.js")],
+    entryPoints: [path.join(generatedClientRoot, "test-app.js")],
     supported: {
       //   "dynamic-import": false,
     },
@@ -62,5 +73,5 @@ const generatedClientRoot = path.join(
     format: "esm",
   };
 
-  await esbuild.build(buildOptions);
+  await esbuild.build(buildOptionsBrowser);
 })();

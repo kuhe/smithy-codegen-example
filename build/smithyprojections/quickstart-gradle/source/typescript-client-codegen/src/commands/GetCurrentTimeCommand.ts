@@ -4,9 +4,7 @@ import {
   ServiceOutputTypes,
   WeatherClientResolvedConfig,
 } from "../WeatherClient";
-import { commonParams } from "../endpoint/EndpointParameters";
 import { GetCurrentTimeOutput } from "../models/models_0";
-import { getEndpointPlugin } from "@smithy/middleware-endpoint";
 import { getSerdePlugin } from "@smithy/middleware-serde";
 import { Command as $Command } from "@smithy/smithy-client";
 import { MetadataBearer as __MetadataBearer } from "@smithy/types";
@@ -59,12 +57,10 @@ export interface GetCurrentTimeCommandOutput extends GetCurrentTimeOutput, __Met
  *
  */
 export class GetCurrentTimeCommand extends $Command.classBuilder<GetCurrentTimeCommandInput, GetCurrentTimeCommandOutput, WeatherClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
-  .ep(commonParams)
       .m(function (this: any, Command: any, cs: any, config: WeatherClientResolvedConfig, o: any) {
           return [
 
   getSerdePlugin(config, this.serialize, this.deserialize),
-  getEndpointPlugin(config, Command.getEndpointParameterInstructions()),
       ];
   })
   .s("Weather", "GetCurrentTime", {

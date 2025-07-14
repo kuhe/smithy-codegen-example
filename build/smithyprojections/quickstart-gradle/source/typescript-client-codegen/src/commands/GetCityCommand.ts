@@ -4,12 +4,10 @@ import {
   ServiceOutputTypes,
   WeatherClientResolvedConfig,
 } from "../WeatherClient";
-import { commonParams } from "../endpoint/EndpointParameters";
 import {
   GetCityInput,
   GetCityOutput,
 } from "../models/models_0";
-import { getEndpointPlugin } from "@smithy/middleware-endpoint";
 import { getSerdePlugin } from "@smithy/middleware-serde";
 import { Command as $Command } from "@smithy/smithy-client";
 import { MetadataBearer as __MetadataBearer } from "@smithy/types";
@@ -70,12 +68,10 @@ export interface GetCityCommandOutput extends GetCityOutput, __MetadataBearer {}
  *
  */
 export class GetCityCommand extends $Command.classBuilder<GetCityCommandInput, GetCityCommandOutput, WeatherClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
-  .ep(commonParams)
       .m(function (this: any, Command: any, cs: any, config: WeatherClientResolvedConfig, o: any) {
           return [
 
   getSerdePlugin(config, this.serialize, this.deserialize),
-  getEndpointPlugin(config, Command.getEndpointParameterInstructions()),
       ];
   })
   .s("Weather", "GetCity", {
