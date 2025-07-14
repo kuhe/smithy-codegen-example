@@ -21,6 +21,12 @@ import {
   ListCitiesCommandInput,
   ListCitiesCommandOutput,
 } from "./commands/ListCitiesCommand";
+import {
+  ClientInputEndpointParameters,
+  ClientResolvedEndpointParameters,
+  EndpointParameters,
+  resolveClientEndpointParameters,
+} from "./endpoint/EndpointParameters";
 import { getRuntimeConfig as __getRuntimeConfig } from "./runtimeConfig";
 import {
   RuntimeExtension,
@@ -42,16 +48,19 @@ import {
   resolveUserAgentConfig,
 } from "@aws-sdk/middleware-user-agent";
 import {
-  CustomEndpointsInputConfig,
-  CustomEndpointsResolvedConfig,
-  resolveCustomEndpointsConfig,
-} from "@smithy/config-resolver";
-import {
   DefaultIdentityProviderConfig,
-  getHttpAuthSchemePlugin,
+  getHttpAuthSchemeEndpointRuleSetPlugin,
   getHttpSigningPlugin,
 } from "@smithy/core";
 import { getContentLengthPlugin } from "@smithy/middleware-content-length";
+import {
+  EndpointInputConfig,
+  EndpointRequiredInputConfig,
+  EndpointRequiredResolvedConfig,
+  EndpointResolvedConfig,
+  resolveEndpointConfig,
+  resolveEndpointRequiredConfig,
+} from "@smithy/middleware-endpoint";
 import {
   RetryInputConfig,
   RetryResolvedConfig,
@@ -232,10 +241,12 @@ export interface ClientDefaults
 export type WeatherClientConfigType = Partial<__SmithyConfiguration<__HttpHandlerOptions>>
   & ClientDefaults
   & UserAgentInputConfig
-  & CustomEndpointsInputConfig
   & RetryInputConfig
   & HostHeaderInputConfig
+  & EndpointInputConfig<EndpointParameters>
+  & EndpointRequiredInputConfig
   & HttpAuthSchemeInputConfig
+  & ClientInputEndpointParameters
 /**
  * @public
  *
@@ -250,10 +261,12 @@ export type WeatherClientResolvedConfigType = __SmithyResolvedConfiguration<__Ht
   & Required<ClientDefaults>
   & RuntimeExtensionsConfig
   & UserAgentResolvedConfig
-  & CustomEndpointsResolvedConfig
   & RetryResolvedConfig
   & HostHeaderResolvedConfig
+  & EndpointResolvedConfig<EndpointParameters>
+  & EndpointRequiredResolvedConfig
   & HttpAuthSchemeResolvedConfig
+  & ClientResolvedEndpointParameters
 /**
  * @public
  *
@@ -280,13 +293,15 @@ export class WeatherClient extends __Client<
     let _config_0 = __getRuntimeConfig(configuration || {});
     super(_config_0 as any);
     this.initConfig = _config_0;
-    let _config_1 = resolveUserAgentConfig(_config_0);
-    let _config_2 = resolveCustomEndpointsConfig(_config_1);
+    let _config_1 = resolveClientEndpointParameters(_config_0);
+    let _config_2 = resolveUserAgentConfig(_config_1);
     let _config_3 = resolveRetryConfig(_config_2);
     let _config_4 = resolveHostHeaderConfig(_config_3);
-    let _config_5 = resolveHttpAuthSchemeConfig(_config_4);
-    let _config_6 = resolveRuntimeExtensions(_config_5, configuration?.extensions || []);
-    this.config = _config_6;
+    let _config_5 = resolveEndpointConfig(_config_4);
+    let _config_6 = resolveEndpointRequiredConfig(_config_5);
+    let _config_7 = resolveHttpAuthSchemeConfig(_config_6);
+    let _config_8 = resolveRuntimeExtensions(_config_7, configuration?.extensions || []);
+    this.config = _config_8;
     this.middlewareStack.use(getUserAgentPlugin(this.config
     ));
     this.middlewareStack.use(getRetryPlugin(this.config
@@ -299,7 +314,7 @@ export class WeatherClient extends __Client<
     ));
     this.middlewareStack.use(getRecursionDetectionPlugin(this.config
     ));
-    this.middlewareStack.use(getHttpAuthSchemePlugin(this.config
+    this.middlewareStack.use(getHttpAuthSchemeEndpointRuleSetPlugin(this.config
       , {
         httpAuthSchemeParametersProvider: defaultWeatherHttpAuthSchemeParametersProvider,identityProviderConfigProvider: async (config: WeatherClientResolvedConfig) => new DefaultIdentityProviderConfig({
         }), }

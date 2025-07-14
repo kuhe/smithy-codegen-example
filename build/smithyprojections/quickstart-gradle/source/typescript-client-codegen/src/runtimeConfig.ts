@@ -32,7 +32,10 @@ export const getRuntimeConfig = (config: WeatherClientConfig) => {
   const defaultsMode = resolveDefaultsModeConfig(config);
   const defaultConfigProvider = () => defaultsMode().then(loadConfigsForDefaultMode);
   const clientSharedValues = getSharedRuntimeConfig(config);
-  const loaderConfig = { profile: config?.profile, logger: clientSharedValues.logger };return {
+  const loaderConfig = {
+  profile: config?.profile,
+  logger: clientSharedValues.logger,
+};return {
     ...clientSharedValues,
     ...config,
     runtime: "node",

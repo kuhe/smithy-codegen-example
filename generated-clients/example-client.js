@@ -990,7 +990,7 @@ var require_fromBase64 = __commonJS({
     exports2.fromBase64 = void 0;
     var util_buffer_from_1 = require_dist_cjs6();
     var BASE64_REGEX = /^[A-Za-z0-9+/]*={0,2}$/;
-    var fromBase644 = (input) => {
+    var fromBase646 = (input) => {
       if ((input.length * 3) % 4 !== 0) {
         throw new TypeError(`Incorrect padding on base64 string.`);
       }
@@ -1000,7 +1000,7 @@ var require_fromBase64 = __commonJS({
       const buffer = (0, util_buffer_from_1.fromString)(input, "base64");
       return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
     };
-    exports2.fromBase64 = fromBase644;
+    exports2.fromBase64 = fromBase646;
   },
 });
 
@@ -1034,7 +1034,7 @@ var require_dist_cjs7 = __commonJS({
     __export2(src_exports, {
       fromUtf8: () => fromUtf83,
       toUint8Array: () => toUint8Array,
-      toUtf8: () => toUtf84,
+      toUtf8: () => toUtf85,
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_util_buffer_from = require_dist_cjs6();
@@ -1051,7 +1051,7 @@ var require_dist_cjs7 = __commonJS({
       }
       return new Uint8Array(data);
     }, "toUint8Array");
-    var toUtf84 = /* @__PURE__ */ __name((input) => {
+    var toUtf85 = /* @__PURE__ */ __name((input) => {
       if (typeof input === "string") {
         return input;
       }
@@ -1075,7 +1075,7 @@ var require_toBase64 = __commonJS({
     exports2.toBase64 = void 0;
     var util_buffer_from_1 = require_dist_cjs6();
     var util_utf8_1 = require_dist_cjs7();
-    var toBase644 = (_input) => {
+    var toBase646 = (_input) => {
       let input;
       if (typeof _input === "string") {
         input = (0, util_utf8_1.fromUtf8)(_input);
@@ -1089,7 +1089,7 @@ var require_toBase64 = __commonJS({
         "base64",
       );
     };
-    exports2.toBase64 = toBase644;
+    exports2.toBase64 = toBase646;
   },
 });
 
@@ -2784,7 +2784,7 @@ var require_dist_cjs12 = __commonJS({
       }),
       __name(_a, "FetchHttpHandler"),
       _a);
-    var import_util_base644 = require_dist_cjs8();
+    var import_util_base647 = require_dist_cjs8();
     var streamCollector2 = /* @__PURE__ */ __name(async (stream) => {
       if ((typeof Blob === "function" && stream instanceof Blob) || stream.constructor?.name === "Blob") {
         if (Blob.prototype.arrayBuffer !== void 0) {
@@ -2796,7 +2796,7 @@ var require_dist_cjs12 = __commonJS({
     }, "streamCollector");
     async function collectBlob(blob) {
       const base64 = await readToBase64(blob);
-      const arrayBuffer = (0, import_util_base644.fromBase64)(base64);
+      const arrayBuffer = (0, import_util_base647.fromBase64)(base64);
       return new Uint8Array(arrayBuffer);
     }
     __name(collectBlob, "collectBlob");
@@ -3135,20 +3135,20 @@ var require_dist_cjs14 = __commonJS({
       Uint8ArrayBlobAdapter: () => Uint8ArrayBlobAdapter2,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_util_base644 = require_dist_cjs8();
-    var import_util_utf84 = require_dist_cjs7();
+    var import_util_base647 = require_dist_cjs8();
+    var import_util_utf85 = require_dist_cjs7();
     function transformToString(payload, encoding = "utf-8") {
       if (encoding === "base64") {
-        return (0, import_util_base644.toBase64)(payload);
+        return (0, import_util_base647.toBase64)(payload);
       }
-      return (0, import_util_utf84.toUtf8)(payload);
+      return (0, import_util_utf85.toUtf8)(payload);
     }
     __name(transformToString, "transformToString");
     function transformFromString(str, encoding) {
       if (encoding === "base64") {
-        return Uint8ArrayBlobAdapter2.mutate((0, import_util_base644.fromBase64)(str));
+        return Uint8ArrayBlobAdapter2.mutate((0, import_util_base647.fromBase64)(str));
       }
-      return Uint8ArrayBlobAdapter2.mutate((0, import_util_utf84.fromUtf8)(str));
+      return Uint8ArrayBlobAdapter2.mutate((0, import_util_utf85.fromUtf8)(str));
     }
     __name(transformFromString, "transformFromString");
     var _a;
@@ -4423,16 +4423,16 @@ var init_date_utils = __esm({
 var LazyJsonString2;
 var init_lazy_json = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/lazy-json.js"() {
-    LazyJsonString2 = function LazyJsonString3(val2) {
-      const str = Object.assign(new String(val2), {
+    LazyJsonString2 = function LazyJsonString3(val) {
+      const str = Object.assign(new String(val), {
         deserializeJSON() {
-          return JSON.parse(String(val2));
+          return JSON.parse(String(val));
         },
         toString() {
-          return String(val2);
+          return String(val);
         },
         toJSON() {
-          return String(val2);
+          return String(val);
         },
       });
       return str;
@@ -4905,9 +4905,9 @@ var init_HttpBindingProtocol = __esm({
             headers[memberTraits.httpHeader.toLowerCase()] = String(serializer.flush());
             delete input[memberName];
           } else if (typeof memberTraits.httpPrefixHeaders === "string") {
-            for (const [key, val2] of Object.entries(inputMemberValue)) {
+            for (const [key, val] of Object.entries(inputMemberValue)) {
               const amalgam = memberTraits.httpPrefixHeaders + key;
-              serializer.write([memberNs.getValueSchema(), { httpHeader: amalgam }], val2);
+              serializer.write([memberNs.getValueSchema(), { httpHeader: amalgam }], val);
               headers[amalgam.toLowerCase()] = serializer.flush();
             }
             delete input[memberName];
@@ -4931,7 +4931,7 @@ var init_HttpBindingProtocol = __esm({
         const serializer = this.serializer;
         const traits = ns.getMergedTraits();
         if (traits.httpQueryParams) {
-          for (const [key, val2] of Object.entries(data)) {
+          for (const [key, val] of Object.entries(data)) {
             if (!(key in query)) {
               this.serializeQuery(
                 NormalizedSchema.of([
@@ -4942,7 +4942,7 @@ var init_HttpBindingProtocol = __esm({
                     httpQueryParams: void 0,
                   },
                 ]),
-                val2,
+                val,
                 query,
               );
             }
@@ -5754,16 +5754,16 @@ var require_dist_cjs15 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
-      EndpointCache: () => EndpointCache,
+      EndpointCache: () => EndpointCache2,
       EndpointError: () => EndpointError2,
       customEndpointFunctions: () => customEndpointFunctions,
       isIpAddress: () => isIpAddress2,
       isValidHostLabel: () => isValidHostLabel,
-      resolveEndpoint: () => resolveEndpoint2,
+      resolveEndpoint: () => resolveEndpoint3,
     });
     module2.exports = __toCommonJS2(src_exports);
     var _a;
-    var EndpointCache =
+    var EndpointCache2 =
       ((_a = class {
         /**
          * @param [size] - desired average maximum capacity. A buffer of 10 additional keys will be allowed
@@ -5820,11 +5820,11 @@ var require_dist_cjs15 = __commonJS({
             return false;
           }
           for (const param of parameters) {
-            const val2 = String(endpointParams[param] ?? "");
-            if (val2.includes("|;")) {
+            const val = String(endpointParams[param] ?? "");
+            if (val.includes("|;")) {
               return false;
             }
-            buffer += val2 + "|;";
+            buffer += val + "|;";
           }
           return buffer;
         }
@@ -6205,7 +6205,7 @@ var require_dist_cjs15 = __commonJS({
       }
       throw new EndpointError2(`Rules evaluation failed`);
     }, "evaluateRules");
-    var resolveEndpoint2 = /* @__PURE__ */ __name((ruleSetObject, options) => {
+    var resolveEndpoint3 = /* @__PURE__ */ __name((ruleSetObject, options) => {
       const { endpointParams, logger: logger3 } = options;
       const { parameters, rules } = ruleSetObject;
       options.logger?.debug?.(`${debugId} Initial EndpointParams: ${toDebugString(endpointParams)}`);
@@ -6232,8 +6232,116 @@ var require_dist_cjs15 = __commonJS({
   },
 });
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/util-endpoints/dist-cjs/index.js
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/querystring-parser/dist-cjs/index.js
 var require_dist_cjs16 = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/querystring-parser/dist-cjs/index.js"(
+    exports2,
+    module2,
+  ) {
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
+    var __export2 = (target, all) => {
+      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if ((from && typeof from === "object") || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, {
+              get: () => from[key],
+              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
+            });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var src_exports = {};
+    __export2(src_exports, {
+      parseQueryString: () => parseQueryString,
+    });
+    module2.exports = __toCommonJS2(src_exports);
+    function parseQueryString(querystring) {
+      const query = {};
+      querystring = querystring.replace(/^\?/, "");
+      if (querystring) {
+        for (const pair of querystring.split("&")) {
+          let [key, value = null] = pair.split("=");
+          key = decodeURIComponent(key);
+          if (value) {
+            value = decodeURIComponent(value);
+          }
+          if (!(key in query)) {
+            query[key] = value;
+          } else if (Array.isArray(query[key])) {
+            query[key].push(value);
+          } else {
+            query[key] = [query[key], value];
+          }
+        }
+      }
+      return query;
+    }
+    __name(parseQueryString, "parseQueryString");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/url-parser/dist-cjs/index.js
+var require_dist_cjs17 = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/url-parser/dist-cjs/index.js"(
+    exports2,
+    module2,
+  ) {
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
+    var __export2 = (target, all) => {
+      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if ((from && typeof from === "object") || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, {
+              get: () => from[key],
+              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
+            });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var src_exports = {};
+    __export2(src_exports, {
+      parseUrl: () => parseUrl2,
+    });
+    module2.exports = __toCommonJS2(src_exports);
+    var import_querystring_parser = require_dist_cjs16();
+    var parseUrl2 = /* @__PURE__ */ __name((url) => {
+      if (typeof url === "string") {
+        return parseUrl2(new URL(url));
+      }
+      const { hostname, pathname, port, protocol, search } = url;
+      let query;
+      if (search) {
+        query = (0, import_querystring_parser.parseQueryString)(search);
+      }
+      return {
+        hostname,
+        port: port ? parseInt(port) : void 0,
+        protocol,
+        path: pathname,
+        query,
+      };
+    }, "parseUrl");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/util-endpoints/dist-cjs/index.js
+var require_dist_cjs18 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/util-endpoints/dist-cjs/index.js"(
     exports2,
     module2,
@@ -6261,37 +6369,39 @@ var require_dist_cjs16 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
     __export2(index_exports, {
-      ConditionObject: () => import_util_endpoints.ConditionObject,
-      DeprecatedObject: () => import_util_endpoints.DeprecatedObject,
-      EndpointError: () => import_util_endpoints.EndpointError,
-      EndpointObject: () => import_util_endpoints.EndpointObject,
-      EndpointObjectHeaders: () => import_util_endpoints.EndpointObjectHeaders,
-      EndpointObjectProperties: () => import_util_endpoints.EndpointObjectProperties,
-      EndpointParams: () => import_util_endpoints.EndpointParams,
-      EndpointResolverOptions: () => import_util_endpoints.EndpointResolverOptions,
-      EndpointRuleObject: () => import_util_endpoints.EndpointRuleObject,
-      ErrorRuleObject: () => import_util_endpoints.ErrorRuleObject,
-      EvaluateOptions: () => import_util_endpoints.EvaluateOptions,
-      Expression: () => import_util_endpoints.Expression,
-      FunctionArgv: () => import_util_endpoints.FunctionArgv,
-      FunctionObject: () => import_util_endpoints.FunctionObject,
-      FunctionReturn: () => import_util_endpoints.FunctionReturn,
-      ParameterObject: () => import_util_endpoints.ParameterObject,
-      ReferenceObject: () => import_util_endpoints.ReferenceObject,
-      ReferenceRecord: () => import_util_endpoints.ReferenceRecord,
-      RuleSetObject: () => import_util_endpoints.RuleSetObject,
-      RuleSetRules: () => import_util_endpoints.RuleSetRules,
-      TreeRuleObject: () => import_util_endpoints.TreeRuleObject,
+      ConditionObject: () => import_util_endpoints2.ConditionObject,
+      DeprecatedObject: () => import_util_endpoints2.DeprecatedObject,
+      EndpointError: () => import_util_endpoints2.EndpointError,
+      EndpointObject: () => import_util_endpoints2.EndpointObject,
+      EndpointObjectHeaders: () => import_util_endpoints2.EndpointObjectHeaders,
+      EndpointObjectProperties: () => import_util_endpoints2.EndpointObjectProperties,
+      EndpointParams: () => import_util_endpoints2.EndpointParams,
+      EndpointResolverOptions: () => import_util_endpoints2.EndpointResolverOptions,
+      EndpointRuleObject: () => import_util_endpoints2.EndpointRuleObject,
+      ErrorRuleObject: () => import_util_endpoints2.ErrorRuleObject,
+      EvaluateOptions: () => import_util_endpoints2.EvaluateOptions,
+      Expression: () => import_util_endpoints2.Expression,
+      FunctionArgv: () => import_util_endpoints2.FunctionArgv,
+      FunctionObject: () => import_util_endpoints2.FunctionObject,
+      FunctionReturn: () => import_util_endpoints2.FunctionReturn,
+      ParameterObject: () => import_util_endpoints2.ParameterObject,
+      ReferenceObject: () => import_util_endpoints2.ReferenceObject,
+      ReferenceRecord: () => import_util_endpoints2.ReferenceRecord,
+      RuleSetObject: () => import_util_endpoints2.RuleSetObject,
+      RuleSetRules: () => import_util_endpoints2.RuleSetRules,
+      TreeRuleObject: () => import_util_endpoints2.TreeRuleObject,
       awsEndpointFunctions: () => awsEndpointFunctions,
       getUserAgentPrefix: () => getUserAgentPrefix,
-      isIpAddress: () => import_util_endpoints.isIpAddress,
+      isIpAddress: () => import_util_endpoints2.isIpAddress,
       partition: () => partition,
-      resolveEndpoint: () => import_util_endpoints.resolveEndpoint,
+      resolveDefaultAwsRegionalEndpointsConfig: () => resolveDefaultAwsRegionalEndpointsConfig,
+      resolveEndpoint: () => import_util_endpoints2.resolveEndpoint,
       setPartitionInfo: () => setPartitionInfo,
+      toEndpointV1: () => toEndpointV1,
       useDefaultPartitionInfo: () => useDefaultPartitionInfo,
     });
     module2.exports = __toCommonJS2(index_exports);
-    var import_util_endpoints = require_dist_cjs15();
+    var import_util_endpoints2 = require_dist_cjs15();
     var isVirtualHostableS3Bucket = /* @__PURE__ */ __name((value, allowSubDomains = false) => {
       if (allowSubDomains) {
         for (const label of value.split(".")) {
@@ -6301,7 +6411,7 @@ var require_dist_cjs16 = __commonJS({
         }
         return true;
       }
-      if (!(0, import_util_endpoints.isValidHostLabel)(value)) {
+      if (!(0, import_util_endpoints2.isValidHostLabel)(value)) {
         return false;
       }
       if (value.length < 3 || value.length > 63) {
@@ -6310,7 +6420,7 @@ var require_dist_cjs16 = __commonJS({
       if (value !== value.toLowerCase()) {
         return false;
       }
-      if ((0, import_util_endpoints.isIpAddress)(value)) {
+      if ((0, import_util_endpoints2.isIpAddress)(value)) {
         return false;
       }
       return true;
@@ -6350,6 +6460,9 @@ var require_dist_cjs16 = __commonJS({
             },
             "ap-east-1": {
               description: "Asia Pacific (Hong Kong)",
+            },
+            "ap-east-2": {
+              description: "Asia Pacific (Taipei)",
             },
             "ap-northeast-1": {
               description: "Asia Pacific (Tokyo)",
@@ -6644,7 +6757,38 @@ var require_dist_cjs16 = __commonJS({
       parseArn,
       partition,
     };
-    import_util_endpoints.customEndpointFunctions.aws = awsEndpointFunctions;
+    import_util_endpoints2.customEndpointFunctions.aws = awsEndpointFunctions;
+    var import_url_parser2 = require_dist_cjs17();
+    var resolveDefaultAwsRegionalEndpointsConfig = /* @__PURE__ */ __name((input) => {
+      if (typeof input.endpointProvider !== "function") {
+        throw new Error("@aws-sdk/util-endpoint - endpointProvider and endpoint missing in config for this client.");
+      }
+      const { endpoint } = input;
+      if (endpoint === void 0) {
+        input.endpoint = async () => {
+          return toEndpointV1(
+            input.endpointProvider(
+              {
+                Region: typeof input.region === "function" ? await input.region() : input.region,
+                UseDualStack:
+                  typeof input.useDualstackEndpoint === "function"
+                    ? await input.useDualstackEndpoint()
+                    : input.useDualstackEndpoint,
+                UseFIPS:
+                  typeof input.useFipsEndpoint === "function" ? await input.useFipsEndpoint() : input.useFipsEndpoint,
+                Endpoint: void 0,
+              },
+              { logger: input.logger },
+            ),
+          );
+        };
+      }
+      return input;
+    }, "resolveDefaultAwsRegionalEndpointsConfig");
+    var toEndpointV1 = /* @__PURE__ */ __name(
+      (endpoint) => (0, import_url_parser2.parseUrl)(endpoint.url),
+      "toEndpointV1",
+    );
   },
 });
 
@@ -6697,12 +6841,25 @@ var init_setFeature2 = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/client/setFeature.js"() {},
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/client/setTokenFeature.js
+function setTokenFeature(token, feature, value) {
+  if (!token.$source) {
+    token.$source = {};
+  }
+  token.$source[feature] = value;
+  return token;
+}
+var init_setTokenFeature = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/client/setTokenFeature.js"() {},
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/client/index.js
 var init_client = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/client/index.js"() {
     init_emitWarningIfUnsupportedVersion();
     init_setCredentialFeature();
     init_setFeature2();
+    init_setTokenFeature();
   },
 });
 
@@ -6875,15 +7032,28 @@ var init_getArrayForCommaSeparatedString = __esm({
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/utils/getBearerTokenEnvKey.js
+var getBearerTokenEnvKey;
+var init_getBearerTokenEnvKey = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/utils/getBearerTokenEnvKey.js"() {
+    getBearerTokenEnvKey = (signingName) => `AWS_BEARER_TOKEN_${signingName.replace(/[\s-]/g, "_").toUpperCase()}`;
+  },
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/NODE_AUTH_SCHEME_PREFERENCE_OPTIONS.js
 var NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY, NODE_AUTH_SCHEME_PREFERENCE_CONFIG_KEY, NODE_AUTH_SCHEME_PREFERENCE_OPTIONS;
 var init_NODE_AUTH_SCHEME_PREFERENCE_OPTIONS = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/NODE_AUTH_SCHEME_PREFERENCE_OPTIONS.js"() {
     init_getArrayForCommaSeparatedString();
+    init_getBearerTokenEnvKey();
     NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY = "AWS_AUTH_SCHEME_PREFERENCE";
     NODE_AUTH_SCHEME_PREFERENCE_CONFIG_KEY = "auth_scheme_preference";
     NODE_AUTH_SCHEME_PREFERENCE_OPTIONS = {
-      environmentVariableSelector: (env) => {
+      environmentVariableSelector: (env, options) => {
+        if (options?.signingName) {
+          const bearerTokenKey = getBearerTokenEnvKey(options.signingName);
+          if (bearerTokenKey in env) return ["httpBearerAuth"];
+        }
         if (!(NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY in env)) return void 0;
         return getArrayForCommaSeparatedString(env[NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY]);
       },
@@ -6897,7 +7067,7 @@ var init_NODE_AUTH_SCHEME_PREFERENCE_OPTIONS = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/property-provider/dist-cjs/index.js
-var require_dist_cjs17 = __commonJS({
+var require_dist_cjs19 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/property-provider/dist-cjs/index.js"(
     exports2,
     module2,
@@ -7064,7 +7234,7 @@ var import_property_provider, resolveAwsSdkSigV4AConfig, NODE_SIGV4A_CONFIG_OPTI
 var init_resolveAwsSdkSigV4AConfig = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/resolveAwsSdkSigV4AConfig.js"() {
     init_dist_es();
-    import_property_provider = __toESM(require_dist_cjs17());
+    import_property_provider = __toESM(require_dist_cjs19());
     resolveAwsSdkSigV4AConfig = (config) => {
       config.sigv4aSigningRegionSet = normalizeProvider2(config.sigv4aSigningRegionSet);
       return config;
@@ -7092,7 +7262,7 @@ var init_resolveAwsSdkSigV4AConfig = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/signature-v4/dist-cjs/index.js
-var require_dist_cjs18 = __commonJS({
+var require_dist_cjs20 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/signature-v4/dist-cjs/index.js"(
     exports2,
     module2,
@@ -7205,7 +7375,7 @@ var require_dist_cjs18 = __commonJS({
     var KEY_TYPE_IDENTIFIER = "aws4_request";
     var MAX_PRESIGNED_TTL = 60 * 60 * 24 * 7;
     var import_util_hex_encoding = require_dist_cjs13();
-    var import_util_utf84 = require_dist_cjs7();
+    var import_util_utf86 = require_dist_cjs7();
     var signingKeyCache = {};
     var cacheQueue = [];
     var createScope = /* @__PURE__ */ __name(
@@ -7236,7 +7406,7 @@ var require_dist_cjs18 = __commonJS({
     }, "clearCredentialCache");
     var hmac = /* @__PURE__ */ __name((ctor, secret, data) => {
       const hash = new ctor(secret);
-      hash.update((0, import_util_utf84.toUint8Array)(data));
+      hash.update((0, import_util_utf86.toUint8Array)(data));
       return hash.digest();
     }, "hmac");
     var getCanonicalHeaders = /* @__PURE__ */ __name(({ headers }, unsignableHeaders, signableHeaders) => {
@@ -7798,7 +7968,7 @@ var init_resolveAwsSdkSigV4Config = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/resolveAwsSdkSigV4Config.js"() {
     init_client();
     init_dist_es();
-    import_signature_v4 = __toESM(require_dist_cjs18());
+    import_signature_v4 = __toESM(require_dist_cjs20());
     resolveAwsSdkSigV4Config = (config) => {
       let inputCredentials = config.credentials;
       let isUserSupplied = !!config.credentials;
@@ -7914,6 +8084,7 @@ var init_aws_sdk = __esm({
 var init_httpAuthSchemes2 = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/index.js"() {
     init_aws_sdk();
+    init_getBearerTokenEnvKey();
   },
 });
 
@@ -7921,64 +8092,157 @@ var init_httpAuthSchemes2 = __esm({
 var _toStr, _toBool, _toNum;
 var init_coercing_serializers = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/coercing-serializers.js"() {
-    _toStr = (val2) => {
-      if (val2 == null) {
-        return val2;
+    _toStr = (val) => {
+      if (val == null) {
+        return val;
       }
-      if (typeof val2 === "number" || typeof val2 === "bigint") {
-        const warning = new Error(`Received number ${val2} where a string was expected.`);
+      if (typeof val === "number" || typeof val === "bigint") {
+        const warning = new Error(`Received number ${val} where a string was expected.`);
         warning.name = "Warning";
         console.warn(warning);
-        return String(val2);
+        return String(val);
       }
-      if (typeof val2 === "boolean") {
-        const warning = new Error(`Received boolean ${val2} where a string was expected.`);
+      if (typeof val === "boolean") {
+        const warning = new Error(`Received boolean ${val} where a string was expected.`);
         warning.name = "Warning";
         console.warn(warning);
-        return String(val2);
+        return String(val);
       }
-      return val2;
+      return val;
     };
-    _toBool = (val2) => {
-      if (val2 == null) {
-        return val2;
+    _toBool = (val) => {
+      if (val == null) {
+        return val;
       }
-      if (typeof val2 === "number") {
+      if (typeof val === "number") {
       }
-      if (typeof val2 === "string") {
-        const lowercase = val2.toLowerCase();
-        if (val2 !== "" && lowercase !== "false" && lowercase !== "true") {
-          const warning = new Error(`Received string "${val2}" where a boolean was expected.`);
+      if (typeof val === "string") {
+        const lowercase = val.toLowerCase();
+        if (val !== "" && lowercase !== "false" && lowercase !== "true") {
+          const warning = new Error(`Received string "${val}" where a boolean was expected.`);
           warning.name = "Warning";
           console.warn(warning);
         }
-        return val2 !== "" && lowercase !== "false";
+        return val !== "" && lowercase !== "false";
       }
-      return val2;
+      return val;
     };
-    _toNum = (val2) => {
-      if (val2 == null) {
-        return val2;
+    _toNum = (val) => {
+      if (val == null) {
+        return val;
       }
-      if (typeof val2 === "boolean") {
+      if (typeof val === "boolean") {
       }
-      if (typeof val2 === "string") {
-        const num = Number(val2);
-        if (num.toString() !== val2) {
-          const warning = new Error(`Received string "${val2}" where a number was expected.`);
+      if (typeof val === "string") {
+        const num = Number(val);
+        if (num.toString() !== val) {
+          const warning = new Error(`Received string "${val}" where a number was expected.`);
           warning.name = "Warning";
           console.warn(warning);
-          return val2;
+          return val;
         }
         return num;
       }
-      return val2;
+      return val;
     };
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-body-length-browser/dist-cjs/index.js
+var require_dist_cjs21 = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-body-length-browser/dist-cjs/index.js"(
+    exports2,
+    module2,
+  ) {
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
+    var __export2 = (target, all) => {
+      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if ((from && typeof from === "object") || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, {
+              get: () => from[key],
+              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
+            });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var src_exports = {};
+    __export2(src_exports, {
+      calculateBodyLength: () => calculateBodyLength6,
+    });
+    module2.exports = __toCommonJS2(src_exports);
+    var TEXT_ENCODER = typeof TextEncoder == "function" ? new TextEncoder() : null;
+    var calculateBodyLength6 = /* @__PURE__ */ __name((body) => {
+      if (typeof body === "string") {
+        if (TEXT_ENCODER) {
+          return TEXT_ENCODER.encode(body).byteLength;
+        }
+        let len = body.length;
+        for (let i = len - 1; i >= 0; i--) {
+          const code = body.charCodeAt(i);
+          if (code > 127 && code <= 2047) len++;
+          else if (code > 2047 && code <= 65535) len += 2;
+          if (code >= 56320 && code <= 57343) i--;
+        }
+        return len;
+      } else if (typeof body.byteLength === "number") {
+        return body.byteLength;
+      } else if (typeof body.size === "number") {
+        return body.size;
+      }
+      throw new Error(`Body Length computation failed for ${body}`);
+    }, "calculateBodyLength");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/ConfigurableSerdeContext.js
+var SerdeContextConfig;
+var init_ConfigurableSerdeContext = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/ConfigurableSerdeContext.js"() {
+    SerdeContextConfig = class {
+      constructor() {
+        __publicField(this, "serdeContext");
+      }
+      setSerdeContext(serdeContext) {
+        this.serdeContext = serdeContext;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/jsonReviver.js
+function jsonReviver(key, value, context) {
+  if (context?.source) {
+    const numericString = context.source;
+    if (typeof value === "number") {
+      if (value > Number.MAX_SAFE_INTEGER || value < Number.MIN_SAFE_INTEGER || numericString !== String(value)) {
+        const isFractional = numericString.includes(".");
+        if (isFractional) {
+          return new NumericValue2(numericString, "bigDecimal");
+        } else {
+          return BigInt(numericString);
+        }
+      }
+    }
+  }
+  return value;
+}
+var init_jsonReviver = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/jsonReviver.js"() {
+    init_serde();
+  },
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-stack/dist-cjs/index.js
-var require_dist_cjs19 = __commonJS({
+var require_dist_cjs22 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-stack/dist-cjs/index.js"(
     exports2,
     module2,
@@ -8296,7 +8560,7 @@ var require_dist_cjs19 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/smithy-client/dist-cjs/index.js
-var require_dist_cjs20 = __commonJS({
+var require_dist_cjs23 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/smithy-client/dist-cjs/index.js"(
     exports2,
     module2,
@@ -8332,21 +8596,21 @@ var require_dist_cjs20 = __commonJS({
       SENSITIVE_STRING: () => SENSITIVE_STRING,
       ServiceException: () => ServiceException,
       _json: () => _json,
-      collectBody: () => import_protocols2.collectBody,
+      collectBody: () => import_protocols8.collectBody,
       convertMap: () => convertMap,
       createAggregatedClient: () => createAggregatedClient2,
       decorateServiceException: () => decorateServiceException,
       emitWarningIfUnsupportedVersion: () => emitWarningIfUnsupportedVersion3,
-      extendedEncodeURIComponent: () => import_protocols2.extendedEncodeURIComponent,
+      extendedEncodeURIComponent: () => import_protocols8.extendedEncodeURIComponent,
       getArrayIfSingleItem: () => getArrayIfSingleItem,
       getDefaultClientConfiguration: () => getDefaultClientConfiguration,
       getDefaultExtensionConfiguration: () => getDefaultExtensionConfiguration2,
-      getValueFromTextNode: () => getValueFromTextNode2,
+      getValueFromTextNode: () => getValueFromTextNode3,
       isSerializableHeaderValue: () => isSerializableHeaderValue,
       loadConfigsForDefaultMode: () => loadConfigsForDefaultMode2,
       map: () => map,
       resolveDefaultRuntimeConfig: () => resolveDefaultRuntimeConfig2,
-      resolvedPath: () => import_protocols2.resolvedPath,
+      resolvedPath: () => import_protocols8.resolvedPath,
       serializeDateTime: () => serializeDateTime,
       serializeFloat: () => serializeFloat,
       take: () => take,
@@ -8354,7 +8618,7 @@ var require_dist_cjs20 = __commonJS({
       withBaseException: () => withBaseException,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_middleware_stack = require_dist_cjs19();
+    var import_middleware_stack = require_dist_cjs22();
     var _a;
     var Client =
       ((_a = class {
@@ -8404,7 +8668,7 @@ var require_dist_cjs20 = __commonJS({
       }),
       __name(_a, "Client"),
       _a);
-    var import_protocols2 = (init_protocols(), __toCommonJS(protocols_exports));
+    var import_protocols8 = (init_protocols(), __toCommonJS(protocols_exports));
     var import_types5 = require_dist_cjs();
     var _a2;
     var Command =
@@ -8791,13 +9055,13 @@ var require_dist_cjs20 = __commonJS({
       (mayBeArray) => (Array.isArray(mayBeArray) ? mayBeArray : [mayBeArray]),
       "getArrayIfSingleItem",
     );
-    var getValueFromTextNode2 = /* @__PURE__ */ __name((obj) => {
+    var getValueFromTextNode3 = /* @__PURE__ */ __name((obj) => {
       const textNodeName = "#text";
       for (const key in obj) {
         if (obj.hasOwnProperty(key) && obj[key][textNodeName] !== void 0) {
           obj[key] = obj[key][textNodeName];
         } else if (typeof obj[key] === "object" && obj[key] !== null) {
-          obj[key] = getValueFromTextNode2(obj[key]);
+          obj[key] = getValueFromTextNode3(obj[key]);
         }
       }
       return obj;
@@ -8951,30 +9215,13 @@ var require_dist_cjs20 = __commonJS({
   },
 });
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/awsExpectUnion.js
-var import_smithy_client, awsExpectUnion;
-var init_awsExpectUnion = __esm({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/awsExpectUnion.js"() {
-    import_smithy_client = __toESM(require_dist_cjs20());
-    awsExpectUnion = (value) => {
-      if (value == null) {
-        return void 0;
-      }
-      if (typeof value === "object" && "__type" in value) {
-        delete value.__type;
-      }
-      return (0, import_smithy_client.expectUnion)(value);
-    };
-  },
-});
-
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/common.js
-var import_smithy_client2, collectBodyString;
+var import_smithy_client, collectBodyString;
 var init_common = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/common.js"() {
-    import_smithy_client2 = __toESM(require_dist_cjs20());
+    import_smithy_client = __toESM(require_dist_cjs23());
     collectBodyString = (streamBody, context) =>
-      (0, import_smithy_client2.collectBody)(streamBody, context).then((body) => context.utf8Encoder(body));
+      (0, import_smithy_client.collectBody)(streamBody, context).then((body) => context.utf8Encoder(body));
   },
 });
 
@@ -9026,502 +9273,1054 @@ var init_parseJsonBody = __esm({
       if (headerKey !== void 0) {
         return sanitizeErrorCode(output.headers[headerKey]);
       }
-      if (data.code !== void 0) {
-        return sanitizeErrorCode(data.code);
+      if (data && typeof data === "object") {
+        const codeKey = findKey(data, "code");
+        if (codeKey && data[codeKey] !== void 0) {
+          return sanitizeErrorCode(data[codeKey]);
+        }
+        if (data["__type"] !== void 0) {
+          return sanitizeErrorCode(data["__type"]);
+        }
       }
-      if (data["__type"] !== void 0) {
-        return sanitizeErrorCode(data["__type"]);
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/JsonShapeDeserializer.js
+var import_util_base643, JsonShapeDeserializer;
+var init_JsonShapeDeserializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/JsonShapeDeserializer.js"() {
+    init_schema();
+    init_serde();
+    import_util_base643 = __toESM(require_dist_cjs8());
+    init_ConfigurableSerdeContext();
+    init_jsonReviver();
+    init_parseJsonBody();
+    JsonShapeDeserializer = class extends SerdeContextConfig {
+      constructor(settings) {
+        super();
+        __publicField(this, "settings");
+        this.settings = settings;
       }
+      async read(schema, data) {
+        return this._read(
+          schema,
+          typeof data === "string" ? JSON.parse(data, jsonReviver) : await parseJsonBody(data, this.serdeContext),
+        );
+      }
+      readObject(schema, data) {
+        return this._read(schema, data);
+      }
+      _read(schema, value) {
+        const isObject = value !== null && typeof value === "object";
+        const ns = NormalizedSchema.of(schema);
+        if (ns.isListSchema() && Array.isArray(value)) {
+          const listMember = ns.getValueSchema();
+          const out = [];
+          const sparse = !!ns.getMergedTraits().sparse;
+          for (const item of value) {
+            if (sparse || item != null) {
+              out.push(this._read(listMember, item));
+            }
+          }
+          return out;
+        } else if (ns.isMapSchema() && isObject) {
+          const mapMember = ns.getValueSchema();
+          const out = {};
+          const sparse = !!ns.getMergedTraits().sparse;
+          for (const [_k, _v] of Object.entries(value)) {
+            if (sparse || _v != null) {
+              out[_k] = this._read(mapMember, _v);
+            }
+          }
+          return out;
+        } else if (ns.isStructSchema() && isObject) {
+          const out = {};
+          for (const [memberName, memberSchema] of ns.structIterator()) {
+            const fromKey = this.settings.jsonName
+              ? (memberSchema.getMergedTraits().jsonName ?? memberName)
+              : memberName;
+            const deserializedValue = this._read(memberSchema, value[fromKey]);
+            if (deserializedValue != null) {
+              out[memberName] = deserializedValue;
+            }
+          }
+          return out;
+        }
+        if (ns.isBlobSchema() && typeof value === "string") {
+          return (0, import_util_base643.fromBase64)(value);
+        }
+        const mediaType = ns.getMergedTraits().mediaType;
+        if (ns.isStringSchema() && typeof value === "string" && mediaType) {
+          const isJson = mediaType === "application/json" || mediaType.endsWith("+json");
+          if (isJson) {
+            return LazyJsonString2.from(value);
+          }
+        }
+        if (ns.isTimestampSchema()) {
+          const options = this.settings.timestampFormat;
+          const format = options.useTrait
+            ? ns.getSchema() === SCHEMA.TIMESTAMP_DEFAULT
+              ? options.default
+              : (ns.getSchema() ?? options.default)
+            : options.default;
+          switch (format) {
+            case SCHEMA.TIMESTAMP_DATE_TIME:
+              return parseRfc3339DateTimeWithOffset2(value);
+            case SCHEMA.TIMESTAMP_HTTP_DATE:
+              return parseRfc7231DateTime2(value);
+            case SCHEMA.TIMESTAMP_EPOCH_SECONDS:
+              return parseEpochTimestamp2(value);
+            default:
+              console.warn("Missing timestamp format, parsing value with Date constructor:", value);
+              return new Date(value);
+          }
+        }
+        if (ns.isBigIntegerSchema() && (typeof value === "number" || typeof value === "string")) {
+          return BigInt(value);
+        }
+        if (ns.isBigDecimalSchema() && value != void 0) {
+          if (value instanceof NumericValue2) {
+            return value;
+          }
+          return new NumericValue2(String(value), "bigDecimal");
+        }
+        if (ns.isNumericSchema() && typeof value === "string") {
+          switch (value) {
+            case "Infinity":
+              return Infinity;
+            case "-Infinity":
+              return -Infinity;
+            case "NaN":
+              return NaN;
+          }
+        }
+        return value;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/jsonReplacer.js
+var NUMERIC_CONTROL_CHAR, JsonReplacer;
+var init_jsonReplacer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/jsonReplacer.js"() {
+    init_serde();
+    NUMERIC_CONTROL_CHAR = String.fromCharCode(925);
+    JsonReplacer = class {
+      constructor() {
+        __publicField(this, "values", /* @__PURE__ */ new Map());
+        __publicField(this, "counter", 0);
+        __publicField(this, "stage", 0);
+      }
+      createReplacer() {
+        if (this.stage === 1) {
+          throw new Error("@aws-sdk/core/protocols - JsonReplacer already created.");
+        }
+        if (this.stage === 2) {
+          throw new Error("@aws-sdk/core/protocols - JsonReplacer exhausted.");
+        }
+        this.stage = 1;
+        return (key, value) => {
+          if (value instanceof NumericValue2) {
+            const v = `${NUMERIC_CONTROL_CHAR + +"nv" + this.counter++}_` + value.string;
+            this.values.set(`"${v}"`, value.string);
+            return v;
+          }
+          if (typeof value === "bigint") {
+            const s = value.toString();
+            const v = `${NUMERIC_CONTROL_CHAR + "b" + this.counter++}_` + s;
+            this.values.set(`"${v}"`, s);
+            return v;
+          }
+          return value;
+        };
+      }
+      replaceInJson(json) {
+        if (this.stage === 0) {
+          throw new Error("@aws-sdk/core/protocols - JsonReplacer not created yet.");
+        }
+        if (this.stage === 2) {
+          throw new Error("@aws-sdk/core/protocols - JsonReplacer exhausted.");
+        }
+        this.stage = 2;
+        if (this.counter === 0) {
+          return json;
+        }
+        for (const [key, value] of this.values) {
+          json = json.replace(key, value);
+        }
+        return json;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/JsonShapeSerializer.js
+var JsonShapeSerializer;
+var init_JsonShapeSerializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/JsonShapeSerializer.js"() {
+    init_schema();
+    init_serde();
+    init_serde();
+    init_ConfigurableSerdeContext();
+    init_jsonReplacer();
+    JsonShapeSerializer = class extends SerdeContextConfig {
+      constructor(settings) {
+        super();
+        __publicField(this, "settings");
+        __publicField(this, "buffer");
+        __publicField(this, "rootSchema");
+        this.settings = settings;
+      }
+      write(schema, value) {
+        this.rootSchema = NormalizedSchema.of(schema);
+        this.buffer = this._write(this.rootSchema, value);
+      }
+      flush() {
+        if (this.rootSchema?.isStructSchema() || this.rootSchema?.isDocumentSchema()) {
+          const replacer = new JsonReplacer();
+          return replacer.replaceInJson(JSON.stringify(this.buffer, replacer.createReplacer(), 0));
+        }
+        return this.buffer;
+      }
+      _write(schema, value, container) {
+        const isObject = value !== null && typeof value === "object";
+        const ns = NormalizedSchema.of(schema);
+        if (ns.isListSchema() && Array.isArray(value)) {
+          const listMember = ns.getValueSchema();
+          const out = [];
+          const sparse = !!ns.getMergedTraits().sparse;
+          for (const item of value) {
+            if (sparse || item != null) {
+              out.push(this._write(listMember, item));
+            }
+          }
+          return out;
+        } else if (ns.isMapSchema() && isObject) {
+          const mapMember = ns.getValueSchema();
+          const out = {};
+          const sparse = !!ns.getMergedTraits().sparse;
+          for (const [_k, _v] of Object.entries(value)) {
+            if (sparse || _v != null) {
+              out[_k] = this._write(mapMember, _v);
+            }
+          }
+          return out;
+        } else if (ns.isStructSchema() && isObject) {
+          const out = {};
+          for (const [memberName, memberSchema] of ns.structIterator()) {
+            const targetKey = this.settings.jsonName
+              ? (memberSchema.getMergedTraits().jsonName ?? memberName)
+              : memberName;
+            const serializableValue = this._write(memberSchema, value[memberName], ns);
+            if (serializableValue !== void 0) {
+              out[targetKey] = serializableValue;
+            }
+          }
+          return out;
+        }
+        if (value === null && container?.isStructSchema()) {
+          return void 0;
+        }
+        if (ns.isBlobSchema() && (value instanceof Uint8Array || typeof value === "string")) {
+          if (ns === this.rootSchema) {
+            return value;
+          }
+          if (!this.serdeContext?.base64Encoder) {
+            throw new Error("Missing base64Encoder in serdeContext");
+          }
+          return this.serdeContext?.base64Encoder(value);
+        }
+        if (ns.isTimestampSchema() && value instanceof Date) {
+          const options = this.settings.timestampFormat;
+          const format = options.useTrait
+            ? ns.getSchema() === SCHEMA.TIMESTAMP_DEFAULT
+              ? options.default
+              : (ns.getSchema() ?? options.default)
+            : options.default;
+          switch (format) {
+            case SCHEMA.TIMESTAMP_DATE_TIME:
+              return value.toISOString().replace(".000Z", "Z");
+            case SCHEMA.TIMESTAMP_HTTP_DATE:
+              return dateToUtcString2(value);
+            case SCHEMA.TIMESTAMP_EPOCH_SECONDS:
+              return value.getTime() / 1e3;
+            default:
+              console.warn("Missing timestamp format, using epoch seconds", value);
+              return value.getTime() / 1e3;
+          }
+        }
+        if (ns.isNumericSchema() && typeof value === "number") {
+          if (Math.abs(value) === Infinity || isNaN(value)) {
+            return String(value);
+          }
+        }
+        const mediaType = ns.getMergedTraits().mediaType;
+        if (ns.isStringSchema() && typeof value === "string" && mediaType) {
+          const isJson = mediaType === "application/json" || mediaType.endsWith("+json");
+          if (isJson) {
+            return LazyJsonString2.from(value);
+          }
+        }
+        return value;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/JsonCodec.js
+var JsonCodec;
+var init_JsonCodec = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/JsonCodec.js"() {
+    init_ConfigurableSerdeContext();
+    init_JsonShapeDeserializer();
+    init_JsonShapeSerializer();
+    JsonCodec = class extends SerdeContextConfig {
+      constructor(settings) {
+        super();
+        __publicField(this, "settings");
+        this.settings = settings;
+      }
+      createSerializer() {
+        const serializer = new JsonShapeSerializer(this.settings);
+        serializer.setSerdeContext(this.serdeContext);
+        return serializer;
+      }
+      createDeserializer() {
+        const deserializer = new JsonShapeDeserializer(this.settings);
+        deserializer.setSerdeContext(this.serdeContext);
+        return deserializer;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsJsonRpcProtocol.js
+var import_util_body_length_browser, AwsJsonRpcProtocol;
+var init_AwsJsonRpcProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsJsonRpcProtocol.js"() {
+    init_protocols();
+    init_schema();
+    import_util_body_length_browser = __toESM(require_dist_cjs21());
+    init_JsonCodec();
+    init_parseJsonBody();
+    AwsJsonRpcProtocol = class extends RpcProtocol {
+      constructor({ defaultNamespace }) {
+        super({
+          defaultNamespace,
+        });
+        __publicField(this, "serializer");
+        __publicField(this, "deserializer");
+        __publicField(this, "codec");
+        this.codec = new JsonCodec({
+          timestampFormat: {
+            useTrait: true,
+            default: SCHEMA.TIMESTAMP_EPOCH_SECONDS,
+          },
+          jsonName: false,
+        });
+        this.serializer = this.codec.createSerializer();
+        this.deserializer = this.codec.createDeserializer();
+      }
+      async serializeRequest(operationSchema, input, context) {
+        const request = await super.serializeRequest(operationSchema, input, context);
+        if (!request.path.endsWith("/")) {
+          request.path += "/";
+        }
+        Object.assign(request.headers, {
+          "content-type": `application/x-amz-json-${this.getJsonRpcVersion()}`,
+          "x-amz-target":
+            (this.getJsonRpcVersion() === "1.0" ? `JsonRpc10.` : `JsonProtocol.`) +
+            NormalizedSchema.of(operationSchema).getName(),
+        });
+        if (deref(operationSchema.input) === "unit" || !request.body) {
+          request.body = "{}";
+        }
+        try {
+          request.headers["content-length"] = String(
+            (0, import_util_body_length_browser.calculateBodyLength)(request.body),
+          );
+        } catch (e) {}
+        return request;
+      }
+      getPayloadCodec() {
+        return this.codec;
+      }
+      async handleError(operationSchema, context, response, dataObject, metadata) {
+        const errorIdentifier = loadRestJsonErrorCode(response, dataObject) ?? "Unknown";
+        let namespace = this.options.defaultNamespace;
+        let errorName = errorIdentifier;
+        if (errorIdentifier.includes("#")) {
+          [namespace, errorName] = errorIdentifier.split("#");
+        }
+        const registry = TypeRegistry.for(namespace);
+        let errorSchema;
+        try {
+          errorSchema = registry.getSchema(errorIdentifier);
+        } catch (e) {
+          const baseExceptionSchema = TypeRegistry.for("smithy.ts.sdk.synthetic." + namespace).getBaseException();
+          if (baseExceptionSchema) {
+            const ErrorCtor = baseExceptionSchema.ctor;
+            throw Object.assign(new ErrorCtor(errorName), dataObject);
+          }
+          throw new Error(errorName);
+        }
+        const ns = NormalizedSchema.of(errorSchema);
+        const message = dataObject.message ?? dataObject.Message ?? "Unknown";
+        const exception = new errorSchema.ctor(message);
+        await this.deserializeHttpMessage(errorSchema, context, response, dataObject);
+        const output = {};
+        for (const [name, member] of ns.structIterator()) {
+          const target = member.getMergedTraits().jsonName ?? name;
+          output[name] = this.codec.createDeserializer().readObject(member, dataObject[target]);
+        }
+        Object.assign(exception, {
+          $metadata: metadata,
+          $response: response,
+          $fault: ns.getMergedTraits().error,
+          message,
+          ...output,
+        });
+        throw exception;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsJson1_0Protocol.js
+var AwsJson1_0Protocol;
+var init_AwsJson1_0Protocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsJson1_0Protocol.js"() {
+    init_AwsJsonRpcProtocol();
+    AwsJson1_0Protocol = class extends AwsJsonRpcProtocol {
+      constructor({ defaultNamespace }) {
+        super({
+          defaultNamespace,
+        });
+      }
+      getShapeId() {
+        return "aws.protocols#awsJson1_0";
+      }
+      getJsonRpcVersion() {
+        return "1.0";
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsJson1_1Protocol.js
+var AwsJson1_1Protocol;
+var init_AwsJson1_1Protocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsJson1_1Protocol.js"() {
+    init_AwsJsonRpcProtocol();
+    AwsJson1_1Protocol = class extends AwsJsonRpcProtocol {
+      constructor({ defaultNamespace }) {
+        super({
+          defaultNamespace,
+        });
+      }
+      getShapeId() {
+        return "aws.protocols#awsJson1_1";
+      }
+      getJsonRpcVersion() {
+        return "1.1";
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsRestJsonProtocol.js
+var import_util_body_length_browser2, AwsRestJsonProtocol;
+var init_AwsRestJsonProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/AwsRestJsonProtocol.js"() {
+    init_protocols();
+    init_schema();
+    import_util_body_length_browser2 = __toESM(require_dist_cjs21());
+    init_JsonCodec();
+    init_parseJsonBody();
+    AwsRestJsonProtocol = class extends HttpBindingProtocol {
+      constructor({ defaultNamespace }) {
+        super({
+          defaultNamespace,
+        });
+        __publicField(this, "serializer");
+        __publicField(this, "deserializer");
+        __publicField(this, "codec");
+        const settings = {
+          timestampFormat: {
+            useTrait: true,
+            default: SCHEMA.TIMESTAMP_EPOCH_SECONDS,
+          },
+          httpBindings: true,
+          jsonName: true,
+        };
+        this.codec = new JsonCodec(settings);
+        this.serializer = new HttpInterceptingShapeSerializer(this.codec.createSerializer(), settings);
+        this.deserializer = new HttpInterceptingShapeDeserializer(this.codec.createDeserializer(), settings);
+      }
+      getShapeId() {
+        return "aws.protocols#restJson1";
+      }
+      getPayloadCodec() {
+        return this.codec;
+      }
+      setSerdeContext(serdeContext) {
+        this.codec.setSerdeContext(serdeContext);
+        super.setSerdeContext(serdeContext);
+      }
+      async serializeRequest(operationSchema, input, context) {
+        const request = await super.serializeRequest(operationSchema, input, context);
+        const inputSchema = NormalizedSchema.of(operationSchema.input);
+        const members = inputSchema.getMemberSchemas();
+        if (!request.headers["content-type"]) {
+          const httpPayloadMember = Object.values(members).find((m) => {
+            return !!m.getMergedTraits().httpPayload;
+          });
+          if (httpPayloadMember) {
+            const mediaType = httpPayloadMember.getMergedTraits().mediaType;
+            if (mediaType) {
+              request.headers["content-type"] = mediaType;
+            } else if (httpPayloadMember.isStringSchema()) {
+              request.headers["content-type"] = "text/plain";
+            } else if (httpPayloadMember.isBlobSchema()) {
+              request.headers["content-type"] = "application/octet-stream";
+            } else {
+              request.headers["content-type"] = "application/json";
+            }
+          } else if (!inputSchema.isUnitSchema()) {
+            const hasBody = Object.values(members).find((m) => {
+              const { httpQuery, httpQueryParams, httpHeader, httpLabel, httpPrefixHeaders } = m.getMergedTraits();
+              return !httpQuery && !httpQueryParams && !httpHeader && !httpLabel && httpPrefixHeaders === void 0;
+            });
+            if (hasBody) {
+              request.headers["content-type"] = "application/json";
+            }
+          }
+        }
+        if (request.headers["content-type"] && !request.body) {
+          request.body = "{}";
+        }
+        if (request.body) {
+          try {
+            request.headers["content-length"] = String(
+              (0, import_util_body_length_browser2.calculateBodyLength)(request.body),
+            );
+          } catch (e) {}
+        }
+        return request;
+      }
+      async handleError(operationSchema, context, response, dataObject, metadata) {
+        const errorIdentifier = loadRestJsonErrorCode(response, dataObject) ?? "Unknown";
+        let namespace = this.options.defaultNamespace;
+        let errorName = errorIdentifier;
+        if (errorIdentifier.includes("#")) {
+          [namespace, errorName] = errorIdentifier.split("#");
+        }
+        const registry = TypeRegistry.for(namespace);
+        let errorSchema;
+        try {
+          errorSchema = registry.getSchema(errorIdentifier);
+        } catch (e) {
+          const baseExceptionSchema = TypeRegistry.for("smithy.ts.sdk.synthetic." + namespace).getBaseException();
+          if (baseExceptionSchema) {
+            const ErrorCtor = baseExceptionSchema.ctor;
+            throw Object.assign(new ErrorCtor(errorName), dataObject);
+          }
+          throw new Error(errorName);
+        }
+        const ns = NormalizedSchema.of(errorSchema);
+        const message = dataObject.message ?? dataObject.Message ?? "Unknown";
+        const exception = new errorSchema.ctor(message);
+        await this.deserializeHttpMessage(errorSchema, context, response, dataObject);
+        const output = {};
+        for (const [name, member] of ns.structIterator()) {
+          const target = member.getMergedTraits().jsonName ?? name;
+          output[name] = this.codec.createDeserializer().readObject(member, dataObject[target]);
+        }
+        Object.assign(exception, {
+          $metadata: metadata,
+          $response: response,
+          $fault: ns.getMergedTraits().error,
+          message,
+          ...output,
+        });
+        throw exception;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/awsExpectUnion.js
+var import_smithy_client2, awsExpectUnion;
+var init_awsExpectUnion = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/json/awsExpectUnion.js"() {
+    import_smithy_client2 = __toESM(require_dist_cjs23());
+    awsExpectUnion = (value) => {
+      if (value == null) {
+        return void 0;
+      }
+      if (typeof value === "object" && "__type" in value) {
+        delete value.__type;
+      }
+      return (0, import_smithy_client2.expectUnion)(value);
     };
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/util.js
-var require_util = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/util.js"(
-    exports2,
-  ) {
+function getAllMatches(string, regex) {
+  const matches = [];
+  let match = regex.exec(string);
+  while (match) {
+    const allmatches = [];
+    allmatches.startIndex = regex.lastIndex - match[0].length;
+    const len = match.length;
+    for (let index = 0; index < len; index++) {
+      allmatches.push(match[index]);
+    }
+    matches.push(allmatches);
+    match = regex.exec(string);
+  }
+  return matches;
+}
+function isExist(v) {
+  return typeof v !== "undefined";
+}
+var nameStartChar, nameChar, nameRegexp, regexName, isName;
+var init_util = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/util.js"() {
     "use strict";
-    var nameStartChar =
+    nameStartChar =
       ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
-    var nameChar = nameStartChar + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
-    var nameRegexp = "[" + nameStartChar + "][" + nameChar + "]*";
-    var regexName = new RegExp("^" + nameRegexp + "$");
-    var getAllMatches = function (string, regex) {
-      const matches = [];
-      let match = regex.exec(string);
-      while (match) {
-        const allmatches = [];
-        allmatches.startIndex = regex.lastIndex - match[0].length;
-        const len = match.length;
-        for (let index = 0; index < len; index++) {
-          allmatches.push(match[index]);
-        }
-        matches.push(allmatches);
-        match = regex.exec(string);
-      }
-      return matches;
-    };
-    var isName = function (string) {
+    nameChar = nameStartChar + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
+    nameRegexp = "[" + nameStartChar + "][" + nameChar + "]*";
+    regexName = new RegExp("^" + nameRegexp + "$");
+    isName = function (string) {
       const match = regexName.exec(string);
       return !(match === null || typeof match === "undefined");
     };
-    exports2.isExist = function (v) {
-      return typeof v !== "undefined";
-    };
-    exports2.isEmptyObject = function (obj) {
-      return Object.keys(obj).length === 0;
-    };
-    exports2.merge = function (target, a, arrayMode) {
-      if (a) {
-        const keys = Object.keys(a);
-        const len = keys.length;
-        for (let i = 0; i < len; i++) {
-          if (arrayMode === "strict") {
-            target[keys[i]] = [a[keys[i]]];
-          } else {
-            target[keys[i]] = a[keys[i]];
-          }
-        }
-      }
-    };
-    exports2.getValue = function (v) {
-      if (exports2.isExist(v)) {
-        return v;
-      } else {
-        return "";
-      }
-    };
-    exports2.isName = isName;
-    exports2.getAllMatches = getAllMatches;
-    exports2.nameRegexp = nameRegexp;
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/validator.js
-var require_validator = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/validator.js"(
-    exports2,
+function validate(xmlData, options) {
+  options = Object.assign({}, defaultOptions, options);
+  const tags = [];
+  let tagFound = false;
+  let reachedRoot = false;
+  if (xmlData[0] === "\uFEFF") {
+    xmlData = xmlData.substr(1);
+  }
+  for (let i = 0; i < xmlData.length; i++) {
+    if (xmlData[i] === "<" && xmlData[i + 1] === "?") {
+      i += 2;
+      i = readPI(xmlData, i);
+      if (i.err) return i;
+    } else if (xmlData[i] === "<") {
+      let tagStartPos = i;
+      i++;
+      if (xmlData[i] === "!") {
+        i = readCommentAndCDATA(xmlData, i);
+        continue;
+      } else {
+        let closingTag = false;
+        if (xmlData[i] === "/") {
+          closingTag = true;
+          i++;
+        }
+        let tagName = "";
+        for (
+          ;
+          i < xmlData.length &&
+          xmlData[i] !== ">" &&
+          xmlData[i] !== " " &&
+          xmlData[i] !== "	" &&
+          xmlData[i] !== "\n" &&
+          xmlData[i] !== "\r";
+          i++
+        ) {
+          tagName += xmlData[i];
+        }
+        tagName = tagName.trim();
+        if (tagName[tagName.length - 1] === "/") {
+          tagName = tagName.substring(0, tagName.length - 1);
+          i--;
+        }
+        if (!validateTagName(tagName)) {
+          let msg;
+          if (tagName.trim().length === 0) {
+            msg = "Invalid space after '<'.";
+          } else {
+            msg = "Tag '" + tagName + "' is an invalid name.";
+          }
+          return getErrorObject("InvalidTag", msg, getLineNumberForPosition(xmlData, i));
+        }
+        const result = readAttributeStr(xmlData, i);
+        if (result === false) {
+          return getErrorObject(
+            "InvalidAttr",
+            "Attributes for '" + tagName + "' have open quote.",
+            getLineNumberForPosition(xmlData, i),
+          );
+        }
+        let attrStr = result.value;
+        i = result.index;
+        if (attrStr[attrStr.length - 1] === "/") {
+          const attrStrStart = i - attrStr.length;
+          attrStr = attrStr.substring(0, attrStr.length - 1);
+          const isValid = validateAttributeString(attrStr, options);
+          if (isValid === true) {
+            tagFound = true;
+          } else {
+            return getErrorObject(
+              isValid.err.code,
+              isValid.err.msg,
+              getLineNumberForPosition(xmlData, attrStrStart + isValid.err.line),
+            );
+          }
+        } else if (closingTag) {
+          if (!result.tagClosed) {
+            return getErrorObject(
+              "InvalidTag",
+              "Closing tag '" + tagName + "' doesn't have proper closing.",
+              getLineNumberForPosition(xmlData, i),
+            );
+          } else if (attrStr.trim().length > 0) {
+            return getErrorObject(
+              "InvalidTag",
+              "Closing tag '" + tagName + "' can't have attributes or invalid starting.",
+              getLineNumberForPosition(xmlData, tagStartPos),
+            );
+          } else if (tags.length === 0) {
+            return getErrorObject(
+              "InvalidTag",
+              "Closing tag '" + tagName + "' has not been opened.",
+              getLineNumberForPosition(xmlData, tagStartPos),
+            );
+          } else {
+            const otg = tags.pop();
+            if (tagName !== otg.tagName) {
+              let openPos = getLineNumberForPosition(xmlData, otg.tagStartPos);
+              return getErrorObject(
+                "InvalidTag",
+                "Expected closing tag '" +
+                  otg.tagName +
+                  "' (opened in line " +
+                  openPos.line +
+                  ", col " +
+                  openPos.col +
+                  ") instead of closing tag '" +
+                  tagName +
+                  "'.",
+                getLineNumberForPosition(xmlData, tagStartPos),
+              );
+            }
+            if (tags.length == 0) {
+              reachedRoot = true;
+            }
+          }
+        } else {
+          const isValid = validateAttributeString(attrStr, options);
+          if (isValid !== true) {
+            return getErrorObject(
+              isValid.err.code,
+              isValid.err.msg,
+              getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line),
+            );
+          }
+          if (reachedRoot === true) {
+            return getErrorObject(
+              "InvalidXml",
+              "Multiple possible root nodes found.",
+              getLineNumberForPosition(xmlData, i),
+            );
+          } else if (options.unpairedTags.indexOf(tagName) !== -1) {
+          } else {
+            tags.push({ tagName, tagStartPos });
+          }
+          tagFound = true;
+        }
+        for (i++; i < xmlData.length; i++) {
+          if (xmlData[i] === "<") {
+            if (xmlData[i + 1] === "!") {
+              i++;
+              i = readCommentAndCDATA(xmlData, i);
+              continue;
+            } else if (xmlData[i + 1] === "?") {
+              i = readPI(xmlData, ++i);
+              if (i.err) return i;
+            } else {
+              break;
+            }
+          } else if (xmlData[i] === "&") {
+            const afterAmp = validateAmpersand(xmlData, i);
+            if (afterAmp == -1)
+              return getErrorObject("InvalidChar", "char '&' is not expected.", getLineNumberForPosition(xmlData, i));
+            i = afterAmp;
+          } else {
+            if (reachedRoot === true && !isWhiteSpace(xmlData[i])) {
+              return getErrorObject("InvalidXml", "Extra text at the end", getLineNumberForPosition(xmlData, i));
+            }
+          }
+        }
+        if (xmlData[i] === "<") {
+          i--;
+        }
+      }
+    } else {
+      if (isWhiteSpace(xmlData[i])) {
+        continue;
+      }
+      return getErrorObject(
+        "InvalidChar",
+        "char '" + xmlData[i] + "' is not expected.",
+        getLineNumberForPosition(xmlData, i),
+      );
+    }
+  }
+  if (!tagFound) {
+    return getErrorObject("InvalidXml", "Start tag expected.", 1);
+  } else if (tags.length == 1) {
+    return getErrorObject(
+      "InvalidTag",
+      "Unclosed tag '" + tags[0].tagName + "'.",
+      getLineNumberForPosition(xmlData, tags[0].tagStartPos),
+    );
+  } else if (tags.length > 0) {
+    return getErrorObject(
+      "InvalidXml",
+      "Invalid '" +
+        JSON.stringify(
+          tags.map((t) => t.tagName),
+          null,
+          4,
+        ).replace(/\r?\n/g, "") +
+        "' found.",
+      { line: 1, col: 1 },
+    );
+  }
+  return true;
+}
+function isWhiteSpace(char) {
+  return char === " " || char === "	" || char === "\n" || char === "\r";
+}
+function readPI(xmlData, i) {
+  const start = i;
+  for (; i < xmlData.length; i++) {
+    if (xmlData[i] == "?" || xmlData[i] == " ") {
+      const tagname = xmlData.substr(start, i - start);
+      if (i > 5 && tagname === "xml") {
+        return getErrorObject(
+          "InvalidXml",
+          "XML declaration allowed only at the start of the document.",
+          getLineNumberForPosition(xmlData, i),
+        );
+      } else if (xmlData[i] == "?" && xmlData[i + 1] == ">") {
+        i++;
+        break;
+      } else {
+        continue;
+      }
+    }
+  }
+  return i;
+}
+function readCommentAndCDATA(xmlData, i) {
+  if (xmlData.length > i + 5 && xmlData[i + 1] === "-" && xmlData[i + 2] === "-") {
+    for (i += 3; i < xmlData.length; i++) {
+      if (xmlData[i] === "-" && xmlData[i + 1] === "-" && xmlData[i + 2] === ">") {
+        i += 2;
+        break;
+      }
+    }
+  } else if (
+    xmlData.length > i + 8 &&
+    xmlData[i + 1] === "D" &&
+    xmlData[i + 2] === "O" &&
+    xmlData[i + 3] === "C" &&
+    xmlData[i + 4] === "T" &&
+    xmlData[i + 5] === "Y" &&
+    xmlData[i + 6] === "P" &&
+    xmlData[i + 7] === "E"
   ) {
+    let angleBracketsCount = 1;
+    for (i += 8; i < xmlData.length; i++) {
+      if (xmlData[i] === "<") {
+        angleBracketsCount++;
+      } else if (xmlData[i] === ">") {
+        angleBracketsCount--;
+        if (angleBracketsCount === 0) {
+          break;
+        }
+      }
+    }
+  } else if (
+    xmlData.length > i + 9 &&
+    xmlData[i + 1] === "[" &&
+    xmlData[i + 2] === "C" &&
+    xmlData[i + 3] === "D" &&
+    xmlData[i + 4] === "A" &&
+    xmlData[i + 5] === "T" &&
+    xmlData[i + 6] === "A" &&
+    xmlData[i + 7] === "["
+  ) {
+    for (i += 8; i < xmlData.length; i++) {
+      if (xmlData[i] === "]" && xmlData[i + 1] === "]" && xmlData[i + 2] === ">") {
+        i += 2;
+        break;
+      }
+    }
+  }
+  return i;
+}
+function readAttributeStr(xmlData, i) {
+  let attrStr = "";
+  let startChar = "";
+  let tagClosed = false;
+  for (; i < xmlData.length; i++) {
+    if (xmlData[i] === doubleQuote || xmlData[i] === singleQuote) {
+      if (startChar === "") {
+        startChar = xmlData[i];
+      } else if (startChar !== xmlData[i]) {
+      } else {
+        startChar = "";
+      }
+    } else if (xmlData[i] === ">") {
+      if (startChar === "") {
+        tagClosed = true;
+        break;
+      }
+    }
+    attrStr += xmlData[i];
+  }
+  if (startChar !== "") {
+    return false;
+  }
+  return {
+    value: attrStr,
+    index: i,
+    tagClosed,
+  };
+}
+function validateAttributeString(attrStr, options) {
+  const matches = getAllMatches(attrStr, validAttrStrRegxp);
+  const attrNames = {};
+  for (let i = 0; i < matches.length; i++) {
+    if (matches[i][1].length === 0) {
+      return getErrorObject(
+        "InvalidAttr",
+        "Attribute '" + matches[i][2] + "' has no space in starting.",
+        getPositionFromMatch(matches[i]),
+      );
+    } else if (matches[i][3] !== void 0 && matches[i][4] === void 0) {
+      return getErrorObject(
+        "InvalidAttr",
+        "Attribute '" + matches[i][2] + "' is without value.",
+        getPositionFromMatch(matches[i]),
+      );
+    } else if (matches[i][3] === void 0 && !options.allowBooleanAttributes) {
+      return getErrorObject(
+        "InvalidAttr",
+        "boolean attribute '" + matches[i][2] + "' is not allowed.",
+        getPositionFromMatch(matches[i]),
+      );
+    }
+    const attrName = matches[i][2];
+    if (!validateAttrName(attrName)) {
+      return getErrorObject(
+        "InvalidAttr",
+        "Attribute '" + attrName + "' is an invalid name.",
+        getPositionFromMatch(matches[i]),
+      );
+    }
+    if (!attrNames.hasOwnProperty(attrName)) {
+      attrNames[attrName] = 1;
+    } else {
+      return getErrorObject(
+        "InvalidAttr",
+        "Attribute '" + attrName + "' is repeated.",
+        getPositionFromMatch(matches[i]),
+      );
+    }
+  }
+  return true;
+}
+function validateNumberAmpersand(xmlData, i) {
+  let re = /\d/;
+  if (xmlData[i] === "x") {
+    i++;
+    re = /[\da-fA-F]/;
+  }
+  for (; i < xmlData.length; i++) {
+    if (xmlData[i] === ";") return i;
+    if (!xmlData[i].match(re)) break;
+  }
+  return -1;
+}
+function validateAmpersand(xmlData, i) {
+  i++;
+  if (xmlData[i] === ";") return -1;
+  if (xmlData[i] === "#") {
+    i++;
+    return validateNumberAmpersand(xmlData, i);
+  }
+  let count = 0;
+  for (; i < xmlData.length; i++, count++) {
+    if (xmlData[i].match(/\w/) && count < 20) continue;
+    if (xmlData[i] === ";") break;
+    return -1;
+  }
+  return i;
+}
+function getErrorObject(code, message, lineNumber) {
+  return {
+    err: {
+      code,
+      msg: message,
+      line: lineNumber.line || lineNumber,
+      col: lineNumber.col,
+    },
+  };
+}
+function validateAttrName(attrName) {
+  return isName(attrName);
+}
+function validateTagName(tagname) {
+  return isName(tagname);
+}
+function getLineNumberForPosition(xmlData, index) {
+  const lines = xmlData.substring(0, index).split(/\r?\n/);
+  return {
+    line: lines.length,
+    // column number is last line's length + 1, because column numbering starts at 1:
+    col: lines[lines.length - 1].length + 1,
+  };
+}
+function getPositionFromMatch(match) {
+  return match.startIndex + match[1].length;
+}
+var defaultOptions, doubleQuote, singleQuote, validAttrStrRegxp;
+var init_validator = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/validator.js"() {
     "use strict";
-    var util = require_util();
-    var defaultOptions = {
+    init_util();
+    defaultOptions = {
       allowBooleanAttributes: false,
       //A tag can have attributes without any value
       unpairedTags: [],
     };
-    exports2.validate = function (xmlData, options) {
-      options = Object.assign({}, defaultOptions, options);
-      const tags = [];
-      let tagFound = false;
-      let reachedRoot = false;
-      if (xmlData[0] === "\uFEFF") {
-        xmlData = xmlData.substr(1);
-      }
-      for (let i = 0; i < xmlData.length; i++) {
-        if (xmlData[i] === "<" && xmlData[i + 1] === "?") {
-          i += 2;
-          i = readPI(xmlData, i);
-          if (i.err) return i;
-        } else if (xmlData[i] === "<") {
-          let tagStartPos = i;
-          i++;
-          if (xmlData[i] === "!") {
-            i = readCommentAndCDATA(xmlData, i);
-            continue;
-          } else {
-            let closingTag = false;
-            if (xmlData[i] === "/") {
-              closingTag = true;
-              i++;
-            }
-            let tagName = "";
-            for (
-              ;
-              i < xmlData.length &&
-              xmlData[i] !== ">" &&
-              xmlData[i] !== " " &&
-              xmlData[i] !== "	" &&
-              xmlData[i] !== "\n" &&
-              xmlData[i] !== "\r";
-              i++
-            ) {
-              tagName += xmlData[i];
-            }
-            tagName = tagName.trim();
-            if (tagName[tagName.length - 1] === "/") {
-              tagName = tagName.substring(0, tagName.length - 1);
-              i--;
-            }
-            if (!validateTagName(tagName)) {
-              let msg;
-              if (tagName.trim().length === 0) {
-                msg = "Invalid space after '<'.";
-              } else {
-                msg = "Tag '" + tagName + "' is an invalid name.";
-              }
-              return getErrorObject("InvalidTag", msg, getLineNumberForPosition(xmlData, i));
-            }
-            const result = readAttributeStr(xmlData, i);
-            if (result === false) {
-              return getErrorObject(
-                "InvalidAttr",
-                "Attributes for '" + tagName + "' have open quote.",
-                getLineNumberForPosition(xmlData, i),
-              );
-            }
-            let attrStr = result.value;
-            i = result.index;
-            if (attrStr[attrStr.length - 1] === "/") {
-              const attrStrStart = i - attrStr.length;
-              attrStr = attrStr.substring(0, attrStr.length - 1);
-              const isValid = validateAttributeString(attrStr, options);
-              if (isValid === true) {
-                tagFound = true;
-              } else {
-                return getErrorObject(
-                  isValid.err.code,
-                  isValid.err.msg,
-                  getLineNumberForPosition(xmlData, attrStrStart + isValid.err.line),
-                );
-              }
-            } else if (closingTag) {
-              if (!result.tagClosed) {
-                return getErrorObject(
-                  "InvalidTag",
-                  "Closing tag '" + tagName + "' doesn't have proper closing.",
-                  getLineNumberForPosition(xmlData, i),
-                );
-              } else if (attrStr.trim().length > 0) {
-                return getErrorObject(
-                  "InvalidTag",
-                  "Closing tag '" + tagName + "' can't have attributes or invalid starting.",
-                  getLineNumberForPosition(xmlData, tagStartPos),
-                );
-              } else if (tags.length === 0) {
-                return getErrorObject(
-                  "InvalidTag",
-                  "Closing tag '" + tagName + "' has not been opened.",
-                  getLineNumberForPosition(xmlData, tagStartPos),
-                );
-              } else {
-                const otg = tags.pop();
-                if (tagName !== otg.tagName) {
-                  let openPos = getLineNumberForPosition(xmlData, otg.tagStartPos);
-                  return getErrorObject(
-                    "InvalidTag",
-                    "Expected closing tag '" +
-                      otg.tagName +
-                      "' (opened in line " +
-                      openPos.line +
-                      ", col " +
-                      openPos.col +
-                      ") instead of closing tag '" +
-                      tagName +
-                      "'.",
-                    getLineNumberForPosition(xmlData, tagStartPos),
-                  );
-                }
-                if (tags.length == 0) {
-                  reachedRoot = true;
-                }
-              }
-            } else {
-              const isValid = validateAttributeString(attrStr, options);
-              if (isValid !== true) {
-                return getErrorObject(
-                  isValid.err.code,
-                  isValid.err.msg,
-                  getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line),
-                );
-              }
-              if (reachedRoot === true) {
-                return getErrorObject(
-                  "InvalidXml",
-                  "Multiple possible root nodes found.",
-                  getLineNumberForPosition(xmlData, i),
-                );
-              } else if (options.unpairedTags.indexOf(tagName) !== -1) {
-              } else {
-                tags.push({ tagName, tagStartPos });
-              }
-              tagFound = true;
-            }
-            for (i++; i < xmlData.length; i++) {
-              if (xmlData[i] === "<") {
-                if (xmlData[i + 1] === "!") {
-                  i++;
-                  i = readCommentAndCDATA(xmlData, i);
-                  continue;
-                } else if (xmlData[i + 1] === "?") {
-                  i = readPI(xmlData, ++i);
-                  if (i.err) return i;
-                } else {
-                  break;
-                }
-              } else if (xmlData[i] === "&") {
-                const afterAmp = validateAmpersand(xmlData, i);
-                if (afterAmp == -1)
-                  return getErrorObject(
-                    "InvalidChar",
-                    "char '&' is not expected.",
-                    getLineNumberForPosition(xmlData, i),
-                  );
-                i = afterAmp;
-              } else {
-                if (reachedRoot === true && !isWhiteSpace(xmlData[i])) {
-                  return getErrorObject("InvalidXml", "Extra text at the end", getLineNumberForPosition(xmlData, i));
-                }
-              }
-            }
-            if (xmlData[i] === "<") {
-              i--;
-            }
-          }
-        } else {
-          if (isWhiteSpace(xmlData[i])) {
-            continue;
-          }
-          return getErrorObject(
-            "InvalidChar",
-            "char '" + xmlData[i] + "' is not expected.",
-            getLineNumberForPosition(xmlData, i),
-          );
-        }
-      }
-      if (!tagFound) {
-        return getErrorObject("InvalidXml", "Start tag expected.", 1);
-      } else if (tags.length == 1) {
-        return getErrorObject(
-          "InvalidTag",
-          "Unclosed tag '" + tags[0].tagName + "'.",
-          getLineNumberForPosition(xmlData, tags[0].tagStartPos),
-        );
-      } else if (tags.length > 0) {
-        return getErrorObject(
-          "InvalidXml",
-          "Invalid '" +
-            JSON.stringify(
-              tags.map((t) => t.tagName),
-              null,
-              4,
-            ).replace(/\r?\n/g, "") +
-            "' found.",
-          { line: 1, col: 1 },
-        );
-      }
-      return true;
-    };
-    function isWhiteSpace(char) {
-      return char === " " || char === "	" || char === "\n" || char === "\r";
-    }
-    function readPI(xmlData, i) {
-      const start = i;
-      for (; i < xmlData.length; i++) {
-        if (xmlData[i] == "?" || xmlData[i] == " ") {
-          const tagname = xmlData.substr(start, i - start);
-          if (i > 5 && tagname === "xml") {
-            return getErrorObject(
-              "InvalidXml",
-              "XML declaration allowed only at the start of the document.",
-              getLineNumberForPosition(xmlData, i),
-            );
-          } else if (xmlData[i] == "?" && xmlData[i + 1] == ">") {
-            i++;
-            break;
-          } else {
-            continue;
-          }
-        }
-      }
-      return i;
-    }
-    function readCommentAndCDATA(xmlData, i) {
-      if (xmlData.length > i + 5 && xmlData[i + 1] === "-" && xmlData[i + 2] === "-") {
-        for (i += 3; i < xmlData.length; i++) {
-          if (xmlData[i] === "-" && xmlData[i + 1] === "-" && xmlData[i + 2] === ">") {
-            i += 2;
-            break;
-          }
-        }
-      } else if (
-        xmlData.length > i + 8 &&
-        xmlData[i + 1] === "D" &&
-        xmlData[i + 2] === "O" &&
-        xmlData[i + 3] === "C" &&
-        xmlData[i + 4] === "T" &&
-        xmlData[i + 5] === "Y" &&
-        xmlData[i + 6] === "P" &&
-        xmlData[i + 7] === "E"
-      ) {
-        let angleBracketsCount = 1;
-        for (i += 8; i < xmlData.length; i++) {
-          if (xmlData[i] === "<") {
-            angleBracketsCount++;
-          } else if (xmlData[i] === ">") {
-            angleBracketsCount--;
-            if (angleBracketsCount === 0) {
-              break;
-            }
-          }
-        }
-      } else if (
-        xmlData.length > i + 9 &&
-        xmlData[i + 1] === "[" &&
-        xmlData[i + 2] === "C" &&
-        xmlData[i + 3] === "D" &&
-        xmlData[i + 4] === "A" &&
-        xmlData[i + 5] === "T" &&
-        xmlData[i + 6] === "A" &&
-        xmlData[i + 7] === "["
-      ) {
-        for (i += 8; i < xmlData.length; i++) {
-          if (xmlData[i] === "]" && xmlData[i + 1] === "]" && xmlData[i + 2] === ">") {
-            i += 2;
-            break;
-          }
-        }
-      }
-      return i;
-    }
-    var doubleQuote = '"';
-    var singleQuote = "'";
-    function readAttributeStr(xmlData, i) {
-      let attrStr = "";
-      let startChar = "";
-      let tagClosed = false;
-      for (; i < xmlData.length; i++) {
-        if (xmlData[i] === doubleQuote || xmlData[i] === singleQuote) {
-          if (startChar === "") {
-            startChar = xmlData[i];
-          } else if (startChar !== xmlData[i]) {
-          } else {
-            startChar = "";
-          }
-        } else if (xmlData[i] === ">") {
-          if (startChar === "") {
-            tagClosed = true;
-            break;
-          }
-        }
-        attrStr += xmlData[i];
-      }
-      if (startChar !== "") {
-        return false;
-      }
-      return {
-        value: attrStr,
-        index: i,
-        tagClosed,
-      };
-    }
-    var validAttrStrRegxp = new RegExp(`(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['"])(([\\s\\S])*?)\\5)?`, "g");
-    function validateAttributeString(attrStr, options) {
-      const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
-      const attrNames = {};
-      for (let i = 0; i < matches.length; i++) {
-        if (matches[i][1].length === 0) {
-          return getErrorObject(
-            "InvalidAttr",
-            "Attribute '" + matches[i][2] + "' has no space in starting.",
-            getPositionFromMatch(matches[i]),
-          );
-        } else if (matches[i][3] !== void 0 && matches[i][4] === void 0) {
-          return getErrorObject(
-            "InvalidAttr",
-            "Attribute '" + matches[i][2] + "' is without value.",
-            getPositionFromMatch(matches[i]),
-          );
-        } else if (matches[i][3] === void 0 && !options.allowBooleanAttributes) {
-          return getErrorObject(
-            "InvalidAttr",
-            "boolean attribute '" + matches[i][2] + "' is not allowed.",
-            getPositionFromMatch(matches[i]),
-          );
-        }
-        const attrName = matches[i][2];
-        if (!validateAttrName(attrName)) {
-          return getErrorObject(
-            "InvalidAttr",
-            "Attribute '" + attrName + "' is an invalid name.",
-            getPositionFromMatch(matches[i]),
-          );
-        }
-        if (!attrNames.hasOwnProperty(attrName)) {
-          attrNames[attrName] = 1;
-        } else {
-          return getErrorObject(
-            "InvalidAttr",
-            "Attribute '" + attrName + "' is repeated.",
-            getPositionFromMatch(matches[i]),
-          );
-        }
-      }
-      return true;
-    }
-    function validateNumberAmpersand(xmlData, i) {
-      let re = /\d/;
-      if (xmlData[i] === "x") {
-        i++;
-        re = /[\da-fA-F]/;
-      }
-      for (; i < xmlData.length; i++) {
-        if (xmlData[i] === ";") return i;
-        if (!xmlData[i].match(re)) break;
-      }
-      return -1;
-    }
-    function validateAmpersand(xmlData, i) {
-      i++;
-      if (xmlData[i] === ";") return -1;
-      if (xmlData[i] === "#") {
-        i++;
-        return validateNumberAmpersand(xmlData, i);
-      }
-      let count = 0;
-      for (; i < xmlData.length; i++, count++) {
-        if (xmlData[i].match(/\w/) && count < 20) continue;
-        if (xmlData[i] === ";") break;
-        return -1;
-      }
-      return i;
-    }
-    function getErrorObject(code, message, lineNumber) {
-      return {
-        err: {
-          code,
-          msg: message,
-          line: lineNumber.line || lineNumber,
-          col: lineNumber.col,
-        },
-      };
-    }
-    function validateAttrName(attrName) {
-      return util.isName(attrName);
-    }
-    function validateTagName(tagname) {
-      return util.isName(tagname);
-    }
-    function getLineNumberForPosition(xmlData, index) {
-      const lines = xmlData.substring(0, index).split(/\r?\n/);
-      return {
-        line: lines.length,
-        // column number is last line's length + 1, because column numbering starts at 1:
-        col: lines[lines.length - 1].length + 1,
-      };
-    }
-    function getPositionFromMatch(match) {
-      return match.startIndex + match[1].length;
-    }
+    doubleQuote = '"';
+    singleQuote = "'";
+    validAttrStrRegxp = new RegExp(`(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['"])(([\\s\\S])*?)\\5)?`, "g");
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
-var require_OptionsBuilder = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(
-    exports2,
-  ) {
-    var defaultOptions = {
+var defaultOptions2, buildOptions;
+var init_OptionsBuilder = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"() {
+    defaultOptions2 = {
       preserveOrder: false,
       attributeNamePrefix: "@_",
       attributesGroupName: false,
@@ -9542,11 +10341,11 @@ var require_OptionsBuilder = __commonJS({
         leadingZeros: true,
         eNotation: true,
       },
-      tagValueProcessor: function (tagName, val2) {
-        return val2;
+      tagValueProcessor: function (tagName, val) {
+        return val;
       },
-      attributeValueProcessor: function (attrName, val2) {
-        return val2;
+      attributeValueProcessor: function (attrName, val) {
+        return val;
       },
       stopNodes: [],
       //nested tags will not be parsed even for errors
@@ -9564,201 +10363,337 @@ var require_OptionsBuilder = __commonJS({
         return tagName;
       },
       // skipEmptyListItem: false
+      captureMetaData: false,
     };
-    var buildOptions = function (options) {
-      return Object.assign({}, defaultOptions, options);
+    buildOptions = function (options) {
+      return Object.assign({}, defaultOptions2, options);
     };
-    exports2.buildOptions = buildOptions;
-    exports2.defaultOptions = defaultOptions;
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/xmlNode.js
-var require_xmlNode = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(
-    exports2,
-    module2,
-  ) {
+var METADATA_SYMBOL, XmlNode;
+var init_xmlNode = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"() {
     "use strict";
-    var XmlNode = class {
+    if (typeof Symbol !== "function") {
+      METADATA_SYMBOL = "@@xmlMetadata";
+    } else {
+      METADATA_SYMBOL = Symbol("XML Node Metadata");
+    }
+    XmlNode = class {
       constructor(tagname) {
         this.tagname = tagname;
         this.child = [];
         this[":@"] = {};
       }
-      add(key, val2) {
+      add(key, val) {
         if (key === "__proto__") key = "#__proto__";
-        this.child.push({ [key]: val2 });
+        this.child.push({ [key]: val });
       }
-      addChild(node) {
+      addChild(node, startIndex) {
         if (node.tagname === "__proto__") node.tagname = "#__proto__";
         if (node[":@"] && Object.keys(node[":@"]).length > 0) {
           this.child.push({ [node.tagname]: node.child, [":@"]: node[":@"] });
         } else {
           this.child.push({ [node.tagname]: node.child });
         }
+        if (startIndex !== void 0) {
+          this.child[this.child.length - 1][METADATA_SYMBOL] = { startIndex };
+        }
+      }
+      /** symbol used for metadata */
+      static getMetaDataSymbol() {
+        return METADATA_SYMBOL;
       }
     };
-    module2.exports = XmlNode;
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
-var require_DocTypeReader = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(
-    exports2,
-    module2,
+function readDocType(xmlData, i) {
+  const entities = {};
+  if (
+    xmlData[i + 3] === "O" &&
+    xmlData[i + 4] === "C" &&
+    xmlData[i + 5] === "T" &&
+    xmlData[i + 6] === "Y" &&
+    xmlData[i + 7] === "P" &&
+    xmlData[i + 8] === "E"
   ) {
-    var util = require_util();
-    function readDocType(xmlData, i) {
-      const entities = {};
-      if (
-        xmlData[i + 3] === "O" &&
-        xmlData[i + 4] === "C" &&
-        xmlData[i + 5] === "T" &&
-        xmlData[i + 6] === "Y" &&
-        xmlData[i + 7] === "P" &&
-        xmlData[i + 8] === "E"
-      ) {
-        i = i + 9;
-        let angleBracketsCount = 1;
-        let hasBody = false,
-          comment = false;
-        let exp = "";
-        for (; i < xmlData.length; i++) {
-          if (xmlData[i] === "<" && !comment) {
-            if (hasBody && isEntity(xmlData, i)) {
-              i += 7;
-              [entityName, val, i] = readEntityExp(xmlData, i + 1);
-              if (val.indexOf("&") === -1)
-                entities[validateEntityName(entityName)] = {
-                  regx: RegExp(`&${entityName};`, "g"),
-                  val,
-                };
-            } else if (hasBody && isElement(xmlData, i)) i += 8;
-            else if (hasBody && isAttlist(xmlData, i)) i += 8;
-            else if (hasBody && isNotation(xmlData, i)) i += 9;
-            else if (isComment) comment = true;
-            else throw new Error("Invalid DOCTYPE");
-            angleBracketsCount++;
-            exp = "";
-          } else if (xmlData[i] === ">") {
-            if (comment) {
-              if (xmlData[i - 1] === "-" && xmlData[i - 2] === "-") {
-                comment = false;
-                angleBracketsCount--;
-              }
-            } else {
-              angleBracketsCount--;
-            }
-            if (angleBracketsCount === 0) {
-              break;
-            }
-          } else if (xmlData[i] === "[") {
-            hasBody = true;
-          } else {
-            exp += xmlData[i];
+    i = i + 9;
+    let angleBracketsCount = 1;
+    let hasBody = false,
+      comment = false;
+    let exp = "";
+    for (; i < xmlData.length; i++) {
+      if (xmlData[i] === "<" && !comment) {
+        if (hasBody && hasSeq(xmlData, "!ENTITY", i)) {
+          i += 7;
+          let entityName, val;
+          [entityName, val, i] = readEntityExp(xmlData, i + 1);
+          if (val.indexOf("&") === -1)
+            entities[entityName] = {
+              regx: RegExp(`&${entityName};`, "g"),
+              val,
+            };
+        } else if (hasBody && hasSeq(xmlData, "!ELEMENT", i)) {
+          i += 8;
+          const { index } = readElementExp(xmlData, i + 1);
+          i = index;
+        } else if (hasBody && hasSeq(xmlData, "!ATTLIST", i)) {
+          i += 8;
+        } else if (hasBody && hasSeq(xmlData, "!NOTATION", i)) {
+          i += 9;
+          const { index } = readNotationExp(xmlData, i + 1);
+          i = index;
+        } else if (hasSeq(xmlData, "!--", i)) comment = true;
+        else throw new Error(`Invalid DOCTYPE`);
+        angleBracketsCount++;
+        exp = "";
+      } else if (xmlData[i] === ">") {
+        if (comment) {
+          if (xmlData[i - 1] === "-" && xmlData[i - 2] === "-") {
+            comment = false;
+            angleBracketsCount--;
           }
+        } else {
+          angleBracketsCount--;
         }
-        if (angleBracketsCount !== 0) {
-          throw new Error(`Unclosed DOCTYPE`);
+        if (angleBracketsCount === 0) {
+          break;
         }
+      } else if (xmlData[i] === "[") {
+        hasBody = true;
       } else {
-        throw new Error(`Invalid Tag instead of DOCTYPE`);
+        exp += xmlData[i];
       }
-      return { entities, i };
     }
-    function readEntityExp(xmlData, i) {
-      let entityName2 = "";
-      for (; i < xmlData.length && xmlData[i] !== "'" && xmlData[i] !== '"'; i++) {
-        entityName2 += xmlData[i];
+    if (angleBracketsCount !== 0) {
+      throw new Error(`Unclosed DOCTYPE`);
+    }
+  } else {
+    throw new Error(`Invalid Tag instead of DOCTYPE`);
+  }
+  return { entities, i };
+}
+function readEntityExp(xmlData, i) {
+  i = skipWhitespace(xmlData, i);
+  let entityName = "";
+  while (i < xmlData.length && !/\s/.test(xmlData[i]) && xmlData[i] !== '"' && xmlData[i] !== "'") {
+    entityName += xmlData[i];
+    i++;
+  }
+  validateEntityName(entityName);
+  i = skipWhitespace(xmlData, i);
+  if (xmlData.substring(i, i + 6).toUpperCase() === "SYSTEM") {
+    throw new Error("External entities are not supported");
+  } else if (xmlData[i] === "%") {
+    throw new Error("Parameter entities are not supported");
+  }
+  let entityValue = "";
+  [i, entityValue] = readIdentifierVal(xmlData, i, "entity");
+  i--;
+  return [entityName, entityValue, i];
+}
+function readNotationExp(xmlData, i) {
+  i = skipWhitespace(xmlData, i);
+  let notationName = "";
+  while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+    notationName += xmlData[i];
+    i++;
+  }
+  validateEntityName(notationName);
+  i = skipWhitespace(xmlData, i);
+  const identifierType = xmlData.substring(i, i + 6).toUpperCase();
+  if (identifierType !== "SYSTEM" && identifierType !== "PUBLIC") {
+    throw new Error(`Expected SYSTEM or PUBLIC, found "${identifierType}"`);
+  }
+  i += identifierType.length;
+  i = skipWhitespace(xmlData, i);
+  let publicIdentifier = null;
+  let systemIdentifier = null;
+  if (identifierType === "PUBLIC") {
+    [i, publicIdentifier] = readIdentifierVal(xmlData, i, "publicIdentifier");
+    i = skipWhitespace(xmlData, i);
+    if (xmlData[i] === '"' || xmlData[i] === "'") {
+      [i, systemIdentifier] = readIdentifierVal(xmlData, i, "systemIdentifier");
+    }
+  } else if (identifierType === "SYSTEM") {
+    [i, systemIdentifier] = readIdentifierVal(xmlData, i, "systemIdentifier");
+    if (!systemIdentifier) {
+      throw new Error("Missing mandatory system identifier for SYSTEM notation");
+    }
+  }
+  return { notationName, publicIdentifier, systemIdentifier, index: --i };
+}
+function readIdentifierVal(xmlData, i, type) {
+  let identifierVal = "";
+  const startChar = xmlData[i];
+  if (startChar !== '"' && startChar !== "'") {
+    throw new Error(`Expected quoted string, found "${startChar}"`);
+  }
+  i++;
+  while (i < xmlData.length && xmlData[i] !== startChar) {
+    identifierVal += xmlData[i];
+    i++;
+  }
+  if (xmlData[i] !== startChar) {
+    throw new Error(`Unterminated ${type} value`);
+  }
+  i++;
+  return [i, identifierVal];
+}
+function readElementExp(xmlData, i) {
+  i = skipWhitespace(xmlData, i);
+  let elementName = "";
+  while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+    elementName += xmlData[i];
+    i++;
+  }
+  if (!validateEntityName(elementName)) {
+    throw new Error(`Invalid element name: "${elementName}"`);
+  }
+  i = skipWhitespace(xmlData, i);
+  let contentModel = "";
+  if (xmlData[i] === "E" && hasSeq(xmlData, "MPTY", i)) i += 4;
+  else if (xmlData[i] === "A" && hasSeq(xmlData, "NY", i)) i += 2;
+  else if (xmlData[i] === "(") {
+    i++;
+    while (i < xmlData.length && xmlData[i] !== ")") {
+      contentModel += xmlData[i];
+      i++;
+    }
+    if (xmlData[i] !== ")") {
+      throw new Error("Unterminated content model");
+    }
+  } else {
+    throw new Error(`Invalid Element Expression, found "${xmlData[i]}"`);
+  }
+  return {
+    elementName,
+    contentModel: contentModel.trim(),
+    index: i,
+  };
+}
+function hasSeq(data, seq, i) {
+  for (let j = 0; j < seq.length; j++) {
+    if (seq[j] !== data[i + j + 1]) return false;
+  }
+  return true;
+}
+function validateEntityName(name) {
+  if (isName(name)) return name;
+  else throw new Error(`Invalid entity name ${name}`);
+}
+var skipWhitespace;
+var init_DocTypeReader = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"() {
+    init_util();
+    skipWhitespace = (data, index) => {
+      while (index < data.length && /\s/.test(data[index])) {
+        index++;
       }
-      entityName2 = entityName2.trim();
-      if (entityName2.indexOf(" ") !== -1) throw new Error("External entites are not supported");
-      const startChar = xmlData[i++];
-      let val2 = "";
-      for (; i < xmlData.length && xmlData[i] !== startChar; i++) {
-        val2 += xmlData[i];
-      }
-      return [entityName2, val2, i];
-    }
-    function isComment(xmlData, i) {
-      if (xmlData[i + 1] === "!" && xmlData[i + 2] === "-" && xmlData[i + 3] === "-") return true;
-      return false;
-    }
-    function isEntity(xmlData, i) {
-      if (
-        xmlData[i + 1] === "!" &&
-        xmlData[i + 2] === "E" &&
-        xmlData[i + 3] === "N" &&
-        xmlData[i + 4] === "T" &&
-        xmlData[i + 5] === "I" &&
-        xmlData[i + 6] === "T" &&
-        xmlData[i + 7] === "Y"
-      )
-        return true;
-      return false;
-    }
-    function isElement(xmlData, i) {
-      if (
-        xmlData[i + 1] === "!" &&
-        xmlData[i + 2] === "E" &&
-        xmlData[i + 3] === "L" &&
-        xmlData[i + 4] === "E" &&
-        xmlData[i + 5] === "M" &&
-        xmlData[i + 6] === "E" &&
-        xmlData[i + 7] === "N" &&
-        xmlData[i + 8] === "T"
-      )
-        return true;
-      return false;
-    }
-    function isAttlist(xmlData, i) {
-      if (
-        xmlData[i + 1] === "!" &&
-        xmlData[i + 2] === "A" &&
-        xmlData[i + 3] === "T" &&
-        xmlData[i + 4] === "T" &&
-        xmlData[i + 5] === "L" &&
-        xmlData[i + 6] === "I" &&
-        xmlData[i + 7] === "S" &&
-        xmlData[i + 8] === "T"
-      )
-        return true;
-      return false;
-    }
-    function isNotation(xmlData, i) {
-      if (
-        xmlData[i + 1] === "!" &&
-        xmlData[i + 2] === "N" &&
-        xmlData[i + 3] === "O" &&
-        xmlData[i + 4] === "T" &&
-        xmlData[i + 5] === "A" &&
-        xmlData[i + 6] === "T" &&
-        xmlData[i + 7] === "I" &&
-        xmlData[i + 8] === "O" &&
-        xmlData[i + 9] === "N"
-      )
-        return true;
-      return false;
-    }
-    function validateEntityName(name) {
-      if (util.isName(name)) return name;
-      else throw new Error(`Invalid entity name ${name}`);
-    }
-    module2.exports = readDocType;
+      return index;
+    };
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/strnum/strnum.js
-var require_strnum = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/strnum/strnum.js"(
-    exports2,
-    module2,
-  ) {
-    var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
-    var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
-    var consider = {
+function toNumber(str, options = {}) {
+  options = Object.assign({}, consider, options);
+  if (!str || typeof str !== "string") return str;
+  let trimmedStr = str.trim();
+  if (options.skipLike !== void 0 && options.skipLike.test(trimmedStr)) return str;
+  else if (str === "0") return 0;
+  else if (options.hex && hexRegex.test(trimmedStr)) {
+    return parse_int(trimmedStr, 16);
+  } else if (trimmedStr.search(/.+[eE].+/) !== -1) {
+    return resolveEnotation(str, trimmedStr, options);
+  } else {
+    const match = numRegex.exec(trimmedStr);
+    if (match) {
+      const sign = match[1] || "";
+      const leadingZeros = match[2];
+      let numTrimmedByZeros = trimZeros(match[3]);
+      const decimalAdjacentToLeadingZeros = sign
+        ? // 0., -00., 000.
+          str[leadingZeros.length + 1] === "."
+        : str[leadingZeros.length] === ".";
+      if (
+        !options.leadingZeros &&
+        (leadingZeros.length > 1 || (leadingZeros.length === 1 && !decimalAdjacentToLeadingZeros))
+      ) {
+        return str;
+      } else {
+        const num = Number(trimmedStr);
+        const parsedStr = String(num);
+        if (num === 0) return num;
+        if (parsedStr.search(/[eE]/) !== -1) {
+          if (options.eNotation) return num;
+          else return str;
+        } else if (trimmedStr.indexOf(".") !== -1) {
+          if (parsedStr === "0") return num;
+          else if (parsedStr === numTrimmedByZeros) return num;
+          else if (parsedStr === `${sign}${numTrimmedByZeros}`) return num;
+          else return str;
+        }
+        let n = leadingZeros ? numTrimmedByZeros : trimmedStr;
+        if (leadingZeros) {
+          return n === parsedStr || sign + n === parsedStr ? num : str;
+        } else {
+          return n === parsedStr || n === sign + parsedStr ? num : str;
+        }
+      }
+    } else {
+      return str;
+    }
+  }
+}
+function resolveEnotation(str, trimmedStr, options) {
+  if (!options.eNotation) return str;
+  const notation = trimmedStr.match(eNotationRegx);
+  if (notation) {
+    let sign = notation[1] || "";
+    const eChar = notation[3].indexOf("e") === -1 ? "E" : "e";
+    const leadingZeros = notation[2];
+    const eAdjacentToLeadingZeros = sign
+      ? // 0E.
+        str[leadingZeros.length + 1] === eChar
+      : str[leadingZeros.length] === eChar;
+    if (leadingZeros.length > 1 && eAdjacentToLeadingZeros) return str;
+    else if (leadingZeros.length === 1 && (notation[3].startsWith(`.${eChar}`) || notation[3][0] === eChar)) {
+      return Number(trimmedStr);
+    } else if (options.leadingZeros && !eAdjacentToLeadingZeros) {
+      trimmedStr = (notation[1] || "") + notation[3];
+      return Number(trimmedStr);
+    } else return str;
+  } else {
+    return str;
+  }
+}
+function trimZeros(numStr) {
+  if (numStr && numStr.indexOf(".") !== -1) {
+    numStr = numStr.replace(/0+$/, "");
+    if (numStr === ".") numStr = "0";
+    else if (numStr[0] === ".") numStr = "0" + numStr;
+    else if (numStr[numStr.length - 1] === ".") numStr = numStr.substring(0, numStr.length - 1);
+    return numStr;
+  }
+  return numStr;
+}
+function parse_int(numStr, base) {
+  if (parseInt) return parseInt(numStr, base);
+  else if (Number.parseInt) return Number.parseInt(numStr, base);
+  else if (window && window.parseInt) return window.parseInt(numStr, base);
+  else throw new Error("parseInt, Number.parseInt, window.parseInt are not supported");
+}
+var hexRegex, numRegex, consider, eNotationRegx;
+var init_strnum = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/strnum/strnum.js"() {
+    hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
+    numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
+    consider = {
       hex: true,
       // oct: false,
       leadingZeros: true,
@@ -9766,93 +10701,292 @@ var require_strnum = __commonJS({
       eNotation: true,
       //skipLike: /regex/
     };
-    function toNumber(str, options = {}) {
-      options = Object.assign({}, consider, options);
-      if (!str || typeof str !== "string") return str;
-      let trimmedStr = str.trim();
-      if (options.skipLike !== void 0 && options.skipLike.test(trimmedStr)) return str;
-      else if (str === "0") return 0;
-      else if (options.hex && hexRegex.test(trimmedStr)) {
-        return parse_int(trimmedStr, 16);
-      } else if (trimmedStr.search(/[eE]/) !== -1) {
-        const notation = trimmedStr.match(/^([-\+])?(0*)([0-9]*(\.[0-9]*)?[eE][-\+]?[0-9]+)$/);
-        if (notation) {
-          if (options.leadingZeros) {
-            trimmedStr = (notation[1] || "") + notation[3];
-          } else {
-            if (notation[2] === "0" && notation[3][0] === ".") {
-            } else {
-              return str;
-            }
-          }
-          return options.eNotation ? Number(trimmedStr) : str;
-        } else {
-          return str;
-        }
-      } else {
-        const match = numRegex.exec(trimmedStr);
-        if (match) {
-          const sign = match[1];
-          const leadingZeros = match[2];
-          let numTrimmedByZeros = trimZeros(match[3]);
-          if (!options.leadingZeros && leadingZeros.length > 0 && sign && trimmedStr[2] !== ".") return str;
-          else if (!options.leadingZeros && leadingZeros.length > 0 && !sign && trimmedStr[1] !== ".") return str;
-          else if (options.leadingZeros && leadingZeros === str) return 0;
-          else {
-            const num = Number(trimmedStr);
-            const numStr = "" + num;
-            if (numStr.search(/[eE]/) !== -1) {
-              if (options.eNotation) return num;
-              else return str;
-            } else if (trimmedStr.indexOf(".") !== -1) {
-              if (numStr === "0" && numTrimmedByZeros === "") return num;
-              else if (numStr === numTrimmedByZeros) return num;
-              else if (sign && numStr === "-" + numTrimmedByZeros) return num;
-              else return str;
-            }
-            if (leadingZeros) {
-              return numTrimmedByZeros === numStr || sign + numTrimmedByZeros === numStr ? num : str;
-            } else {
-              return trimmedStr === numStr || trimmedStr === sign + numStr ? num : str;
-            }
-          }
-        } else {
-          return str;
-        }
-      }
-    }
-    function trimZeros(numStr) {
-      if (numStr && numStr.indexOf(".") !== -1) {
-        numStr = numStr.replace(/0+$/, "");
-        if (numStr === ".") numStr = "0";
-        else if (numStr[0] === ".") numStr = "0" + numStr;
-        else if (numStr[numStr.length - 1] === ".") numStr = numStr.substr(0, numStr.length - 1);
-        return numStr;
-      }
-      return numStr;
-    }
-    function parse_int(numStr, base) {
-      if (parseInt) return parseInt(numStr, base);
-      else if (Number.parseInt) return Number.parseInt(numStr, base);
-      else if (window && window.parseInt) return window.parseInt(numStr, base);
-      else throw new Error("parseInt, Number.parseInt, window.parseInt are not supported");
-    }
-    module2.exports = toNumber;
+    eNotationRegx = /^([-+])?(0*)(\d*(\.\d*)?[eE][-\+]?\d+)$/;
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/ignoreAttributes.js
+function getIgnoreAttributesFn(ignoreAttributes) {
+  if (typeof ignoreAttributes === "function") {
+    return ignoreAttributes;
+  }
+  if (Array.isArray(ignoreAttributes)) {
+    return (attrName) => {
+      for (const pattern of ignoreAttributes) {
+        if (typeof pattern === "string" && attrName === pattern) {
+          return true;
+        }
+        if (pattern instanceof RegExp && pattern.test(attrName)) {
+          return true;
+        }
+      }
+    };
+  }
+  return () => false;
+}
+var init_ignoreAttributes = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/ignoreAttributes.js"() {},
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js
-var require_OrderedObjParser = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(
-    exports2,
-    module2,
-  ) {
+function addExternalEntities(externalEntities) {
+  const entKeys = Object.keys(externalEntities);
+  for (let i = 0; i < entKeys.length; i++) {
+    const ent = entKeys[i];
+    this.lastEntities[ent] = {
+      regex: new RegExp("&" + ent + ";", "g"),
+      val: externalEntities[ent],
+    };
+  }
+}
+function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode, escapeEntities) {
+  if (val !== void 0) {
+    if (this.options.trimValues && !dontTrim) {
+      val = val.trim();
+    }
+    if (val.length > 0) {
+      if (!escapeEntities) val = this.replaceEntitiesValue(val);
+      const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
+      if (newval === null || newval === void 0) {
+        return val;
+      } else if (typeof newval !== typeof val || newval !== val) {
+        return newval;
+      } else if (this.options.trimValues) {
+        return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
+      } else {
+        const trimmedVal = val.trim();
+        if (trimmedVal === val) {
+          return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
+        } else {
+          return val;
+        }
+      }
+    }
+  }
+}
+function resolveNameSpace(tagname) {
+  if (this.options.removeNSPrefix) {
+    const tags = tagname.split(":");
+    const prefix = tagname.charAt(0) === "/" ? "/" : "";
+    if (tags[0] === "xmlns") {
+      return "";
+    }
+    if (tags.length === 2) {
+      tagname = prefix + tags[1];
+    }
+  }
+  return tagname;
+}
+function buildAttributesMap(attrStr, jPath, tagName) {
+  if (this.options.ignoreAttributes !== true && typeof attrStr === "string") {
+    const matches = getAllMatches(attrStr, attrsRegx);
+    const len = matches.length;
+    const attrs = {};
+    for (let i = 0; i < len; i++) {
+      const attrName = this.resolveNameSpace(matches[i][1]);
+      if (this.ignoreAttributesFn(attrName, jPath)) {
+        continue;
+      }
+      let oldVal = matches[i][4];
+      let aName = this.options.attributeNamePrefix + attrName;
+      if (attrName.length) {
+        if (this.options.transformAttributeName) {
+          aName = this.options.transformAttributeName(aName);
+        }
+        if (aName === "__proto__") aName = "#__proto__";
+        if (oldVal !== void 0) {
+          if (this.options.trimValues) {
+            oldVal = oldVal.trim();
+          }
+          oldVal = this.replaceEntitiesValue(oldVal);
+          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
+          if (newVal === null || newVal === void 0) {
+            attrs[aName] = oldVal;
+          } else if (typeof newVal !== typeof oldVal || newVal !== oldVal) {
+            attrs[aName] = newVal;
+          } else {
+            attrs[aName] = parseValue(oldVal, this.options.parseAttributeValue, this.options.numberParseOptions);
+          }
+        } else if (this.options.allowBooleanAttributes) {
+          attrs[aName] = true;
+        }
+      }
+    }
+    if (!Object.keys(attrs).length) {
+      return;
+    }
+    if (this.options.attributesGroupName) {
+      const attrCollection = {};
+      attrCollection[this.options.attributesGroupName] = attrs;
+      return attrCollection;
+    }
+    return attrs;
+  }
+}
+function addChild(currentNode, childNode, jPath, startIndex) {
+  if (!this.options.captureMetaData) startIndex = void 0;
+  const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"]);
+  if (result === false) {
+  } else if (typeof result === "string") {
+    childNode.tagname = result;
+    currentNode.addChild(childNode, startIndex);
+  } else {
+    currentNode.addChild(childNode, startIndex);
+  }
+}
+function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
+  if (textData) {
+    if (isLeafNode === void 0) isLeafNode = currentNode.child.length === 0;
+    textData = this.parseTextData(
+      textData,
+      currentNode.tagname,
+      jPath,
+      false,
+      currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false,
+      isLeafNode,
+    );
+    if (textData !== void 0 && textData !== "") currentNode.add(this.options.textNodeName, textData);
+    textData = "";
+  }
+  return textData;
+}
+function isItStopNode(stopNodes, jPath, currentTagName) {
+  const allNodesExp = "*." + currentTagName;
+  for (const stopNodePath in stopNodes) {
+    const stopNodeExp = stopNodes[stopNodePath];
+    if (allNodesExp === stopNodeExp || jPath === stopNodeExp) return true;
+  }
+  return false;
+}
+function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
+  let attrBoundary;
+  let tagExp = "";
+  for (let index = i; index < xmlData.length; index++) {
+    let ch = xmlData[index];
+    if (attrBoundary) {
+      if (ch === attrBoundary) attrBoundary = "";
+    } else if (ch === '"' || ch === "'") {
+      attrBoundary = ch;
+    } else if (ch === closingChar[0]) {
+      if (closingChar[1]) {
+        if (xmlData[index + 1] === closingChar[1]) {
+          return {
+            data: tagExp,
+            index,
+          };
+        }
+      } else {
+        return {
+          data: tagExp,
+          index,
+        };
+      }
+    } else if (ch === "	") {
+      ch = " ";
+    }
+    tagExp += ch;
+  }
+}
+function findClosingIndex(xmlData, str, i, errMsg) {
+  const closingIndex = xmlData.indexOf(str, i);
+  if (closingIndex === -1) {
+    throw new Error(errMsg);
+  } else {
+    return closingIndex + str.length - 1;
+  }
+}
+function readTagExp(xmlData, i, removeNSPrefix, closingChar = ">") {
+  const result = tagExpWithClosingIndex(xmlData, i + 1, closingChar);
+  if (!result) return;
+  let tagExp = result.data;
+  const closeIndex = result.index;
+  const separatorIndex = tagExp.search(/\s/);
+  let tagName = tagExp;
+  let attrExpPresent = true;
+  if (separatorIndex !== -1) {
+    tagName = tagExp.substring(0, separatorIndex);
+    tagExp = tagExp.substring(separatorIndex + 1).trimStart();
+  }
+  const rawTagName = tagName;
+  if (removeNSPrefix) {
+    const colonIndex = tagName.indexOf(":");
+    if (colonIndex !== -1) {
+      tagName = tagName.substr(colonIndex + 1);
+      attrExpPresent = tagName !== result.data.substr(colonIndex + 1);
+    }
+  }
+  return {
+    tagName,
+    tagExp,
+    closeIndex,
+    attrExpPresent,
+    rawTagName,
+  };
+}
+function readStopNodeData(xmlData, tagName, i) {
+  const startIndex = i;
+  let openTagCount = 1;
+  for (; i < xmlData.length; i++) {
+    if (xmlData[i] === "<") {
+      if (xmlData[i + 1] === "/") {
+        const closeIndex = findClosingIndex(xmlData, ">", i, `${tagName} is not closed`);
+        let closeTagName = xmlData.substring(i + 2, closeIndex).trim();
+        if (closeTagName === tagName) {
+          openTagCount--;
+          if (openTagCount === 0) {
+            return {
+              tagContent: xmlData.substring(startIndex, i),
+              i: closeIndex,
+            };
+          }
+        }
+        i = closeIndex;
+      } else if (xmlData[i + 1] === "?") {
+        const closeIndex = findClosingIndex(xmlData, "?>", i + 1, "StopNode is not closed.");
+        i = closeIndex;
+      } else if (xmlData.substr(i + 1, 3) === "!--") {
+        const closeIndex = findClosingIndex(xmlData, "-->", i + 3, "StopNode is not closed.");
+        i = closeIndex;
+      } else if (xmlData.substr(i + 1, 2) === "![") {
+        const closeIndex = findClosingIndex(xmlData, "]]>", i, "StopNode is not closed.") - 2;
+        i = closeIndex;
+      } else {
+        const tagData = readTagExp(xmlData, i, ">");
+        if (tagData) {
+          const openTagName = tagData && tagData.tagName;
+          if (openTagName === tagName && tagData.tagExp[tagData.tagExp.length - 1] !== "/") {
+            openTagCount++;
+          }
+          i = tagData.closeIndex;
+        }
+      }
+    }
+  }
+}
+function parseValue(val, shouldParse, options) {
+  if (shouldParse && typeof val === "string") {
+    const newval = val.trim();
+    if (newval === "true") return true;
+    else if (newval === "false") return false;
+    else return toNumber(val, options);
+  } else {
+    if (isExist(val)) {
+      return val;
+    } else {
+      return "";
+    }
+  }
+}
+var OrderedObjParser, attrsRegx, parseXml, replaceEntitiesValue;
+var init_OrderedObjParser = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"() {
     "use strict";
-    var util = require_util();
-    var xmlNode = require_xmlNode();
-    var readDocType = require_DocTypeReader();
-    var toNumber = require_strnum();
-    var OrderedObjParser = class {
+    init_util();
+    init_xmlNode();
+    init_DocTypeReader();
+    init_strnum();
+    init_ignoreAttributes();
+    OrderedObjParser = class {
       constructor(options) {
         this.options = options;
         this.currentNode = null;
@@ -9879,8 +11013,11 @@ var require_OrderedObjParser = __commonJS({
           copyright: { regex: /&(copy|#169);/g, val: "\xA9" },
           reg: { regex: /&(reg|#174);/g, val: "\xAE" },
           inr: { regex: /&(inr|#8377);/g, val: "\u20B9" },
-          num_dec: { regex: /&#([0-9]{1,7});/g, val: (_, str) => String.fromCharCode(Number.parseInt(str, 10)) },
-          num_hex: { regex: /&#x([0-9a-fA-F]{1,6});/g, val: (_, str) => String.fromCharCode(Number.parseInt(str, 16)) },
+          num_dec: { regex: /&#([0-9]{1,7});/g, val: (_, str) => String.fromCodePoint(Number.parseInt(str, 10)) },
+          num_hex: {
+            regex: /&#x([0-9a-fA-F]{1,6});/g,
+            val: (_, str) => String.fromCodePoint(Number.parseInt(str, 16)),
+          },
         };
         this.addExternalEntities = addExternalEntities;
         this.parseXml = parseXml;
@@ -9892,103 +11029,13 @@ var require_OrderedObjParser = __commonJS({
         this.readStopNodeData = readStopNodeData;
         this.saveTextToParentTag = saveTextToParentTag;
         this.addChild = addChild;
+        this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes);
       }
     };
-    function addExternalEntities(externalEntities) {
-      const entKeys = Object.keys(externalEntities);
-      for (let i = 0; i < entKeys.length; i++) {
-        const ent = entKeys[i];
-        this.lastEntities[ent] = {
-          regex: new RegExp("&" + ent + ";", "g"),
-          val: externalEntities[ent],
-        };
-      }
-    }
-    function parseTextData(val2, tagName, jPath, dontTrim, hasAttributes, isLeafNode, escapeEntities) {
-      if (val2 !== void 0) {
-        if (this.options.trimValues && !dontTrim) {
-          val2 = val2.trim();
-        }
-        if (val2.length > 0) {
-          if (!escapeEntities) val2 = this.replaceEntitiesValue(val2);
-          const newval = this.options.tagValueProcessor(tagName, val2, jPath, hasAttributes, isLeafNode);
-          if (newval === null || newval === void 0) {
-            return val2;
-          } else if (typeof newval !== typeof val2 || newval !== val2) {
-            return newval;
-          } else if (this.options.trimValues) {
-            return parseValue(val2, this.options.parseTagValue, this.options.numberParseOptions);
-          } else {
-            const trimmedVal = val2.trim();
-            if (trimmedVal === val2) {
-              return parseValue(val2, this.options.parseTagValue, this.options.numberParseOptions);
-            } else {
-              return val2;
-            }
-          }
-        }
-      }
-    }
-    function resolveNameSpace(tagname) {
-      if (this.options.removeNSPrefix) {
-        const tags = tagname.split(":");
-        const prefix = tagname.charAt(0) === "/" ? "/" : "";
-        if (tags[0] === "xmlns") {
-          return "";
-        }
-        if (tags.length === 2) {
-          tagname = prefix + tags[1];
-        }
-      }
-      return tagname;
-    }
-    var attrsRegx = new RegExp(`([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`, "gm");
-    function buildAttributesMap(attrStr, jPath, tagName) {
-      if (!this.options.ignoreAttributes && typeof attrStr === "string") {
-        const matches = util.getAllMatches(attrStr, attrsRegx);
-        const len = matches.length;
-        const attrs = {};
-        for (let i = 0; i < len; i++) {
-          const attrName = this.resolveNameSpace(matches[i][1]);
-          let oldVal = matches[i][4];
-          let aName = this.options.attributeNamePrefix + attrName;
-          if (attrName.length) {
-            if (this.options.transformAttributeName) {
-              aName = this.options.transformAttributeName(aName);
-            }
-            if (aName === "__proto__") aName = "#__proto__";
-            if (oldVal !== void 0) {
-              if (this.options.trimValues) {
-                oldVal = oldVal.trim();
-              }
-              oldVal = this.replaceEntitiesValue(oldVal);
-              const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
-              if (newVal === null || newVal === void 0) {
-                attrs[aName] = oldVal;
-              } else if (typeof newVal !== typeof oldVal || newVal !== oldVal) {
-                attrs[aName] = newVal;
-              } else {
-                attrs[aName] = parseValue(oldVal, this.options.parseAttributeValue, this.options.numberParseOptions);
-              }
-            } else if (this.options.allowBooleanAttributes) {
-              attrs[aName] = true;
-            }
-          }
-        }
-        if (!Object.keys(attrs).length) {
-          return;
-        }
-        if (this.options.attributesGroupName) {
-          const attrCollection = {};
-          attrCollection[this.options.attributesGroupName] = attrs;
-          return attrCollection;
-        }
-        return attrs;
-      }
-    }
-    var parseXml = function (xmlData) {
+    attrsRegx = new RegExp(`([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`, "gm");
+    parseXml = function (xmlData) {
       xmlData = xmlData.replace(/\r\n?/g, "\n");
-      const xmlObj = new xmlNode("!xml");
+      const xmlObj = new XmlNode("!xml");
       let currentNode = xmlObj;
       let textData = "";
       let jPath = "";
@@ -10031,12 +11078,12 @@ var require_OrderedObjParser = __commonJS({
             textData = this.saveTextToParentTag(textData, currentNode, jPath);
             if ((this.options.ignoreDeclaration && tagData.tagName === "?xml") || this.options.ignorePiTags) {
             } else {
-              const childNode = new xmlNode(tagData.tagName);
+              const childNode = new XmlNode(tagData.tagName);
               childNode.add(this.options.textNodeName, "");
               if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent) {
                 childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath, tagData.tagName);
               }
-              this.addChild(currentNode, childNode, jPath);
+              this.addChild(currentNode, childNode, jPath, i);
             }
             i = tagData.closeIndex + 1;
           } else if (xmlData.substr(i + 1, 3) === "!--") {
@@ -10055,12 +11102,12 @@ var require_OrderedObjParser = __commonJS({
             const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
             const tagExp = xmlData.substring(i + 9, closeIndex);
             textData = this.saveTextToParentTag(textData, currentNode, jPath);
-            let val2 = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true, true);
-            if (val2 == void 0) val2 = "";
+            let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true, true);
+            if (val == void 0) val = "";
             if (this.options.cdataPropName) {
               currentNode.add(this.options.cdataPropName, [{ [this.options.textNodeName]: tagExp }]);
             } else {
-              currentNode.add(this.options.textNodeName, val2);
+              currentNode.add(this.options.textNodeName, val);
             }
             i = closeIndex + 2;
           } else {
@@ -10086,6 +11133,7 @@ var require_OrderedObjParser = __commonJS({
             if (tagName !== xmlObj.tagname) {
               jPath += jPath ? "." + tagName : tagName;
             }
+            const startIndex = i;
             if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) {
               let tagContent = "";
               if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
@@ -10105,7 +11153,7 @@ var require_OrderedObjParser = __commonJS({
                 i = result2.i;
                 tagContent = result2.tagContent;
               }
-              const childNode = new xmlNode(tagName);
+              const childNode = new XmlNode(tagName);
               if (tagName !== tagExp && attrExpPresent) {
                 childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
               }
@@ -10114,7 +11162,7 @@ var require_OrderedObjParser = __commonJS({
               }
               jPath = jPath.substr(0, jPath.lastIndexOf("."));
               childNode.add(this.options.textNodeName, tagContent);
-              this.addChild(currentNode, childNode, jPath);
+              this.addChild(currentNode, childNode, jPath, startIndex);
             } else {
               if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
                 if (tagName[tagName.length - 1] === "/") {
@@ -10127,19 +11175,19 @@ var require_OrderedObjParser = __commonJS({
                 if (this.options.transformTagName) {
                   tagName = this.options.transformTagName(tagName);
                 }
-                const childNode = new xmlNode(tagName);
+                const childNode = new XmlNode(tagName);
                 if (tagName !== tagExp && attrExpPresent) {
                   childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
                 }
-                this.addChild(currentNode, childNode, jPath);
+                this.addChild(currentNode, childNode, jPath, startIndex);
                 jPath = jPath.substr(0, jPath.lastIndexOf("."));
               } else {
-                const childNode = new xmlNode(tagName);
+                const childNode = new XmlNode(tagName);
                 this.tagsNodeStack.push(currentNode);
                 if (tagName !== tagExp && attrExpPresent) {
                   childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
                 }
-                this.addChild(currentNode, childNode, jPath);
+                this.addChild(currentNode, childNode, jPath, startIndex);
                 currentNode = childNode;
               }
               textData = "";
@@ -10152,287 +11200,135 @@ var require_OrderedObjParser = __commonJS({
       }
       return xmlObj.child;
     };
-    function addChild(currentNode, childNode, jPath) {
-      const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"]);
-      if (result === false) {
-      } else if (typeof result === "string") {
-        childNode.tagname = result;
-        currentNode.addChild(childNode);
-      } else {
-        currentNode.addChild(childNode);
-      }
-    }
-    var replaceEntitiesValue = function (val2) {
+    replaceEntitiesValue = function (val) {
       if (this.options.processEntities) {
-        for (let entityName2 in this.docTypeEntities) {
-          const entity = this.docTypeEntities[entityName2];
-          val2 = val2.replace(entity.regx, entity.val);
+        for (let entityName in this.docTypeEntities) {
+          const entity = this.docTypeEntities[entityName];
+          val = val.replace(entity.regx, entity.val);
         }
-        for (let entityName2 in this.lastEntities) {
-          const entity = this.lastEntities[entityName2];
-          val2 = val2.replace(entity.regex, entity.val);
+        for (let entityName in this.lastEntities) {
+          const entity = this.lastEntities[entityName];
+          val = val.replace(entity.regex, entity.val);
         }
         if (this.options.htmlEntities) {
-          for (let entityName2 in this.htmlEntities) {
-            const entity = this.htmlEntities[entityName2];
-            val2 = val2.replace(entity.regex, entity.val);
+          for (let entityName in this.htmlEntities) {
+            const entity = this.htmlEntities[entityName];
+            val = val.replace(entity.regex, entity.val);
           }
         }
-        val2 = val2.replace(this.ampEntity.regex, this.ampEntity.val);
+        val = val.replace(this.ampEntity.regex, this.ampEntity.val);
       }
-      return val2;
+      return val;
     };
-    function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
-      if (textData) {
-        if (isLeafNode === void 0) isLeafNode = Object.keys(currentNode.child).length === 0;
-        textData = this.parseTextData(
-          textData,
-          currentNode.tagname,
-          jPath,
-          false,
-          currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false,
-          isLeafNode,
-        );
-        if (textData !== void 0 && textData !== "") currentNode.add(this.options.textNodeName, textData);
-        textData = "";
-      }
-      return textData;
-    }
-    function isItStopNode(stopNodes, jPath, currentTagName) {
-      const allNodesExp = "*." + currentTagName;
-      for (const stopNodePath in stopNodes) {
-        const stopNodeExp = stopNodes[stopNodePath];
-        if (allNodesExp === stopNodeExp || jPath === stopNodeExp) return true;
-      }
-      return false;
-    }
-    function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
-      let attrBoundary;
-      let tagExp = "";
-      for (let index = i; index < xmlData.length; index++) {
-        let ch = xmlData[index];
-        if (attrBoundary) {
-          if (ch === attrBoundary) attrBoundary = "";
-        } else if (ch === '"' || ch === "'") {
-          attrBoundary = ch;
-        } else if (ch === closingChar[0]) {
-          if (closingChar[1]) {
-            if (xmlData[index + 1] === closingChar[1]) {
-              return {
-                data: tagExp,
-                index,
-              };
-            }
-          } else {
-            return {
-              data: tagExp,
-              index,
-            };
-          }
-        } else if (ch === "	") {
-          ch = " ";
-        }
-        tagExp += ch;
-      }
-    }
-    function findClosingIndex(xmlData, str, i, errMsg) {
-      const closingIndex = xmlData.indexOf(str, i);
-      if (closingIndex === -1) {
-        throw new Error(errMsg);
-      } else {
-        return closingIndex + str.length - 1;
-      }
-    }
-    function readTagExp(xmlData, i, removeNSPrefix, closingChar = ">") {
-      const result = tagExpWithClosingIndex(xmlData, i + 1, closingChar);
-      if (!result) return;
-      let tagExp = result.data;
-      const closeIndex = result.index;
-      const separatorIndex = tagExp.search(/\s/);
-      let tagName = tagExp;
-      let attrExpPresent = true;
-      if (separatorIndex !== -1) {
-        tagName = tagExp.substring(0, separatorIndex);
-        tagExp = tagExp.substring(separatorIndex + 1).trimStart();
-      }
-      const rawTagName = tagName;
-      if (removeNSPrefix) {
-        const colonIndex = tagName.indexOf(":");
-        if (colonIndex !== -1) {
-          tagName = tagName.substr(colonIndex + 1);
-          attrExpPresent = tagName !== result.data.substr(colonIndex + 1);
-        }
-      }
-      return {
-        tagName,
-        tagExp,
-        closeIndex,
-        attrExpPresent,
-        rawTagName,
-      };
-    }
-    function readStopNodeData(xmlData, tagName, i) {
-      const startIndex = i;
-      let openTagCount = 1;
-      for (; i < xmlData.length; i++) {
-        if (xmlData[i] === "<") {
-          if (xmlData[i + 1] === "/") {
-            const closeIndex = findClosingIndex(xmlData, ">", i, `${tagName} is not closed`);
-            let closeTagName = xmlData.substring(i + 2, closeIndex).trim();
-            if (closeTagName === tagName) {
-              openTagCount--;
-              if (openTagCount === 0) {
-                return {
-                  tagContent: xmlData.substring(startIndex, i),
-                  i: closeIndex,
-                };
-              }
-            }
-            i = closeIndex;
-          } else if (xmlData[i + 1] === "?") {
-            const closeIndex = findClosingIndex(xmlData, "?>", i + 1, "StopNode is not closed.");
-            i = closeIndex;
-          } else if (xmlData.substr(i + 1, 3) === "!--") {
-            const closeIndex = findClosingIndex(xmlData, "-->", i + 3, "StopNode is not closed.");
-            i = closeIndex;
-          } else if (xmlData.substr(i + 1, 2) === "![") {
-            const closeIndex = findClosingIndex(xmlData, "]]>", i, "StopNode is not closed.") - 2;
-            i = closeIndex;
-          } else {
-            const tagData = readTagExp(xmlData, i, ">");
-            if (tagData) {
-              const openTagName = tagData && tagData.tagName;
-              if (openTagName === tagName && tagData.tagExp[tagData.tagExp.length - 1] !== "/") {
-                openTagCount++;
-              }
-              i = tagData.closeIndex;
-            }
-          }
-        }
-      }
-    }
-    function parseValue(val2, shouldParse, options) {
-      if (shouldParse && typeof val2 === "string") {
-        const newval = val2.trim();
-        if (newval === "true") return true;
-        else if (newval === "false") return false;
-        else return toNumber(val2, options);
-      } else {
-        if (util.isExist(val2)) {
-          return val2;
-        } else {
-          return "";
-        }
-      }
-    }
-    module2.exports = OrderedObjParser;
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/node2json.js
-var require_node2json = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/node2json.js"(
-    exports2,
-  ) {
+function prettify(node, options) {
+  return compress(node, options);
+}
+function compress(arr, options, jPath) {
+  let text;
+  const compressedObj = {};
+  for (let i = 0; i < arr.length; i++) {
+    const tagObj = arr[i];
+    const property = propName(tagObj);
+    let newJpath = "";
+    if (jPath === void 0) newJpath = property;
+    else newJpath = jPath + "." + property;
+    if (property === options.textNodeName) {
+      if (text === void 0) text = tagObj[property];
+      else text += "" + tagObj[property];
+    } else if (property === void 0) {
+      continue;
+    } else if (tagObj[property]) {
+      let val = compress(tagObj[property], options, newJpath);
+      const isLeaf = isLeafTag(val, options);
+      if (tagObj[METADATA_SYMBOL2] !== void 0) {
+        val[METADATA_SYMBOL2] = tagObj[METADATA_SYMBOL2];
+      }
+      if (tagObj[":@"]) {
+        assignAttributes(val, tagObj[":@"], newJpath, options);
+      } else if (
+        Object.keys(val).length === 1 &&
+        val[options.textNodeName] !== void 0 &&
+        !options.alwaysCreateTextNode
+      ) {
+        val = val[options.textNodeName];
+      } else if (Object.keys(val).length === 0) {
+        if (options.alwaysCreateTextNode) val[options.textNodeName] = "";
+        else val = "";
+      }
+      if (compressedObj[property] !== void 0 && compressedObj.hasOwnProperty(property)) {
+        if (!Array.isArray(compressedObj[property])) {
+          compressedObj[property] = [compressedObj[property]];
+        }
+        compressedObj[property].push(val);
+      } else {
+        if (options.isArray(property, newJpath, isLeaf)) {
+          compressedObj[property] = [val];
+        } else {
+          compressedObj[property] = val;
+        }
+      }
+    }
+  }
+  if (typeof text === "string") {
+    if (text.length > 0) compressedObj[options.textNodeName] = text;
+  } else if (text !== void 0) compressedObj[options.textNodeName] = text;
+  return compressedObj;
+}
+function propName(obj) {
+  const keys = Object.keys(obj);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if (key !== ":@") return key;
+  }
+}
+function assignAttributes(obj, attrMap, jpath, options) {
+  if (attrMap) {
+    const keys = Object.keys(attrMap);
+    const len = keys.length;
+    for (let i = 0; i < len; i++) {
+      const atrrName = keys[i];
+      if (options.isArray(atrrName, jpath + "." + atrrName, true, true)) {
+        obj[atrrName] = [attrMap[atrrName]];
+      } else {
+        obj[atrrName] = attrMap[atrrName];
+      }
+    }
+  }
+}
+function isLeafTag(obj, options) {
+  const { textNodeName } = options;
+  const propCount = Object.keys(obj).length;
+  if (propCount === 0) {
+    return true;
+  }
+  if (propCount === 1 && (obj[textNodeName] || typeof obj[textNodeName] === "boolean" || obj[textNodeName] === 0)) {
+    return true;
+  }
+  return false;
+}
+var METADATA_SYMBOL2;
+var init_node2json = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/node2json.js"() {
     "use strict";
-    function prettify(node, options) {
-      return compress(node, options);
-    }
-    function compress(arr, options, jPath) {
-      let text;
-      const compressedObj = {};
-      for (let i = 0; i < arr.length; i++) {
-        const tagObj = arr[i];
-        const property = propName(tagObj);
-        let newJpath = "";
-        if (jPath === void 0) newJpath = property;
-        else newJpath = jPath + "." + property;
-        if (property === options.textNodeName) {
-          if (text === void 0) text = tagObj[property];
-          else text += "" + tagObj[property];
-        } else if (property === void 0) {
-          continue;
-        } else if (tagObj[property]) {
-          let val2 = compress(tagObj[property], options, newJpath);
-          const isLeaf = isLeafTag(val2, options);
-          if (tagObj[":@"]) {
-            assignAttributes(val2, tagObj[":@"], newJpath, options);
-          } else if (
-            Object.keys(val2).length === 1 &&
-            val2[options.textNodeName] !== void 0 &&
-            !options.alwaysCreateTextNode
-          ) {
-            val2 = val2[options.textNodeName];
-          } else if (Object.keys(val2).length === 0) {
-            if (options.alwaysCreateTextNode) val2[options.textNodeName] = "";
-            else val2 = "";
-          }
-          if (compressedObj[property] !== void 0 && compressedObj.hasOwnProperty(property)) {
-            if (!Array.isArray(compressedObj[property])) {
-              compressedObj[property] = [compressedObj[property]];
-            }
-            compressedObj[property].push(val2);
-          } else {
-            if (options.isArray(property, newJpath, isLeaf)) {
-              compressedObj[property] = [val2];
-            } else {
-              compressedObj[property] = val2;
-            }
-          }
-        }
-      }
-      if (typeof text === "string") {
-        if (text.length > 0) compressedObj[options.textNodeName] = text;
-      } else if (text !== void 0) compressedObj[options.textNodeName] = text;
-      return compressedObj;
-    }
-    function propName(obj) {
-      const keys = Object.keys(obj);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        if (key !== ":@") return key;
-      }
-    }
-    function assignAttributes(obj, attrMap, jpath, options) {
-      if (attrMap) {
-        const keys = Object.keys(attrMap);
-        const len = keys.length;
-        for (let i = 0; i < len; i++) {
-          const atrrName = keys[i];
-          if (options.isArray(atrrName, jpath + "." + atrrName, true, true)) {
-            obj[atrrName] = [attrMap[atrrName]];
-          } else {
-            obj[atrrName] = attrMap[atrrName];
-          }
-        }
-      }
-    }
-    function isLeafTag(obj, options) {
-      const { textNodeName } = options;
-      const propCount = Object.keys(obj).length;
-      if (propCount === 0) {
-        return true;
-      }
-      if (propCount === 1 && (obj[textNodeName] || typeof obj[textNodeName] === "boolean" || obj[textNodeName] === 0)) {
-        return true;
-      }
-      return false;
-    }
-    exports2.prettify = prettify;
+    init_xmlNode();
+    METADATA_SYMBOL2 = XmlNode.getMetaDataSymbol();
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
-var require_XMLParser = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(
-    exports2,
-    module2,
-  ) {
-    var { buildOptions } = require_OptionsBuilder();
-    var OrderedObjParser = require_OrderedObjParser();
-    var { prettify } = require_node2json();
-    var validator = require_validator();
-    var XMLParser2 = class {
+var XMLParser;
+var init_XMLParser = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"() {
+    init_OptionsBuilder();
+    init_OrderedObjParser();
+    init_node2json();
+    init_validator();
+    init_xmlNode();
+    XMLParser = class {
       constructor(options) {
         this.externalEntities = {};
         this.options = buildOptions(options);
@@ -10451,7 +11347,7 @@ var require_XMLParser = __commonJS({
         }
         if (validationOption) {
           if (validationOption === true) validationOption = {};
-          const result = validator.validate(xmlData, validationOption);
+          const result = validate(xmlData, validationOption);
           if (result !== true) {
             throw Error(`${result.err.msg}:${result.err.line}:${result.err.col}`);
           }
@@ -10478,433 +11374,535 @@ var require_XMLParser = __commonJS({
           this.externalEntities[key] = value;
         }
       }
-    };
-    module2.exports = XMLParser2;
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
-var require_orderedJs2Xml = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(
-    exports2,
-    module2,
-  ) {
-    var EOL = "\n";
-    function toXml(jArray, options) {
-      let indentation = "";
-      if (options.format && options.indentBy.length > 0) {
-        indentation = EOL;
-      }
-      return arrToStr(jArray, options, "", indentation);
-    }
-    function arrToStr(arr, options, jPath, indentation) {
-      let xmlStr = "";
-      let isPreviousElementTag = false;
-      for (let i = 0; i < arr.length; i++) {
-        const tagObj = arr[i];
-        const tagName = propName(tagObj);
-        if (tagName === void 0) continue;
-        let newJPath = "";
-        if (jPath.length === 0) newJPath = tagName;
-        else newJPath = `${jPath}.${tagName}`;
-        if (tagName === options.textNodeName) {
-          let tagText = tagObj[tagName];
-          if (!isStopNode(newJPath, options)) {
-            tagText = options.tagValueProcessor(tagName, tagText);
-            tagText = replaceEntitiesValue(tagText, options);
-          }
-          if (isPreviousElementTag) {
-            xmlStr += indentation;
-          }
-          xmlStr += tagText;
-          isPreviousElementTag = false;
-          continue;
-        } else if (tagName === options.cdataPropName) {
-          if (isPreviousElementTag) {
-            xmlStr += indentation;
-          }
-          xmlStr += `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
-          isPreviousElementTag = false;
-          continue;
-        } else if (tagName === options.commentPropName) {
-          xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
-          isPreviousElementTag = true;
-          continue;
-        } else if (tagName[0] === "?") {
-          const attStr2 = attr_to_str(tagObj[":@"], options);
-          const tempInd = tagName === "?xml" ? "" : indentation;
-          let piTextNodeName = tagObj[tagName][0][options.textNodeName];
-          piTextNodeName = piTextNodeName.length !== 0 ? " " + piTextNodeName : "";
-          xmlStr += tempInd + `<${tagName}${piTextNodeName}${attStr2}?>`;
-          isPreviousElementTag = true;
-          continue;
-        }
-        let newIdentation = indentation;
-        if (newIdentation !== "") {
-          newIdentation += options.indentBy;
-        }
-        const attStr = attr_to_str(tagObj[":@"], options);
-        const tagStart = indentation + `<${tagName}${attStr}`;
-        const tagValue = arrToStr(tagObj[tagName], options, newJPath, newIdentation);
-        if (options.unpairedTags.indexOf(tagName) !== -1) {
-          if (options.suppressUnpairedNode) xmlStr += tagStart + ">";
-          else xmlStr += tagStart + "/>";
-        } else if ((!tagValue || tagValue.length === 0) && options.suppressEmptyNode) {
-          xmlStr += tagStart + "/>";
-        } else if (tagValue && tagValue.endsWith(">")) {
-          xmlStr += tagStart + `>${tagValue}${indentation}</${tagName}>`;
-        } else {
-          xmlStr += tagStart + ">";
-          if (tagValue && indentation !== "" && (tagValue.includes("/>") || tagValue.includes("</"))) {
-            xmlStr += indentation + options.indentBy + tagValue + indentation;
-          } else {
-            xmlStr += tagValue;
-          }
-          xmlStr += `</${tagName}>`;
-        }
-        isPreviousElementTag = true;
-      }
-      return xmlStr;
-    }
-    function propName(obj) {
-      const keys = Object.keys(obj);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        if (!obj.hasOwnProperty(key)) continue;
-        if (key !== ":@") return key;
-      }
-    }
-    function attr_to_str(attrMap, options) {
-      let attrStr = "";
-      if (attrMap && !options.ignoreAttributes) {
-        for (let attr in attrMap) {
-          if (!attrMap.hasOwnProperty(attr)) continue;
-          let attrVal = options.attributeValueProcessor(attr, attrMap[attr]);
-          attrVal = replaceEntitiesValue(attrVal, options);
-          if (attrVal === true && options.suppressBooleanAttributes) {
-            attrStr += ` ${attr.substr(options.attributeNamePrefix.length)}`;
-          } else {
-            attrStr += ` ${attr.substr(options.attributeNamePrefix.length)}="${attrVal}"`;
-          }
-        }
-      }
-      return attrStr;
-    }
-    function isStopNode(jPath, options) {
-      jPath = jPath.substr(0, jPath.length - options.textNodeName.length - 1);
-      let tagName = jPath.substr(jPath.lastIndexOf(".") + 1);
-      for (let index in options.stopNodes) {
-        if (options.stopNodes[index] === jPath || options.stopNodes[index] === "*." + tagName) return true;
-      }
-      return false;
-    }
-    function replaceEntitiesValue(textValue, options) {
-      if (textValue && textValue.length > 0 && options.processEntities) {
-        for (let i = 0; i < options.entities.length; i++) {
-          const entity = options.entities[i];
-          textValue = textValue.replace(entity.regex, entity.val);
-        }
-      }
-      return textValue;
-    }
-    module2.exports = toXml;
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js
-var require_json2xml = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(
-    exports2,
-    module2,
-  ) {
-    "use strict";
-    var buildFromOrderedJs = require_orderedJs2Xml();
-    var defaultOptions = {
-      attributeNamePrefix: "@_",
-      attributesGroupName: false,
-      textNodeName: "#text",
-      ignoreAttributes: true,
-      cdataPropName: false,
-      format: false,
-      indentBy: "  ",
-      suppressEmptyNode: false,
-      suppressUnpairedNode: true,
-      suppressBooleanAttributes: true,
-      tagValueProcessor: function (key, a) {
-        return a;
-      },
-      attributeValueProcessor: function (attrName, a) {
-        return a;
-      },
-      preserveOrder: false,
-      commentPropName: false,
-      unpairedTags: [],
-      entities: [
-        { regex: new RegExp("&", "g"), val: "&amp;" },
-        //it must be on top
-        { regex: new RegExp(">", "g"), val: "&gt;" },
-        { regex: new RegExp("<", "g"), val: "&lt;" },
-        { regex: new RegExp("'", "g"), val: "&apos;" },
-        { regex: new RegExp('"', "g"), val: "&quot;" },
-      ],
-      processEntities: true,
-      stopNodes: [],
-      // transformTagName: false,
-      // transformAttributeName: false,
-      oneListGroup: false,
-    };
-    function Builder(options) {
-      this.options = Object.assign({}, defaultOptions, options);
-      if (this.options.ignoreAttributes || this.options.attributesGroupName) {
-        this.isAttribute = function () {
-          return false;
-        };
-      } else {
-        this.attrPrefixLen = this.options.attributeNamePrefix.length;
-        this.isAttribute = isAttribute;
-      }
-      this.processTextOrObjNode = processTextOrObjNode;
-      if (this.options.format) {
-        this.indentate = indentate;
-        this.tagEndChar = ">\n";
-        this.newLine = "\n";
-      } else {
-        this.indentate = function () {
-          return "";
-        };
-        this.tagEndChar = ">";
-        this.newLine = "";
-      }
-    }
-    Builder.prototype.build = function (jObj) {
-      if (this.options.preserveOrder) {
-        return buildFromOrderedJs(jObj, this.options);
-      } else {
-        if (Array.isArray(jObj) && this.options.arrayNodeName && this.options.arrayNodeName.length > 1) {
-          jObj = {
-            [this.options.arrayNodeName]: jObj,
-          };
-        }
-        return this.j2x(jObj, 0).val;
+      /**
+       * Returns a Symbol that can be used to access the metadata
+       * property on a node.
+       *
+       * If Symbol is not available in the environment, an ordinary property is used
+       * and the name of the property is here returned.
+       *
+       * The XMLMetaData property is only present when `captureMetaData`
+       * is true in the options.
+       */
+      static getMetaDataSymbol() {
+        return XmlNode.getMetaDataSymbol();
       }
     };
-    Builder.prototype.j2x = function (jObj, level) {
-      let attrStr = "";
-      let val2 = "";
-      for (let key in jObj) {
-        if (!Object.prototype.hasOwnProperty.call(jObj, key)) continue;
-        if (typeof jObj[key] === "undefined") {
-          if (this.isAttribute(key)) {
-            val2 += "";
-          }
-        } else if (jObj[key] === null) {
-          if (this.isAttribute(key)) {
-            val2 += "";
-          } else if (key[0] === "?") {
-            val2 += this.indentate(level) + "<" + key + "?" + this.tagEndChar;
-          } else {
-            val2 += this.indentate(level) + "<" + key + "/" + this.tagEndChar;
-          }
-        } else if (jObj[key] instanceof Date) {
-          val2 += this.buildTextValNode(jObj[key], key, "", level);
-        } else if (typeof jObj[key] !== "object") {
-          const attr = this.isAttribute(key);
-          if (attr) {
-            attrStr += this.buildAttrPairStr(attr, "" + jObj[key]);
-          } else {
-            if (key === this.options.textNodeName) {
-              let newval = this.options.tagValueProcessor(key, "" + jObj[key]);
-              val2 += this.replaceEntitiesValue(newval);
-            } else {
-              val2 += this.buildTextValNode(jObj[key], key, "", level);
-            }
-          }
-        } else if (Array.isArray(jObj[key])) {
-          const arrLen = jObj[key].length;
-          let listTagVal = "";
-          let listTagAttr = "";
-          for (let j = 0; j < arrLen; j++) {
-            const item = jObj[key][j];
-            if (typeof item === "undefined") {
-            } else if (item === null) {
-              if (key[0] === "?") val2 += this.indentate(level) + "<" + key + "?" + this.tagEndChar;
-              else val2 += this.indentate(level) + "<" + key + "/" + this.tagEndChar;
-            } else if (typeof item === "object") {
-              if (this.options.oneListGroup) {
-                const result = this.j2x(item, level + 1);
-                listTagVal += result.val;
-                if (this.options.attributesGroupName && item.hasOwnProperty(this.options.attributesGroupName)) {
-                  listTagAttr += result.attrStr;
-                }
-              } else {
-                listTagVal += this.processTextOrObjNode(item, key, level);
-              }
-            } else {
-              if (this.options.oneListGroup) {
-                let textValue = this.options.tagValueProcessor(key, item);
-                textValue = this.replaceEntitiesValue(textValue);
-                listTagVal += textValue;
-              } else {
-                listTagVal += this.buildTextValNode(item, key, "", level);
-              }
-            }
-          }
-          if (this.options.oneListGroup) {
-            listTagVal = this.buildObjectNode(listTagVal, key, listTagAttr, level);
-          }
-          val2 += listTagVal;
-        } else {
-          if (this.options.attributesGroupName && key === this.options.attributesGroupName) {
-            const Ks = Object.keys(jObj[key]);
-            const L = Ks.length;
-            for (let j = 0; j < L; j++) {
-              attrStr += this.buildAttrPairStr(Ks[j], "" + jObj[key][Ks[j]]);
-            }
-          } else {
-            val2 += this.processTextOrObjNode(jObj[key], key, level);
-          }
-        }
-      }
-      return { attrStr, val: val2 };
-    };
-    Builder.prototype.buildAttrPairStr = function (attrName, val2) {
-      val2 = this.options.attributeValueProcessor(attrName, "" + val2);
-      val2 = this.replaceEntitiesValue(val2);
-      if (this.options.suppressBooleanAttributes && val2 === "true") {
-        return " " + attrName;
-      } else return " " + attrName + '="' + val2 + '"';
-    };
-    function processTextOrObjNode(object, key, level) {
-      const result = this.j2x(object, level + 1);
-      if (object[this.options.textNodeName] !== void 0 && Object.keys(object).length === 1) {
-        return this.buildTextValNode(object[this.options.textNodeName], key, result.attrStr, level);
-      } else {
-        return this.buildObjectNode(result.val, key, result.attrStr, level);
-      }
-    }
-    Builder.prototype.buildObjectNode = function (val2, key, attrStr, level) {
-      if (val2 === "") {
-        if (key[0] === "?") return this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar;
-        else {
-          return this.indentate(level) + "<" + key + attrStr + this.closeTag(key) + this.tagEndChar;
-        }
-      } else {
-        let tagEndExp = "</" + key + this.tagEndChar;
-        let piClosingChar = "";
-        if (key[0] === "?") {
-          piClosingChar = "?";
-          tagEndExp = "";
-        }
-        if ((attrStr || attrStr === "") && val2.indexOf("<") === -1) {
-          return this.indentate(level) + "<" + key + attrStr + piClosingChar + ">" + val2 + tagEndExp;
-        } else if (
-          this.options.commentPropName !== false &&
-          key === this.options.commentPropName &&
-          piClosingChar.length === 0
-        ) {
-          return this.indentate(level) + `<!--${val2}-->` + this.newLine;
-        } else {
-          return (
-            this.indentate(level) +
-            "<" +
-            key +
-            attrStr +
-            piClosingChar +
-            this.tagEndChar +
-            val2 +
-            this.indentate(level) +
-            tagEndExp
-          );
-        }
-      }
-    };
-    Builder.prototype.closeTag = function (key) {
-      let closeTag = "";
-      if (this.options.unpairedTags.indexOf(key) !== -1) {
-        if (!this.options.suppressUnpairedNode) closeTag = "/";
-      } else if (this.options.suppressEmptyNode) {
-        closeTag = "/";
-      } else {
-        closeTag = `></${key}`;
-      }
-      return closeTag;
-    };
-    Builder.prototype.buildTextValNode = function (val2, key, attrStr, level) {
-      if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
-        return this.indentate(level) + `<![CDATA[${val2}]]>` + this.newLine;
-      } else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
-        return this.indentate(level) + `<!--${val2}-->` + this.newLine;
-      } else if (key[0] === "?") {
-        return this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar;
-      } else {
-        let textValue = this.options.tagValueProcessor(key, val2);
-        textValue = this.replaceEntitiesValue(textValue);
-        if (textValue === "") {
-          return this.indentate(level) + "<" + key + attrStr + this.closeTag(key) + this.tagEndChar;
-        } else {
-          return this.indentate(level) + "<" + key + attrStr + ">" + textValue + "</" + key + this.tagEndChar;
-        }
-      }
-    };
-    Builder.prototype.replaceEntitiesValue = function (textValue) {
-      if (textValue && textValue.length > 0 && this.options.processEntities) {
-        for (let i = 0; i < this.options.entities.length; i++) {
-          const entity = this.options.entities[i];
-          textValue = textValue.replace(entity.regex, entity.val);
-        }
-      }
-      return textValue;
-    };
-    function indentate(level) {
-      return this.options.indentBy.repeat(level);
-    }
-    function isAttribute(name) {
-      if (name.startsWith(this.options.attributeNamePrefix) && name !== this.options.textNodeName) {
-        return name.substr(this.attrPrefixLen);
-      } else {
-        return false;
-      }
-    }
-    module2.exports = Builder;
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/fxp.js
-var require_fxp = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/fxp.js"(
-    exports2,
-    module2,
-  ) {
+var init_fxp = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/fast-xml-parser/src/fxp.js"() {
     "use strict";
-    var validator = require_validator();
-    var XMLParser2 = require_XMLParser();
-    var XMLBuilder = require_json2xml();
-    module2.exports = {
-      XMLParser: XMLParser2,
-      XMLValidator: validator,
-      XMLBuilder,
-    };
+    init_XMLParser();
   },
 });
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/parseXmlBody.js
-var import_smithy_client3, import_fast_xml_parser, parseXmlBody, parseXmlErrorBody, loadRestXmlErrorCode;
-var init_parseXmlBody = __esm({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/parseXmlBody.js"() {
-    import_smithy_client3 = __toESM(require_dist_cjs20());
-    import_fast_xml_parser = __toESM(require_fxp());
-    init_common();
-    parseXmlBody = (streamBody, context) =>
-      collectBodyString(streamBody, context).then((encoded) => {
-        if (encoded.length) {
-          const parser = new import_fast_xml_parser.XMLParser({
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/XmlShapeDeserializer.js
+var import_smithy_client3, import_util_utf83, XmlShapeDeserializer;
+var init_XmlShapeDeserializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/XmlShapeDeserializer.js"() {
+    init_protocols();
+    init_schema();
+    import_smithy_client3 = __toESM(require_dist_cjs23());
+    import_util_utf83 = __toESM(require_dist_cjs7());
+    init_fxp();
+    init_ConfigurableSerdeContext();
+    XmlShapeDeserializer = class extends SerdeContextConfig {
+      constructor(settings) {
+        super();
+        __publicField(this, "settings");
+        __publicField(this, "stringDeserializer");
+        this.settings = settings;
+        this.stringDeserializer = new FromStringShapeDeserializer(settings);
+      }
+      setSerdeContext(serdeContext) {
+        this.serdeContext = serdeContext;
+        this.stringDeserializer.setSerdeContext(serdeContext);
+      }
+      read(schema, bytes, key) {
+        const ns = NormalizedSchema.of(schema);
+        const memberSchemas = ns.getMemberSchemas();
+        const isEventPayload =
+          ns.isStructSchema() &&
+          ns.isMemberSchema() &&
+          !!Object.values(memberSchemas).find((memberNs) => {
+            return !!memberNs.getMemberTraits().eventPayload;
+          });
+        if (isEventPayload) {
+          const output = {};
+          const memberName = Object.keys(memberSchemas)[0];
+          const eventMemberSchema = memberSchemas[memberName];
+          if (eventMemberSchema.isBlobSchema()) {
+            output[memberName] = bytes;
+          } else {
+            output[memberName] = this.read(memberSchemas[memberName], bytes);
+          }
+          return output;
+        }
+        const xmlString = (this.serdeContext?.utf8Encoder ?? import_util_utf83.toUtf8)(bytes);
+        const parsedObject = this.parseXml(xmlString);
+        return this.readSchema(schema, key ? parsedObject[key] : parsedObject);
+      }
+      readSchema(_schema, value) {
+        const ns = NormalizedSchema.of(_schema);
+        const traits = ns.getMergedTraits();
+        const schema = ns.getSchema();
+        if (ns.isListSchema() && !Array.isArray(value)) {
+          return this.readSchema(schema, [value]);
+        }
+        if (value == null) {
+          return value;
+        }
+        if (typeof value === "object") {
+          const sparse = !!traits.sparse;
+          const flat = !!traits.xmlFlattened;
+          if (ns.isListSchema()) {
+            const listValue = ns.getValueSchema();
+            const buffer2 = [];
+            const sourceKey = listValue.getMergedTraits().xmlName ?? "member";
+            const source = flat ? value : (value[0] ?? value)[sourceKey];
+            const sourceArray = Array.isArray(source) ? source : [source];
+            for (const v of sourceArray) {
+              if (v != null || sparse) {
+                buffer2.push(this.readSchema(listValue, v));
+              }
+            }
+            return buffer2;
+          }
+          const buffer = {};
+          if (ns.isMapSchema()) {
+            const keyNs = ns.getKeySchema();
+            const memberNs = ns.getValueSchema();
+            let entries;
+            if (flat) {
+              entries = Array.isArray(value) ? value : [value];
+            } else {
+              entries = Array.isArray(value.entry) ? value.entry : [value.entry];
+            }
+            const keyProperty = keyNs.getMergedTraits().xmlName ?? "key";
+            const valueProperty = memberNs.getMergedTraits().xmlName ?? "value";
+            for (const entry of entries) {
+              const key = entry[keyProperty];
+              const value2 = entry[valueProperty];
+              if (value2 != null || sparse) {
+                buffer[key] = this.readSchema(memberNs, value2);
+              }
+            }
+            return buffer;
+          }
+          if (ns.isStructSchema()) {
+            for (const [memberName, memberSchema] of ns.structIterator()) {
+              const memberTraits = memberSchema.getMergedTraits();
+              const xmlObjectKey = !memberTraits.httpPayload
+                ? (memberSchema.getMemberTraits().xmlName ?? memberName)
+                : (memberTraits.xmlName ?? memberSchema.getName());
+              if (value[xmlObjectKey] != null) {
+                buffer[memberName] = this.readSchema(memberSchema, value[xmlObjectKey]);
+              }
+            }
+            return buffer;
+          }
+          if (ns.isDocumentSchema()) {
+            return value;
+          }
+          throw new Error(`@aws-sdk/core/protocols - xml deserializer unhandled schema type for ${ns.getName(true)}`);
+        } else {
+          if (ns.isListSchema()) {
+            return [];
+          } else if (ns.isMapSchema() || ns.isStructSchema()) {
+            return {};
+          }
+          return this.stringDeserializer.read(ns, value);
+        }
+      }
+      parseXml(xml) {
+        if (xml.length) {
+          const parser = new XMLParser({
             attributeNamePrefix: "",
             htmlEntities: true,
             ignoreAttributes: false,
             ignoreDeclaration: true,
             parseTagValue: false,
             trimValues: false,
-            tagValueProcessor: (_, val2) => (val2.trim() === "" && val2.includes("\n") ? "" : void 0),
+            tagValueProcessor: (_, val) => (val.trim() === "" && val.includes("\n") ? "" : void 0),
+          });
+          parser.addEntity("#xD", "\r");
+          parser.addEntity("#10", "\n");
+          let parsedObj;
+          try {
+            parsedObj = parser.parse(xml, true);
+          } catch (e) {
+            if (e && typeof e === "object") {
+              Object.defineProperty(e, "$responseBodyText", {
+                value: xml,
+              });
+            }
+            throw e;
+          }
+          const textNodeName = "#text";
+          const key = Object.keys(parsedObj)[0];
+          const parsedObjToReturn = parsedObj[key];
+          if (parsedObjToReturn[textNodeName]) {
+            parsedObjToReturn[key] = parsedObjToReturn[textNodeName];
+            delete parsedObjToReturn[textNodeName];
+          }
+          return (0, import_smithy_client3.getValueFromTextNode)(parsedObjToReturn);
+        }
+        return {};
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/query/QueryShapeSerializer.js
+var import_smithy_client4, import_util_base644, QueryShapeSerializer;
+var init_QueryShapeSerializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/query/QueryShapeSerializer.js"() {
+    init_protocols();
+    init_schema();
+    init_serde();
+    import_smithy_client4 = __toESM(require_dist_cjs23());
+    import_util_base644 = __toESM(require_dist_cjs8());
+    init_ConfigurableSerdeContext();
+    QueryShapeSerializer = class extends SerdeContextConfig {
+      constructor(settings) {
+        super();
+        __publicField(this, "settings");
+        __publicField(this, "buffer");
+        this.settings = settings;
+      }
+      write(schema, value, prefix = "") {
+        if (this.buffer === void 0) {
+          this.buffer = "";
+        }
+        const ns = NormalizedSchema.of(schema);
+        if (prefix && !prefix.endsWith(".")) {
+          prefix += ".";
+        }
+        if (ns.isBlobSchema()) {
+          if (typeof value === "string" || value instanceof Uint8Array) {
+            this.writeKey(prefix);
+            this.writeValue((this.serdeContext?.base64Encoder ?? import_util_base644.toBase64)(value));
+          }
+        } else if (ns.isBooleanSchema() || ns.isNumericSchema() || ns.isStringSchema()) {
+          if (value != null) {
+            this.writeKey(prefix);
+            this.writeValue(String(value));
+          }
+        } else if (ns.isBigIntegerSchema()) {
+          if (value != null) {
+            this.writeKey(prefix);
+            this.writeValue(String(value));
+          }
+        } else if (ns.isBigDecimalSchema()) {
+          if (value != null) {
+            this.writeKey(prefix);
+            this.writeValue(value instanceof NumericValue2 ? value.string : String(value));
+          }
+        } else if (ns.isTimestampSchema()) {
+          if (value instanceof Date) {
+            this.writeKey(prefix);
+            const format = determineTimestampFormat(ns, this.settings);
+            switch (format) {
+              case SCHEMA.TIMESTAMP_DATE_TIME:
+                this.writeValue(value.toISOString().replace(".000Z", "Z"));
+                break;
+              case SCHEMA.TIMESTAMP_HTTP_DATE:
+                this.writeValue((0, import_smithy_client4.dateToUtcString)(value));
+                break;
+              case SCHEMA.TIMESTAMP_EPOCH_SECONDS:
+                this.writeValue(String(value.getTime() / 1e3));
+                break;
+            }
+          }
+        } else if (ns.isDocumentSchema()) {
+          throw new Error(`@aws-sdk/core/protocols - QuerySerializer unsupported document type ${ns.getName(true)}`);
+        } else if (ns.isListSchema()) {
+          if (Array.isArray(value)) {
+            if (value.length === 0) {
+              if (this.settings.serializeEmptyLists) {
+                this.writeKey(prefix);
+                this.writeValue("");
+              }
+            } else {
+              const member = ns.getValueSchema();
+              const flat = this.settings.flattenLists || ns.getMergedTraits().xmlFlattened;
+              let i = 1;
+              for (const item of value) {
+                if (item == null) {
+                  continue;
+                }
+                const suffix = this.getKey("member", member.getMergedTraits().xmlName);
+                const key = flat ? `${prefix}${i}` : `${prefix}${suffix}.${i}`;
+                this.write(member, item, key);
+                ++i;
+              }
+            }
+          }
+        } else if (ns.isMapSchema()) {
+          if (value && typeof value === "object") {
+            const keySchema = ns.getKeySchema();
+            const memberSchema = ns.getValueSchema();
+            const flat = ns.getMergedTraits().xmlFlattened;
+            let i = 1;
+            for (const [k, v] of Object.entries(value)) {
+              if (v == null) {
+                continue;
+              }
+              const keySuffix = this.getKey("key", keySchema.getMergedTraits().xmlName);
+              const key = flat ? `${prefix}${i}.${keySuffix}` : `${prefix}entry.${i}.${keySuffix}`;
+              const valueSuffix = this.getKey("value", memberSchema.getMergedTraits().xmlName);
+              const valueKey = flat ? `${prefix}${i}.${valueSuffix}` : `${prefix}entry.${i}.${valueSuffix}`;
+              this.write(keySchema, k, key);
+              this.write(memberSchema, v, valueKey);
+              ++i;
+            }
+          }
+        } else if (ns.isStructSchema()) {
+          if (value && typeof value === "object") {
+            for (const [memberName, member] of ns.structIterator()) {
+              if (value[memberName] == null) {
+                continue;
+              }
+              const suffix = this.getKey(memberName, member.getMergedTraits().xmlName);
+              const key = `${prefix}${suffix}`;
+              this.write(member, value[memberName], key);
+            }
+          }
+        } else if (ns.isUnitSchema()) {
+        } else {
+          throw new Error(`@aws-sdk/core/protocols - QuerySerializer unrecognized schema type ${ns.getName(true)}`);
+        }
+      }
+      flush() {
+        if (this.buffer === void 0) {
+          throw new Error("@aws-sdk/core/protocols - QuerySerializer cannot flush with nothing written to buffer.");
+        }
+        const str = this.buffer;
+        delete this.buffer;
+        return str;
+      }
+      getKey(memberName, xmlName) {
+        const key = xmlName ?? memberName;
+        if (this.settings.capitalizeKeys) {
+          return key[0].toUpperCase() + key.slice(1);
+        }
+        return key;
+      }
+      writeKey(key) {
+        if (key.endsWith(".")) {
+          key = key.slice(0, key.length - 1);
+        }
+        this.buffer += `&${extendedEncodeURIComponent2(key)}=`;
+      }
+      writeValue(value) {
+        this.buffer += extendedEncodeURIComponent2(value);
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/query/AwsQueryProtocol.js
+var import_util_body_length_browser3, AwsQueryProtocol;
+var init_AwsQueryProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/query/AwsQueryProtocol.js"() {
+    init_protocols();
+    init_schema();
+    import_util_body_length_browser3 = __toESM(require_dist_cjs21());
+    init_XmlShapeDeserializer();
+    init_QueryShapeSerializer();
+    AwsQueryProtocol = class extends RpcProtocol {
+      constructor(options) {
+        super({
+          defaultNamespace: options.defaultNamespace,
+        });
+        __publicField(this, "options");
+        __publicField(this, "serializer");
+        __publicField(this, "deserializer");
+        this.options = options;
+        const settings = {
+          timestampFormat: {
+            useTrait: true,
+            default: SCHEMA.TIMESTAMP_DATE_TIME,
+          },
+          httpBindings: false,
+          xmlNamespace: options.xmlNamespace,
+          serviceNamespace: options.defaultNamespace,
+          serializeEmptyLists: true,
+        };
+        this.serializer = new QueryShapeSerializer(settings);
+        this.deserializer = new XmlShapeDeserializer(settings);
+      }
+      getShapeId() {
+        return "aws.protocols#awsQuery";
+      }
+      setSerdeContext(serdeContext) {
+        this.serializer.setSerdeContext(serdeContext);
+        this.deserializer.setSerdeContext(serdeContext);
+      }
+      getPayloadCodec() {
+        throw new Error("AWSQuery protocol has no payload codec.");
+      }
+      async serializeRequest(operationSchema, input, context) {
+        const request = await super.serializeRequest(operationSchema, input, context);
+        if (!request.path.endsWith("/")) {
+          request.path += "/";
+        }
+        Object.assign(request.headers, {
+          "content-type": `application/x-www-form-urlencoded`,
+        });
+        if (deref(operationSchema.input) === "unit" || !request.body) {
+          request.body = "";
+        }
+        request.body = `Action=${operationSchema.name.split("#")[1]}&Version=${this.options.version}` + request.body;
+        if (request.body.endsWith("&")) {
+          request.body = request.body.slice(-1);
+        }
+        try {
+          request.headers["content-length"] = String(
+            (0, import_util_body_length_browser3.calculateBodyLength)(request.body),
+          );
+        } catch (e) {}
+        return request;
+      }
+      async deserializeResponse(operationSchema, context, response) {
+        const deserializer = this.deserializer;
+        const ns = NormalizedSchema.of(operationSchema.output);
+        const dataObject = {};
+        if (response.statusCode >= 300) {
+          const bytes2 = await collectBody2(response.body, context);
+          if (bytes2.byteLength > 0) {
+            Object.assign(dataObject, await deserializer.read(SCHEMA.DOCUMENT, bytes2));
+          }
+          await this.handleError(operationSchema, context, response, dataObject, this.deserializeMetadata(response));
+        }
+        for (const header in response.headers) {
+          const value = response.headers[header];
+          delete response.headers[header];
+          response.headers[header.toLowerCase()] = value;
+        }
+        const awsQueryResultKey =
+          ns.isStructSchema() && this.useNestedResult() ? operationSchema.name.split("#")[1] + "Result" : void 0;
+        const bytes = await collectBody2(response.body, context);
+        if (bytes.byteLength > 0) {
+          Object.assign(dataObject, await deserializer.read(ns, bytes, awsQueryResultKey));
+        }
+        const output = {
+          $metadata: this.deserializeMetadata(response),
+          ...dataObject,
+        };
+        return output;
+      }
+      useNestedResult() {
+        return true;
+      }
+      async handleError(operationSchema, context, response, dataObject, metadata) {
+        const errorIdentifier = this.loadQueryErrorCode(response, dataObject) ?? "Unknown";
+        let namespace = this.options.defaultNamespace;
+        let errorName = errorIdentifier;
+        if (errorIdentifier.includes("#")) {
+          [namespace, errorName] = errorIdentifier.split("#");
+        }
+        const errorDataSource = this.loadQueryError(dataObject);
+        const registry = TypeRegistry.for(namespace);
+        let errorSchema;
+        try {
+          errorSchema = registry.find(
+            (schema) => NormalizedSchema.of(schema).getMergedTraits().awsQueryError?.[0] === errorName,
+          );
+          if (!errorSchema) {
+            errorSchema = registry.getSchema(errorIdentifier);
+          }
+        } catch (e) {
+          const baseExceptionSchema = TypeRegistry.for("smithy.ts.sdk.synthetic." + namespace).getBaseException();
+          if (baseExceptionSchema) {
+            const ErrorCtor = baseExceptionSchema.ctor;
+            throw Object.assign(new ErrorCtor(errorName), errorDataSource);
+          }
+          throw new Error(errorName);
+        }
+        const ns = NormalizedSchema.of(errorSchema);
+        const message = this.loadQueryErrorMessage(dataObject);
+        const exception = new errorSchema.ctor(message);
+        const output = {};
+        for (const [name, member] of ns.structIterator()) {
+          const target = member.getMergedTraits().xmlName ?? name;
+          const value = errorDataSource[target] ?? dataObject[target];
+          output[name] = this.deserializer.readSchema(member, value);
+        }
+        Object.assign(exception, {
+          $metadata: metadata,
+          $response: response,
+          $fault: ns.getMergedTraits().error,
+          message,
+          ...output,
+        });
+        throw exception;
+      }
+      loadQueryErrorCode(output, data) {
+        const code = (data.Errors?.[0]?.Error ?? data.Errors?.Error ?? data.Error)?.Code;
+        if (code !== void 0) {
+          return code;
+        }
+        if (output.statusCode == 404) {
+          return "NotFound";
+        }
+      }
+      loadQueryError(data) {
+        return data.Errors?.[0]?.Error ?? data.Errors?.Error ?? data.Error;
+      }
+      loadQueryErrorMessage(data) {
+        const errorData = this.loadQueryError(data);
+        return errorData?.message ?? errorData?.Message ?? data.message ?? data.Message ?? "Unknown";
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/query/AwsEc2QueryProtocol.js
+var AwsEc2QueryProtocol;
+var init_AwsEc2QueryProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/query/AwsEc2QueryProtocol.js"() {
+    init_AwsQueryProtocol();
+    AwsEc2QueryProtocol = class extends AwsQueryProtocol {
+      constructor(options) {
+        super(options);
+        __publicField(this, "options");
+        this.options = options;
+        const ec2Settings = {
+          capitalizeKeys: true,
+          flattenLists: true,
+          serializeEmptyLists: false,
+        };
+        Object.assign(this.serializer.settings, ec2Settings);
+      }
+      useNestedResult() {
+        return false;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/parseXmlBody.js
+var import_smithy_client5, parseXmlBody, parseXmlErrorBody, loadRestXmlErrorCode;
+var init_parseXmlBody = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/parseXmlBody.js"() {
+    import_smithy_client5 = __toESM(require_dist_cjs23());
+    init_fxp();
+    init_common();
+    parseXmlBody = (streamBody, context) =>
+      collectBodyString(streamBody, context).then((encoded) => {
+        if (encoded.length) {
+          const parser = new XMLParser({
+            attributeNamePrefix: "",
+            htmlEntities: true,
+            ignoreAttributes: false,
+            ignoreDeclaration: true,
+            parseTagValue: false,
+            trimValues: false,
+            tagValueProcessor: (_, val) => (val.trim() === "" && val.includes("\n") ? "" : void 0),
           });
           parser.addEntity("#xD", "\r");
           parser.addEntity("#10", "\n");
@@ -10926,7 +11924,7 @@ var init_parseXmlBody = __esm({
             parsedObjToReturn[key] = parsedObjToReturn[textNodeName];
             delete parsedObjToReturn[textNodeName];
           }
-          return (0, import_smithy_client3.getValueFromTextNode)(parsedObjToReturn);
+          return (0, import_smithy_client5.getValueFromTextNode)(parsedObjToReturn);
         }
         return {};
       });
@@ -10951,12 +11949,657 @@ var init_parseXmlBody = __esm({
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/xml-builder/dist-cjs/index.js
+var require_dist_cjs24 = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/xml-builder/dist-cjs/index.js"(
+    exports2,
+    module2,
+  ) {
+    "use strict";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
+    var __export2 = (target, all) => {
+      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if ((from && typeof from === "object") || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, {
+              get: () => from[key],
+              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
+            });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var index_exports = {};
+    __export2(index_exports, {
+      XmlNode: () => XmlNode3,
+      XmlText: () => XmlText2,
+    });
+    module2.exports = __toCommonJS2(index_exports);
+    function escapeAttribute(value) {
+      return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    __name(escapeAttribute, "escapeAttribute");
+    function escapeElement(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\r/g, "&#x0D;")
+        .replace(/\n/g, "&#x0A;")
+        .replace(/\u0085/g, "&#x85;")
+        .replace(/\u2028/, "&#x2028;");
+    }
+    __name(escapeElement, "escapeElement");
+    var _a;
+    var XmlText2 =
+      ((_a = class {
+        constructor(value) {
+          this.value = value;
+        }
+        toString() {
+          return escapeElement("" + this.value);
+        }
+      }),
+      __name(_a, "XmlText"),
+      _a);
+    var _a2;
+    var XmlNode3 =
+      ((_a2 = class {
+        constructor(name, children = []) {
+          __publicField(this, "attributes", {});
+          this.name = name;
+          this.children = children;
+        }
+        static of(name, childText, withName) {
+          const node = new _a2(name);
+          if (childText !== void 0) {
+            node.addChildNode(new XmlText2(childText));
+          }
+          if (withName !== void 0) {
+            node.withName(withName);
+          }
+          return node;
+        }
+        withName(name) {
+          this.name = name;
+          return this;
+        }
+        addAttribute(name, value) {
+          this.attributes[name] = value;
+          return this;
+        }
+        addChildNode(child) {
+          this.children.push(child);
+          return this;
+        }
+        removeAttribute(name) {
+          delete this.attributes[name];
+          return this;
+        }
+        /**
+         * @internal
+         * Alias of {@link XmlNode#withName(string)} for codegen brevity.
+         */
+        n(name) {
+          this.name = name;
+          return this;
+        }
+        /**
+         * @internal
+         * Alias of {@link XmlNode#addChildNode(string)} for codegen brevity.
+         */
+        c(child) {
+          this.children.push(child);
+          return this;
+        }
+        /**
+         * @internal
+         * Checked version of {@link XmlNode#addAttribute(string)} for codegen brevity.
+         */
+        a(name, value) {
+          if (value != null) {
+            this.attributes[name] = value;
+          }
+          return this;
+        }
+        /**
+         * Create a child node.
+         * Used in serialization of string fields.
+         * @internal
+         */
+        cc(input, field, withName = field) {
+          if (input[field] != null) {
+            const node = _a2.of(field, input[field]).withName(withName);
+            this.c(node);
+          }
+        }
+        /**
+         * Creates list child nodes.
+         * @internal
+         */
+        l(input, listName, memberName, valueProvider) {
+          if (input[listName] != null) {
+            const nodes = valueProvider();
+            nodes.map((node) => {
+              node.withName(memberName);
+              this.c(node);
+            });
+          }
+        }
+        /**
+         * Creates list child nodes with container.
+         * @internal
+         */
+        lc(input, listName, memberName, valueProvider) {
+          if (input[listName] != null) {
+            const nodes = valueProvider();
+            const containerNode = new _a2(memberName);
+            nodes.map((node) => {
+              containerNode.c(node);
+            });
+            this.c(containerNode);
+          }
+        }
+        toString() {
+          const hasChildren = Boolean(this.children.length);
+          let xmlText = `<${this.name}`;
+          const attributes = this.attributes;
+          for (const attributeName of Object.keys(attributes)) {
+            const attribute = attributes[attributeName];
+            if (attribute != null) {
+              xmlText += ` ${attributeName}="${escapeAttribute("" + attribute)}"`;
+            }
+          }
+          return (xmlText += !hasChildren
+            ? "/>"
+            : `>${this.children.map((c) => c.toString()).join("")}</${this.name}>`);
+        }
+      }),
+      __name(_a2, "XmlNode"),
+      _a2);
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/XmlShapeSerializer.js
+var import_xml_builder, import_smithy_client6, import_util_base645, XmlShapeSerializer;
+var init_XmlShapeSerializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/XmlShapeSerializer.js"() {
+    import_xml_builder = __toESM(require_dist_cjs24());
+    init_schema();
+    init_serde();
+    import_smithy_client6 = __toESM(require_dist_cjs23());
+    import_util_base645 = __toESM(require_dist_cjs8());
+    init_ConfigurableSerdeContext();
+    XmlShapeSerializer = class extends SerdeContextConfig {
+      constructor(settings) {
+        super();
+        __publicField(this, "settings");
+        __publicField(this, "stringBuffer");
+        __publicField(this, "byteBuffer");
+        __publicField(this, "buffer");
+        this.settings = settings;
+      }
+      write(schema, value) {
+        const ns = NormalizedSchema.of(schema);
+        if (ns.isStringSchema() && typeof value === "string") {
+          this.stringBuffer = value;
+        } else if (ns.isBlobSchema()) {
+          this.byteBuffer =
+            "byteLength" in value ? value : (this.serdeContext?.base64Decoder ?? import_util_base645.fromBase64)(value);
+        } else {
+          this.buffer = this.writeStruct(ns, value, void 0);
+          const traits = ns.getMergedTraits();
+          if (traits.httpPayload && !traits.xmlName) {
+            this.buffer.withName(ns.getName());
+          }
+        }
+      }
+      flush() {
+        if (this.byteBuffer !== void 0) {
+          const bytes = this.byteBuffer;
+          delete this.byteBuffer;
+          return bytes;
+        }
+        if (this.stringBuffer !== void 0) {
+          const str = this.stringBuffer;
+          delete this.stringBuffer;
+          return str;
+        }
+        const buffer = this.buffer;
+        if (this.settings.xmlNamespace) {
+          if (!buffer?.attributes?.["xmlns"]) {
+            buffer.addAttribute("xmlns", this.settings.xmlNamespace);
+          }
+        }
+        delete this.buffer;
+        return buffer.toString();
+      }
+      writeStruct(ns, value, parentXmlns) {
+        const traits = ns.getMergedTraits();
+        const name =
+          ns.isMemberSchema() && !traits.httpPayload
+            ? (ns.getMemberTraits().xmlName ?? ns.getMemberName())
+            : (traits.xmlName ?? ns.getName());
+        if (!name || !ns.isStructSchema()) {
+          throw new Error(
+            `@aws-sdk/core/protocols - xml serializer, cannot write struct with empty name or non-struct, schema=${ns.getName(true)}.`,
+          );
+        }
+        const structXmlNode = import_xml_builder.XmlNode.of(name);
+        const [xmlnsAttr, xmlns] = this.getXmlnsAttribute(ns, parentXmlns);
+        if (xmlns) {
+          structXmlNode.addAttribute(xmlnsAttr, xmlns);
+        }
+        for (const [memberName, memberSchema] of ns.structIterator()) {
+          const val = value[memberName];
+          if (val != null) {
+            if (memberSchema.getMergedTraits().xmlAttribute) {
+              structXmlNode.addAttribute(
+                memberSchema.getMergedTraits().xmlName ?? memberName,
+                this.writeSimple(memberSchema, val),
+              );
+              continue;
+            }
+            if (memberSchema.isListSchema()) {
+              this.writeList(memberSchema, val, structXmlNode, xmlns);
+            } else if (memberSchema.isMapSchema()) {
+              this.writeMap(memberSchema, val, structXmlNode, xmlns);
+            } else if (memberSchema.isStructSchema()) {
+              structXmlNode.addChildNode(this.writeStruct(memberSchema, val, xmlns));
+            } else {
+              const memberNode = import_xml_builder.XmlNode.of(
+                memberSchema.getMergedTraits().xmlName ?? memberSchema.getMemberName(),
+              );
+              this.writeSimpleInto(memberSchema, val, memberNode, xmlns);
+              structXmlNode.addChildNode(memberNode);
+            }
+          }
+        }
+        return structXmlNode;
+      }
+      writeList(listMember, array, container, parentXmlns) {
+        if (!listMember.isMemberSchema()) {
+          throw new Error(
+            `@aws-sdk/core/protocols - xml serializer, cannot write non-member list: ${listMember.getName(true)}`,
+          );
+        }
+        const listTraits = listMember.getMergedTraits();
+        const listValueSchema = listMember.getValueSchema();
+        const listValueTraits = listValueSchema.getMergedTraits();
+        const sparse = !!listValueTraits.sparse;
+        const flat = !!listTraits.xmlFlattened;
+        const [xmlnsAttr, xmlns] = this.getXmlnsAttribute(listMember, parentXmlns);
+        const writeItem = (container2, value) => {
+          if (listValueSchema.isListSchema()) {
+            this.writeList(listValueSchema, Array.isArray(value) ? value : [value], container2, xmlns);
+          } else if (listValueSchema.isMapSchema()) {
+            this.writeMap(listValueSchema, value, container2, xmlns);
+          } else if (listValueSchema.isStructSchema()) {
+            const struct = this.writeStruct(listValueSchema, value, xmlns);
+            container2.addChildNode(
+              struct.withName(
+                flat ? (listTraits.xmlName ?? listMember.getMemberName()) : (listValueTraits.xmlName ?? "member"),
+              ),
+            );
+          } else {
+            const listItemNode = import_xml_builder.XmlNode.of(
+              flat ? (listTraits.xmlName ?? listMember.getMemberName()) : (listValueTraits.xmlName ?? "member"),
+            );
+            this.writeSimpleInto(listValueSchema, value, listItemNode, xmlns);
+            container2.addChildNode(listItemNode);
+          }
+        };
+        if (flat) {
+          for (const value of array) {
+            if (sparse || value != null) {
+              writeItem(container, value);
+            }
+          }
+        } else {
+          const listNode = import_xml_builder.XmlNode.of(listTraits.xmlName ?? listMember.getMemberName());
+          if (xmlns) {
+            listNode.addAttribute(xmlnsAttr, xmlns);
+          }
+          for (const value of array) {
+            if (sparse || value != null) {
+              writeItem(listNode, value);
+            }
+          }
+          container.addChildNode(listNode);
+        }
+      }
+      writeMap(mapMember, map, container, parentXmlns, containerIsMap = false) {
+        if (!mapMember.isMemberSchema()) {
+          throw new Error(
+            `@aws-sdk/core/protocols - xml serializer, cannot write non-member map: ${mapMember.getName(true)}`,
+          );
+        }
+        const mapTraits = mapMember.getMergedTraits();
+        const mapKeySchema = mapMember.getKeySchema();
+        const mapKeyTraits = mapKeySchema.getMergedTraits();
+        const keyTag = mapKeyTraits.xmlName ?? "key";
+        const mapValueSchema = mapMember.getValueSchema();
+        const mapValueTraits = mapValueSchema.getMergedTraits();
+        const valueTag = mapValueTraits.xmlName ?? "value";
+        const sparse = !!mapValueTraits.sparse;
+        const flat = !!mapTraits.xmlFlattened;
+        const [xmlnsAttr, xmlns] = this.getXmlnsAttribute(mapMember, parentXmlns);
+        const addKeyValue = (entry, key, val) => {
+          const keyNode = import_xml_builder.XmlNode.of(keyTag, key);
+          const [keyXmlnsAttr, keyXmlns] = this.getXmlnsAttribute(mapKeySchema, xmlns);
+          if (keyXmlns) {
+            keyNode.addAttribute(keyXmlnsAttr, keyXmlns);
+          }
+          entry.addChildNode(keyNode);
+          let valueNode = import_xml_builder.XmlNode.of(valueTag);
+          if (mapValueSchema.isListSchema()) {
+            this.writeList(mapValueSchema, val, valueNode, xmlns);
+          } else if (mapValueSchema.isMapSchema()) {
+            this.writeMap(mapValueSchema, val, valueNode, xmlns, true);
+          } else if (mapValueSchema.isStructSchema()) {
+            valueNode = this.writeStruct(mapValueSchema, val, xmlns);
+          } else {
+            this.writeSimpleInto(mapValueSchema, val, valueNode, xmlns);
+          }
+          entry.addChildNode(valueNode);
+        };
+        if (flat) {
+          for (const [key, val] of Object.entries(map)) {
+            if (sparse || val != null) {
+              const entry = import_xml_builder.XmlNode.of(mapTraits.xmlName ?? mapMember.getMemberName());
+              addKeyValue(entry, key, val);
+              container.addChildNode(entry);
+            }
+          }
+        } else {
+          let mapNode;
+          if (!containerIsMap) {
+            mapNode = import_xml_builder.XmlNode.of(mapTraits.xmlName ?? mapMember.getMemberName());
+            if (xmlns) {
+              mapNode.addAttribute(xmlnsAttr, xmlns);
+            }
+            container.addChildNode(mapNode);
+          }
+          for (const [key, val] of Object.entries(map)) {
+            if (sparse || val != null) {
+              const entry = import_xml_builder.XmlNode.of("entry");
+              addKeyValue(entry, key, val);
+              (containerIsMap ? container : mapNode).addChildNode(entry);
+            }
+          }
+        }
+      }
+      writeSimple(_schema, value) {
+        if (null === value) {
+          throw new Error("@aws-sdk/core/protocols - (XML serializer) cannot write null value.");
+        }
+        const ns = NormalizedSchema.of(_schema);
+        let nodeContents = null;
+        if (value && typeof value === "object") {
+          if (ns.isBlobSchema()) {
+            nodeContents = (this.serdeContext?.base64Encoder ?? import_util_base645.toBase64)(value);
+          } else if (ns.isTimestampSchema() && value instanceof Date) {
+            const options = this.settings.timestampFormat;
+            const format = options.useTrait
+              ? ns.getSchema() === SCHEMA.TIMESTAMP_DEFAULT
+                ? options.default
+                : (ns.getSchema() ?? options.default)
+              : options.default;
+            switch (format) {
+              case SCHEMA.TIMESTAMP_DATE_TIME:
+                nodeContents = value.toISOString().replace(".000Z", "Z");
+                break;
+              case SCHEMA.TIMESTAMP_HTTP_DATE:
+                nodeContents = (0, import_smithy_client6.dateToUtcString)(value);
+                break;
+              case SCHEMA.TIMESTAMP_EPOCH_SECONDS:
+                nodeContents = String(value.getTime() / 1e3);
+                break;
+              default:
+                console.warn("Missing timestamp format, using http date", value);
+                nodeContents = (0, import_smithy_client6.dateToUtcString)(value);
+                break;
+            }
+          } else if (ns.isBigDecimalSchema() && value) {
+            if (value instanceof NumericValue2) {
+              return value.string;
+            }
+            return String(value);
+          } else if (ns.isMapSchema() || ns.isListSchema()) {
+            throw new Error(
+              "@aws-sdk/core/protocols - xml serializer, cannot call _write() on List/Map schema, call writeList or writeMap() instead.",
+            );
+          } else {
+            throw new Error(
+              `@aws-sdk/core/protocols - xml serializer, unhandled schema type for object value and schema: ${ns.getName(true)}`,
+            );
+          }
+        }
+        if (
+          ns.isStringSchema() ||
+          ns.isBooleanSchema() ||
+          ns.isNumericSchema() ||
+          ns.isBigIntegerSchema() ||
+          ns.isBigDecimalSchema()
+        ) {
+          nodeContents = String(value);
+        }
+        if (nodeContents === null) {
+          throw new Error(`Unhandled schema-value pair ${ns.getName(true)}=${value}`);
+        }
+        return nodeContents;
+      }
+      writeSimpleInto(_schema, value, into, parentXmlns) {
+        const nodeContents = this.writeSimple(_schema, value);
+        const ns = NormalizedSchema.of(_schema);
+        const content = new import_xml_builder.XmlText(nodeContents);
+        const [xmlnsAttr, xmlns] = this.getXmlnsAttribute(ns, parentXmlns);
+        if (xmlns) {
+          into.addAttribute(xmlnsAttr, xmlns);
+        }
+        into.addChildNode(content);
+      }
+      getXmlnsAttribute(ns, parentXmlns) {
+        const traits = ns.getMergedTraits();
+        const [prefix, xmlns] = traits.xmlNamespace ?? [];
+        if (xmlns && xmlns !== parentXmlns) {
+          return [prefix ? `xmlns:${prefix}` : "xmlns", xmlns];
+        }
+        return [void 0, void 0];
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/XmlCodec.js
+var XmlCodec;
+var init_XmlCodec = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/XmlCodec.js"() {
+    init_ConfigurableSerdeContext();
+    init_XmlShapeDeserializer();
+    init_XmlShapeSerializer();
+    XmlCodec = class extends SerdeContextConfig {
+      constructor(settings) {
+        super();
+        __publicField(this, "settings");
+        this.settings = settings;
+      }
+      createSerializer() {
+        const serializer = new XmlShapeSerializer(this.settings);
+        serializer.setSerdeContext(this.serdeContext);
+        return serializer;
+      }
+      createDeserializer() {
+        const deserializer = new XmlShapeDeserializer(this.settings);
+        deserializer.setSerdeContext(this.serdeContext);
+        return deserializer;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/AwsRestXmlProtocol.js
+var import_util_body_length_browser4, AwsRestXmlProtocol;
+var init_AwsRestXmlProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/xml/AwsRestXmlProtocol.js"() {
+    init_protocols();
+    init_schema();
+    import_util_body_length_browser4 = __toESM(require_dist_cjs21());
+    init_parseXmlBody();
+    init_XmlCodec();
+    AwsRestXmlProtocol = class extends HttpBindingProtocol {
+      constructor(options) {
+        super(options);
+        __publicField(this, "codec");
+        __publicField(this, "serializer");
+        __publicField(this, "deserializer");
+        const settings = {
+          timestampFormat: {
+            useTrait: true,
+            default: SCHEMA.TIMESTAMP_DATE_TIME,
+          },
+          httpBindings: true,
+          xmlNamespace: options.xmlNamespace,
+          serviceNamespace: options.defaultNamespace,
+        };
+        this.codec = new XmlCodec(settings);
+        this.serializer = new HttpInterceptingShapeSerializer(this.codec.createSerializer(), settings);
+        this.deserializer = new HttpInterceptingShapeDeserializer(this.codec.createDeserializer(), settings);
+      }
+      getPayloadCodec() {
+        return this.codec;
+      }
+      getShapeId() {
+        return "aws.protocols#restXml";
+      }
+      async serializeRequest(operationSchema, input, context) {
+        const request = await super.serializeRequest(operationSchema, input, context);
+        const ns = NormalizedSchema.of(operationSchema.input);
+        const members = ns.getMemberSchemas();
+        request.path =
+          String(request.path)
+            .split("/")
+            .filter((segment) => {
+              return segment !== "{Bucket}";
+            })
+            .join("/") || "/";
+        if (!request.headers["content-type"]) {
+          const httpPayloadMember = Object.values(members).find((m) => {
+            return !!m.getMergedTraits().httpPayload;
+          });
+          if (httpPayloadMember) {
+            const mediaType = httpPayloadMember.getMergedTraits().mediaType;
+            if (mediaType) {
+              request.headers["content-type"] = mediaType;
+            } else if (httpPayloadMember.isStringSchema()) {
+              request.headers["content-type"] = "text/plain";
+            } else if (httpPayloadMember.isBlobSchema()) {
+              request.headers["content-type"] = "application/octet-stream";
+            } else {
+              request.headers["content-type"] = "application/xml";
+            }
+          } else if (!ns.isUnitSchema()) {
+            const hasBody = Object.values(members).find((m) => {
+              const { httpQuery, httpQueryParams, httpHeader, httpLabel, httpPrefixHeaders } = m.getMergedTraits();
+              return !httpQuery && !httpQueryParams && !httpHeader && !httpLabel && httpPrefixHeaders === void 0;
+            });
+            if (hasBody) {
+              request.headers["content-type"] = "application/xml";
+            }
+          }
+        }
+        if (request.headers["content-type"] === "application/xml") {
+          if (typeof request.body === "string") {
+            request.body = '<?xml version="1.0" encoding="UTF-8"?>' + request.body;
+          }
+        }
+        if (request.body) {
+          try {
+            request.headers["content-length"] = String(
+              (0, import_util_body_length_browser4.calculateBodyLength)(request.body),
+            );
+          } catch (e) {}
+        }
+        return request;
+      }
+      async deserializeResponse(operationSchema, context, response) {
+        return super.deserializeResponse(operationSchema, context, response);
+      }
+      async handleError(operationSchema, context, response, dataObject, metadata) {
+        const errorIdentifier = loadRestXmlErrorCode(response, dataObject) ?? "Unknown";
+        let namespace = this.options.defaultNamespace;
+        let errorName = errorIdentifier;
+        if (errorIdentifier.includes("#")) {
+          [namespace, errorName] = errorIdentifier.split("#");
+        }
+        const registry = TypeRegistry.for(namespace);
+        let errorSchema;
+        try {
+          errorSchema = registry.getSchema(errorIdentifier);
+        } catch (e) {
+          const baseExceptionSchema = TypeRegistry.for("smithy.ts.sdk.synthetic." + namespace).getBaseException();
+          if (baseExceptionSchema) {
+            const ErrorCtor = baseExceptionSchema.ctor;
+            throw Object.assign(new ErrorCtor(errorName), dataObject);
+          }
+          throw new Error(errorName);
+        }
+        const ns = NormalizedSchema.of(errorSchema);
+        const message =
+          dataObject.Error?.message ??
+          dataObject.Error?.Message ??
+          dataObject.message ??
+          dataObject.Message ??
+          "Unknown";
+        const exception = new errorSchema.ctor(message);
+        await this.deserializeHttpMessage(errorSchema, context, response, dataObject);
+        const output = {};
+        for (const [name, member] of ns.structIterator()) {
+          const target = member.getMergedTraits().xmlName ?? name;
+          const value = dataObject.Error?.[target] ?? dataObject[target];
+          output[name] = this.codec.createDeserializer().readSchema(member, value);
+        }
+        Object.assign(exception, {
+          $metadata: metadata,
+          $response: response,
+          $fault: ns.getMergedTraits().error,
+          message,
+          ...output,
+        });
+        throw exception;
+      }
+    };
+  },
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/index.js
 var init_protocols2 = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/protocols/index.js"() {
     init_coercing_serializers();
+    init_AwsJson1_0Protocol();
+    init_AwsJson1_1Protocol();
+    init_AwsJsonRpcProtocol();
+    init_AwsRestJsonProtocol();
+    init_JsonCodec();
+    init_JsonShapeDeserializer();
+    init_JsonShapeSerializer();
     init_awsExpectUnion();
     init_parseJsonBody();
+    init_AwsEc2QueryProtocol();
+    init_AwsQueryProtocol();
+    init_AwsRestXmlProtocol();
+    init_XmlCodec();
+    init_XmlShapeDeserializer();
+    init_XmlShapeSerializer();
     init_parseXmlBody();
   },
 });
@@ -10965,15 +12608,29 @@ var init_protocols2 = __esm({
 var dist_es_exports2 = {};
 __export(dist_es_exports2, {
   AWSSDKSigV4Signer: () => AWSSDKSigV4Signer,
+  AwsEc2QueryProtocol: () => AwsEc2QueryProtocol,
+  AwsJson1_0Protocol: () => AwsJson1_0Protocol,
+  AwsJson1_1Protocol: () => AwsJson1_1Protocol,
+  AwsJsonRpcProtocol: () => AwsJsonRpcProtocol,
+  AwsQueryProtocol: () => AwsQueryProtocol,
+  AwsRestJsonProtocol: () => AwsRestJsonProtocol,
+  AwsRestXmlProtocol: () => AwsRestXmlProtocol,
   AwsSdkSigV4ASigner: () => AwsSdkSigV4ASigner,
   AwsSdkSigV4Signer: () => AwsSdkSigV4Signer,
+  JsonCodec: () => JsonCodec,
+  JsonShapeDeserializer: () => JsonShapeDeserializer,
+  JsonShapeSerializer: () => JsonShapeSerializer,
   NODE_AUTH_SCHEME_PREFERENCE_OPTIONS: () => NODE_AUTH_SCHEME_PREFERENCE_OPTIONS,
   NODE_SIGV4A_CONFIG_OPTIONS: () => NODE_SIGV4A_CONFIG_OPTIONS,
+  XmlCodec: () => XmlCodec,
+  XmlShapeDeserializer: () => XmlShapeDeserializer,
+  XmlShapeSerializer: () => XmlShapeSerializer,
   _toBool: () => _toBool,
   _toNum: () => _toNum,
   _toStr: () => _toStr,
   awsExpectUnion: () => awsExpectUnion,
   emitWarningIfUnsupportedVersion: () => emitWarningIfUnsupportedVersion,
+  getBearerTokenEnvKey: () => getBearerTokenEnvKey,
   loadRestJsonErrorCode: () => loadRestJsonErrorCode,
   loadRestXmlErrorCode: () => loadRestXmlErrorCode,
   parseJsonBody: () => parseJsonBody,
@@ -10985,6 +12642,7 @@ __export(dist_es_exports2, {
   resolveAwsSdkSigV4Config: () => resolveAwsSdkSigV4Config,
   setCredentialFeature: () => setCredentialFeature,
   setFeature: () => setFeature2,
+  setTokenFeature: () => setTokenFeature,
   state: () => state,
   validateSigningProperties: () => validateSigningProperties,
 });
@@ -10997,7 +12655,7 @@ var init_dist_es2 = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-user-agent/dist-cjs/index.js
-var require_dist_cjs21 = __commonJS({
+var require_dist_cjs25 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-user-agent/dist-cjs/index.js"(
     exports2,
     module2,
@@ -11061,7 +12719,7 @@ var require_dist_cjs21 = __commonJS({
       });
     }
     __name(resolveUserAgentConfig2, "resolveUserAgentConfig");
-    var import_util_endpoints = require_dist_cjs16();
+    var import_util_endpoints2 = require_dist_cjs18();
     var import_protocol_http13 = require_dist_cjs3();
     var import_core22 = (init_dist_es2(), __toCommonJS(dist_es_exports2));
     var ACCOUNT_ID_ENDPOINT_REGEX = /\d{12}\.ddb/;
@@ -11122,12 +12780,12 @@ var require_dist_cjs21 = __commonJS({
     function encodeFeatures(features) {
       let buffer = "";
       for (const key in features) {
-        const val2 = features[key];
-        if (buffer.length + val2.length + 1 <= BYTE_LIMIT) {
+        const val = features[key];
+        if (buffer.length + val.length + 1 <= BYTE_LIMIT) {
           if (buffer.length) {
-            buffer += "," + val2;
+            buffer += "," + val;
           } else {
-            buffer += val2;
+            buffer += val;
           }
           continue;
         }
@@ -11157,7 +12815,7 @@ var require_dist_cjs21 = __commonJS({
         if (appId) {
           defaultUserAgent.push(escapeUserAgent([`app/${appId}`]));
         }
-        const prefix = (0, import_util_endpoints.getUserAgentPrefix)();
+        const prefix = (0, import_util_endpoints2.getUserAgentPrefix)();
         const sdkUserAgentValue = (prefix ? [prefix] : [])
           .concat([...defaultUserAgent, ...userAgent, ...customUserAgent])
           .join(SPACE);
@@ -11226,7 +12884,7 @@ var require_dist_cjs21 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/util-user-agent-node/dist-cjs/index.js
-var require_dist_cjs22 = __commonJS({
+var require_dist_cjs26 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/util-user-agent-node/dist-cjs/index.js"(
     exports2,
     module2,
@@ -11303,7 +12961,7 @@ var require_dist_cjs22 = __commonJS({
       };
     }, "createDefaultUserAgentProvider");
     var defaultUserAgent = createDefaultUserAgentProvider2;
-    var import_middleware_user_agent2 = require_dist_cjs21();
+    var import_middleware_user_agent2 = require_dist_cjs25();
     var UA_APP_ID_ENV_NAME = "AWS_SDK_UA_APP_ID";
     var UA_APP_ID_INI_NAME = "sdk_ua_app_id";
     var UA_APP_ID_INI_NAME_DEPRECATED = "sdk-ua-app-id";
@@ -11322,7 +12980,7 @@ var require_dist_cjs22 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/hash-node/dist-cjs/index.js
-var require_dist_cjs23 = __commonJS({
+var require_dist_cjs27 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/hash-node/dist-cjs/index.js"(
     exports2,
     module2,
@@ -11353,7 +13011,7 @@ var require_dist_cjs23 = __commonJS({
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_util_buffer_from = require_dist_cjs6();
-    var import_util_utf84 = require_dist_cjs7();
+    var import_util_utf85 = require_dist_cjs7();
     var import_buffer = require("buffer");
     var import_crypto5 = require("crypto");
     var _a;
@@ -11365,7 +13023,7 @@ var require_dist_cjs23 = __commonJS({
           this.reset();
         }
         update(toHash, encoding) {
-          this.hash.update((0, import_util_utf84.toUint8Array)(castSourceData(toHash, encoding)));
+          this.hash.update((0, import_util_utf85.toUint8Array)(castSourceData(toHash, encoding)));
         }
         digest() {
           return Promise.resolve(this.hash.digest());
@@ -11421,14 +13079,14 @@ var init_regex = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/uuid/dist/esm-node/validate.js
-function validate(uuid) {
+function validate2(uuid) {
   return typeof uuid === "string" && regex_default.test(uuid);
 }
 var validate_default;
 var init_validate = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/uuid/dist/esm-node/validate.js"() {
     init_regex();
-    validate_default = validate;
+    validate_default = validate2;
   },
 });
 
@@ -11768,7 +13426,7 @@ var init_esm_node = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/service-error-classification/dist-cjs/index.js
-var require_dist_cjs24 = __commonJS({
+var require_dist_cjs28 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/service-error-classification/dist-cjs/index.js"(
     exports2,
     module2,
@@ -11893,7 +13551,7 @@ var require_dist_cjs24 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-retry/dist-cjs/index.js
-var require_dist_cjs25 = __commonJS({
+var require_dist_cjs29 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-retry/dist-cjs/index.js"(
     exports2,
     module2,
@@ -11945,7 +13603,7 @@ var require_dist_cjs25 = __commonJS({
     })(RETRY_MODES || {});
     var DEFAULT_MAX_ATTEMPTS = 3;
     var DEFAULT_RETRY_MODE2 = "standard";
-    var import_service_error_classification = require_dist_cjs24();
+    var import_service_error_classification = require_dist_cjs28();
     var _a;
     var DefaultRateLimiter =
       ((_a = class {
@@ -12240,7 +13898,7 @@ var require_isStreamingPayload = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-retry/dist-cjs/index.js
-var require_dist_cjs26 = __commonJS({
+var require_dist_cjs30 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-retry/dist-cjs/index.js"(
     exports2,
     module2,
@@ -12289,7 +13947,7 @@ var require_dist_cjs26 = __commonJS({
     module2.exports = __toCommonJS2(src_exports);
     var import_protocol_http13 = require_dist_cjs3();
     var import_uuid = (init_esm_node(), __toCommonJS(esm_node_exports));
-    var import_util_retry2 = require_dist_cjs25();
+    var import_util_retry2 = require_dist_cjs29();
     var getDefaultRetryQuota = /* @__PURE__ */ __name((initialRetryTokens, options) => {
       const MAX_CAPACITY = initialRetryTokens;
       const noRetryIncrement = options?.noRetryIncrement ?? import_util_retry2.NO_RETRY_INCREMENT;
@@ -12327,7 +13985,7 @@ var require_dist_cjs26 = __commonJS({
         Math.floor(Math.min(import_util_retry2.MAXIMUM_RETRY_DELAY, Math.random() * 2 ** attempts * delayBase)),
       "defaultDelayDecider",
     );
-    var import_service_error_classification = require_dist_cjs24();
+    var import_service_error_classification = require_dist_cjs28();
     var defaultRetryDecider = /* @__PURE__ */ __name((error) => {
       if (!error) {
         return false;
@@ -12529,7 +14187,7 @@ var require_dist_cjs26 = __commonJS({
       }),
       "getOmitRetryHeadersPlugin",
     );
-    var import_smithy_client15 = require_dist_cjs20();
+    var import_smithy_client18 = require_dist_cjs23();
     var import_isStreamingPayload = require_isStreamingPayload();
     var retryMiddleware = /* @__PURE__ */ __name(
       (options) => (next, context) => async (args) => {
@@ -12560,7 +14218,7 @@ var require_dist_cjs26 = __commonJS({
               const retryErrorInfo = getRetryErrorInfo(e);
               lastError = asSdkError(e);
               if (isRequest && (0, import_isStreamingPayload.isStreamingPayload)(request)) {
-                (context.logger instanceof import_smithy_client15.NoOpLogger ? console : context.logger)?.warn(
+                (context.logger instanceof import_smithy_client18.NoOpLogger ? console : context.logger)?.warn(
                   "An error was encountered in a non-retryable streaming request.",
                 );
                 throw lastError;
@@ -12734,7 +14392,7 @@ var require_slurpFile = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/shared-ini-file-loader/dist-cjs/index.js
-var require_dist_cjs27 = __commonJS({
+var require_dist_cjs31 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/shared-ini-file-loader/dist-cjs/index.js"(
     exports2,
     module2,
@@ -12948,7 +14606,7 @@ var require_dist_cjs27 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/node-config-provider/dist-cjs/index.js
-var require_dist_cjs28 = __commonJS({
+var require_dist_cjs32 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/node-config-provider/dist-cjs/index.js"(
     exports2,
     module2,
@@ -12978,7 +14636,7 @@ var require_dist_cjs28 = __commonJS({
       loadConfig: () => loadConfig,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_property_provider2 = require_dist_cjs17();
+    var import_property_provider2 = require_dist_cjs19();
     function getSelectorName(functionString) {
       try {
         const constants = new Set(Array.from(functionString.match(/([A-Z_]){3,}/g) ?? []));
@@ -13008,7 +14666,7 @@ var require_dist_cjs28 = __commonJS({
       },
       "fromEnv",
     );
-    var import_shared_ini_file_loader = require_dist_cjs27();
+    var import_shared_ini_file_loader = require_dist_cjs31();
     var fromSharedConfigFiles = /* @__PURE__ */ __name(
       (configSelector, { preferredFile = "config", ...init } = {}) =>
         async () => {
@@ -13063,7 +14721,7 @@ var require_dist_cjs28 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-body-length-node/dist-cjs/index.js
-var require_dist_cjs29 = __commonJS({
+var require_dist_cjs33 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-body-length-node/dist-cjs/index.js"(
     exports2,
     module2,
@@ -13090,11 +14748,11 @@ var require_dist_cjs29 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
-      calculateBodyLength: () => calculateBodyLength2,
+      calculateBodyLength: () => calculateBodyLength6,
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_fs = require("fs");
-    var calculateBodyLength2 = /* @__PURE__ */ __name((body) => {
+    var calculateBodyLength6 = /* @__PURE__ */ __name((body) => {
       if (!body) {
         return 0;
       }
@@ -13116,116 +14774,8 @@ var require_dist_cjs29 = __commonJS({
   },
 });
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/querystring-parser/dist-cjs/index.js
-var require_dist_cjs30 = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/querystring-parser/dist-cjs/index.js"(
-    exports2,
-    module2,
-  ) {
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
-    var __export2 = (target, all) => {
-      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if ((from && typeof from === "object") || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, {
-              get: () => from[key],
-              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
-            });
-      }
-      return to;
-    };
-    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
-      parseQueryString: () => parseQueryString,
-    });
-    module2.exports = __toCommonJS2(src_exports);
-    function parseQueryString(querystring) {
-      const query = {};
-      querystring = querystring.replace(/^\?/, "");
-      if (querystring) {
-        for (const pair of querystring.split("&")) {
-          let [key, value = null] = pair.split("=");
-          key = decodeURIComponent(key);
-          if (value) {
-            value = decodeURIComponent(value);
-          }
-          if (!(key in query)) {
-            query[key] = value;
-          } else if (Array.isArray(query[key])) {
-            query[key].push(value);
-          } else {
-            query[key] = [query[key], value];
-          }
-        }
-      }
-      return query;
-    }
-    __name(parseQueryString, "parseQueryString");
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/url-parser/dist-cjs/index.js
-var require_dist_cjs31 = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/url-parser/dist-cjs/index.js"(
-    exports2,
-    module2,
-  ) {
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
-    var __export2 = (target, all) => {
-      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if ((from && typeof from === "object") || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, {
-              get: () => from[key],
-              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
-            });
-      }
-      return to;
-    };
-    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
-      parseUrl: () => parseUrl2,
-    });
-    module2.exports = __toCommonJS2(src_exports);
-    var import_querystring_parser = require_dist_cjs30();
-    var parseUrl2 = /* @__PURE__ */ __name((url) => {
-      if (typeof url === "string") {
-        return parseUrl2(new URL(url));
-      }
-      const { hostname, pathname, port, protocol, search } = url;
-      let query;
-      if (search) {
-        query = (0, import_querystring_parser.parseQueryString)(search);
-      }
-      return {
-        hostname,
-        port: port ? parseInt(port) : void 0,
-        protocol,
-        path: pathname,
-        query,
-      };
-    }, "parseUrl");
-  },
-});
-
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-config-provider/dist-cjs/index.js
-var require_dist_cjs32 = __commonJS({
+var require_dist_cjs34 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-config-provider/dist-cjs/index.js"(
     exports2,
     module2,
@@ -13280,7 +14830,7 @@ var require_dist_cjs32 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/config-resolver/dist-cjs/index.js
-var require_dist_cjs33 = __commonJS({
+var require_dist_cjs35 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/config-resolver/dist-cjs/index.js"(
     exports2,
     module2,
@@ -13320,12 +14870,12 @@ var require_dist_cjs33 = __commonJS({
       REGION_ENV_NAME: () => REGION_ENV_NAME,
       REGION_INI_NAME: () => REGION_INI_NAME,
       getRegionInfo: () => getRegionInfo,
-      resolveCustomEndpointsConfig: () => resolveCustomEndpointsConfig2,
+      resolveCustomEndpointsConfig: () => resolveCustomEndpointsConfig,
       resolveEndpointsConfig: () => resolveEndpointsConfig,
       resolveRegionConfig: () => resolveRegionConfig,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_util_config_provider = require_dist_cjs32();
+    var import_util_config_provider = require_dist_cjs34();
     var ENV_USE_DUALSTACK_ENDPOINT = "AWS_USE_DUALSTACK_ENDPOINT";
     var CONFIG_USE_DUALSTACK_ENDPOINT = "use_dualstack_endpoint";
     var DEFAULT_USE_DUALSTACK_ENDPOINT = false;
@@ -13363,7 +14913,7 @@ var require_dist_cjs33 = __commonJS({
       default: false,
     };
     var import_util_middleware6 = require_dist_cjs2();
-    var resolveCustomEndpointsConfig2 = /* @__PURE__ */ __name((input) => {
+    var resolveCustomEndpointsConfig = /* @__PURE__ */ __name((input) => {
       const { tls, endpoint, urlParser, useDualstackEndpoint } = input;
       return Object.assign(input, {
         tls: tls ?? true,
@@ -13523,7 +15073,7 @@ var require_dist_cjs33 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/credential-provider-imds/dist-cjs/index.js
-var require_dist_cjs34 = __commonJS({
+var require_dist_cjs36 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/credential-provider-imds/dist-cjs/index.js"(
     exports2,
     module2,
@@ -13564,7 +15114,7 @@ var require_dist_cjs34 = __commonJS({
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_url = require("url");
-    var import_property_provider2 = require_dist_cjs17();
+    var import_property_provider2 = require_dist_cjs19();
     var import_buffer = require("buffer");
     var import_http = require("http");
     function httpRequest(options) {
@@ -13740,8 +15290,8 @@ var require_dist_cjs34 = __commonJS({
       }),
       __name(_a, "InstanceMetadataV1FallbackError"),
       _a);
-    var import_node_config_provider2 = require_dist_cjs28();
-    var import_url_parser2 = require_dist_cjs31();
+    var import_node_config_provider2 = require_dist_cjs32();
+    var import_url_parser2 = require_dist_cjs17();
     var Endpoint = /* @__PURE__ */ ((Endpoint2) => {
       Endpoint2["IPv4"] = "http://169.254.169.254";
       Endpoint2["IPv6"] = "http://[fd00:ec2::254]";
@@ -13981,7 +15531,7 @@ For more information, please visit: ` + STATIC_STABILITY_DOC_URL,
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-defaults-mode-node/dist-cjs/index.js
-var require_dist_cjs35 = __commonJS({
+var require_dist_cjs37 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-defaults-mode-node/dist-cjs/index.js"(
     exports2,
     module2,
@@ -14026,9 +15576,9 @@ var require_dist_cjs35 = __commonJS({
       resolveDefaultsModeConfig: () => resolveDefaultsModeConfig2,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_config_resolver2 = require_dist_cjs33();
-    var import_node_config_provider2 = require_dist_cjs28();
-    var import_property_provider2 = require_dist_cjs17();
+    var import_config_resolver = require_dist_cjs35();
+    var import_node_config_provider2 = require_dist_cjs32();
+    var import_property_provider2 = require_dist_cjs19();
     var AWS_EXECUTION_ENV = "AWS_EXECUTION_ENV";
     var AWS_REGION_ENV = "AWS_REGION";
     var AWS_DEFAULT_REGION_ENV = "AWS_DEFAULT_REGION";
@@ -14048,7 +15598,7 @@ var require_dist_cjs35 = __commonJS({
     };
     var resolveDefaultsModeConfig2 = /* @__PURE__ */ __name(
       ({
-        region = (0, import_node_config_provider2.loadConfig)(import_config_resolver2.NODE_REGION_CONFIG_OPTIONS),
+        region = (0, import_node_config_provider2.loadConfig)(import_config_resolver.NODE_REGION_CONFIG_OPTIONS),
         defaultsMode = (0, import_node_config_provider2.loadConfig)(NODE_DEFAULTS_MODE_CONFIG_OPTIONS),
       } = {}) =>
         (0, import_property_provider2.memoize)(async () => {
@@ -14094,7 +15644,7 @@ var require_dist_cjs35 = __commonJS({
       if (!process.env[ENV_IMDS_DISABLED]) {
         try {
           const { getInstanceMetadataEndpoint, httpRequest } = await Promise.resolve().then(() =>
-            __toESM2(require_dist_cjs34()),
+            __toESM2(require_dist_cjs36()),
           );
           const endpoint = await getInstanceMetadataEndpoint();
           return (await httpRequest({ ...endpoint, path: IMDS_REGION_PATH })).toString();
@@ -14105,7 +15655,7 @@ var require_dist_cjs35 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-host-header/dist-cjs/index.js
-var require_dist_cjs36 = __commonJS({
+var require_dist_cjs38 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-host-header/dist-cjs/index.js"(
     exports2,
     module2,
@@ -14180,7 +15730,7 @@ var require_dist_cjs36 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js
-var require_dist_cjs37 = __commonJS({
+var require_dist_cjs39 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js"(
     exports2,
     module2,
@@ -14264,7 +15814,7 @@ var require_dist_cjs37 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-recursion-detection/dist-cjs/index.js
-var require_dist_cjs38 = __commonJS({
+var require_dist_cjs40 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/middleware-recursion-detection/dist-cjs/index.js"(
     exports2,
     module2,
@@ -14348,7 +15898,7 @@ var require_dist_cjs38 = __commonJS({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-content-length/dist-cjs/index.js
-var require_dist_cjs39 = __commonJS({
+var require_dist_cjs41 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-content-length/dist-cjs/index.js"(
     exports2,
     module2,
@@ -14426,6 +15976,360 @@ var require_dist_cjs39 = __commonJS({
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-cjs/adaptors/getEndpointUrlConfig.js
+var require_getEndpointUrlConfig = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-cjs/adaptors/getEndpointUrlConfig.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getEndpointUrlConfig = void 0;
+    var shared_ini_file_loader_1 = require_dist_cjs31();
+    var ENV_ENDPOINT_URL = "AWS_ENDPOINT_URL";
+    var CONFIG_ENDPOINT_URL = "endpoint_url";
+    var getEndpointUrlConfig = (serviceId) => ({
+      environmentVariableSelector: (env) => {
+        const serviceSuffixParts = serviceId.split(" ").map((w) => w.toUpperCase());
+        const serviceEndpointUrl = env[[ENV_ENDPOINT_URL, ...serviceSuffixParts].join("_")];
+        if (serviceEndpointUrl) return serviceEndpointUrl;
+        const endpointUrl = env[ENV_ENDPOINT_URL];
+        if (endpointUrl) return endpointUrl;
+        return void 0;
+      },
+      configFileSelector: (profile, config) => {
+        if (config && profile.services) {
+          const servicesSection =
+            config[["services", profile.services].join(shared_ini_file_loader_1.CONFIG_PREFIX_SEPARATOR)];
+          if (servicesSection) {
+            const servicePrefixParts = serviceId.split(" ").map((w) => w.toLowerCase());
+            const endpointUrl2 =
+              servicesSection[
+                [servicePrefixParts.join("_"), CONFIG_ENDPOINT_URL].join(
+                  shared_ini_file_loader_1.CONFIG_PREFIX_SEPARATOR,
+                )
+              ];
+            if (endpointUrl2) return endpointUrl2;
+          }
+        }
+        const endpointUrl = profile[CONFIG_ENDPOINT_URL];
+        if (endpointUrl) return endpointUrl;
+        return void 0;
+      },
+      default: void 0,
+    });
+    exports2.getEndpointUrlConfig = getEndpointUrlConfig;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-cjs/adaptors/getEndpointFromConfig.js
+var require_getEndpointFromConfig = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-cjs/adaptors/getEndpointFromConfig.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getEndpointFromConfig = void 0;
+    var node_config_provider_1 = require_dist_cjs32();
+    var getEndpointUrlConfig_1 = require_getEndpointUrlConfig();
+    var getEndpointFromConfig = async (serviceId) =>
+      (0, node_config_provider_1.loadConfig)(
+        (0, getEndpointUrlConfig_1.getEndpointUrlConfig)(serviceId !== null && serviceId !== void 0 ? serviceId : ""),
+      )();
+    exports2.getEndpointFromConfig = getEndpointFromConfig;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-cjs/index.js
+var require_dist_cjs42 = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-cjs/index.js"(
+    exports2,
+    module2,
+  ) {
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
+    var __export2 = (target, all) => {
+      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if ((from && typeof from === "object") || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, {
+              get: () => from[key],
+              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
+            });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var src_exports = {};
+    __export2(src_exports, {
+      endpointMiddleware: () => endpointMiddleware,
+      endpointMiddlewareOptions: () => endpointMiddlewareOptions,
+      getEndpointFromInstructions: () => getEndpointFromInstructions,
+      getEndpointPlugin: () => getEndpointPlugin5,
+      resolveEndpointConfig: () => resolveEndpointConfig2,
+      resolveEndpointRequiredConfig: () => resolveEndpointRequiredConfig2,
+      resolveParams: () => resolveParams,
+      toEndpointV1: () => toEndpointV1,
+    });
+    module2.exports = __toCommonJS2(src_exports);
+    var resolveParamsForS3 = /* @__PURE__ */ __name(async (endpointParams) => {
+      const bucket = endpointParams?.Bucket || "";
+      if (typeof endpointParams.Bucket === "string") {
+        endpointParams.Bucket = bucket.replace(/#/g, encodeURIComponent("#")).replace(/\?/g, encodeURIComponent("?"));
+      }
+      if (isArnBucketName(bucket)) {
+        if (endpointParams.ForcePathStyle === true) {
+          throw new Error("Path-style addressing cannot be used with ARN buckets");
+        }
+      } else if (
+        !isDnsCompatibleBucketName(bucket) ||
+        (bucket.indexOf(".") !== -1 && !String(endpointParams.Endpoint).startsWith("http:")) ||
+        bucket.toLowerCase() !== bucket ||
+        bucket.length < 3
+      ) {
+        endpointParams.ForcePathStyle = true;
+      }
+      if (endpointParams.DisableMultiRegionAccessPoints) {
+        endpointParams.disableMultiRegionAccessPoints = true;
+        endpointParams.DisableMRAP = true;
+      }
+      return endpointParams;
+    }, "resolveParamsForS3");
+    var DOMAIN_PATTERN = /^[a-z0-9][a-z0-9\.\-]{1,61}[a-z0-9]$/;
+    var IP_ADDRESS_PATTERN = /(\d+\.){3}\d+/;
+    var DOTS_PATTERN = /\.\./;
+    var isDnsCompatibleBucketName = /* @__PURE__ */ __name(
+      (bucketName) =>
+        DOMAIN_PATTERN.test(bucketName) && !IP_ADDRESS_PATTERN.test(bucketName) && !DOTS_PATTERN.test(bucketName),
+      "isDnsCompatibleBucketName",
+    );
+    var isArnBucketName = /* @__PURE__ */ __name((bucketName) => {
+      const [arn, partition, service, , , bucket] = bucketName.split(":");
+      const isArn = arn === "arn" && bucketName.split(":").length >= 6;
+      const isValidArn = Boolean(isArn && partition && service && bucket);
+      if (isArn && !isValidArn) {
+        throw new Error(`Invalid ARN: ${bucketName} was an invalid ARN.`);
+      }
+      return isValidArn;
+    }, "isArnBucketName");
+    var createConfigValueProvider = /* @__PURE__ */ __name((configKey, canonicalEndpointParamKey, config) => {
+      const configProvider = /* @__PURE__ */ __name(async () => {
+        const configValue = config[configKey] ?? config[canonicalEndpointParamKey];
+        if (typeof configValue === "function") {
+          return configValue();
+        }
+        return configValue;
+      }, "configProvider");
+      if (configKey === "credentialScope" || canonicalEndpointParamKey === "CredentialScope") {
+        return async () => {
+          const credentials =
+            typeof config.credentials === "function" ? await config.credentials() : config.credentials;
+          const configValue = credentials?.credentialScope ?? credentials?.CredentialScope;
+          return configValue;
+        };
+      }
+      if (configKey === "accountId" || canonicalEndpointParamKey === "AccountId") {
+        return async () => {
+          const credentials =
+            typeof config.credentials === "function" ? await config.credentials() : config.credentials;
+          const configValue = credentials?.accountId ?? credentials?.AccountId;
+          return configValue;
+        };
+      }
+      if (configKey === "endpoint" || canonicalEndpointParamKey === "endpoint") {
+        return async () => {
+          if (config.isCustomEndpoint === false) {
+            return void 0;
+          }
+          const endpoint = await configProvider();
+          if (endpoint && typeof endpoint === "object") {
+            if ("url" in endpoint) {
+              return endpoint.url.href;
+            }
+            if ("hostname" in endpoint) {
+              const { protocol, hostname, port, path } = endpoint;
+              return `${protocol}//${hostname}${port ? ":" + port : ""}${path}`;
+            }
+          }
+          return endpoint;
+        };
+      }
+      return configProvider;
+    }, "createConfigValueProvider");
+    var import_getEndpointFromConfig = require_getEndpointFromConfig();
+    var import_url_parser2 = require_dist_cjs17();
+    var toEndpointV1 = /* @__PURE__ */ __name((endpoint) => {
+      if (typeof endpoint === "object") {
+        if ("url" in endpoint) {
+          return (0, import_url_parser2.parseUrl)(endpoint.url);
+        }
+        return endpoint;
+      }
+      return (0, import_url_parser2.parseUrl)(endpoint);
+    }, "toEndpointV1");
+    var getEndpointFromInstructions = /* @__PURE__ */ __name(
+      async (commandInput, instructionsSupplier, clientConfig, context) => {
+        if (!clientConfig.isCustomEndpoint) {
+          let endpointFromConfig;
+          if (clientConfig.serviceConfiguredEndpoint) {
+            endpointFromConfig = await clientConfig.serviceConfiguredEndpoint();
+          } else {
+            endpointFromConfig = await (0, import_getEndpointFromConfig.getEndpointFromConfig)(clientConfig.serviceId);
+          }
+          if (endpointFromConfig) {
+            clientConfig.endpoint = () => Promise.resolve(toEndpointV1(endpointFromConfig));
+          }
+        }
+        const endpointParams = await resolveParams(commandInput, instructionsSupplier, clientConfig);
+        if (typeof clientConfig.endpointProvider !== "function") {
+          throw new Error("config.endpointProvider is not set.");
+        }
+        const endpoint = clientConfig.endpointProvider(endpointParams, context);
+        return endpoint;
+      },
+      "getEndpointFromInstructions",
+    );
+    var resolveParams = /* @__PURE__ */ __name(async (commandInput, instructionsSupplier, clientConfig) => {
+      const endpointParams = {};
+      const instructions = instructionsSupplier?.getEndpointParameterInstructions?.() || {};
+      for (const [name, instruction] of Object.entries(instructions)) {
+        switch (instruction.type) {
+          case "staticContextParams":
+            endpointParams[name] = instruction.value;
+            break;
+          case "contextParams":
+            endpointParams[name] = commandInput[instruction.name];
+            break;
+          case "clientContextParams":
+          case "builtInParams":
+            endpointParams[name] = await createConfigValueProvider(instruction.name, name, clientConfig)();
+            break;
+          case "operationContextParams":
+            endpointParams[name] = instruction.get(commandInput);
+            break;
+          default:
+            throw new Error("Unrecognized endpoint parameter instruction: " + JSON.stringify(instruction));
+        }
+      }
+      if (Object.keys(instructions).length === 0) {
+        Object.assign(endpointParams, clientConfig);
+      }
+      if (String(clientConfig.serviceId).toLowerCase() === "s3") {
+        await resolveParamsForS3(endpointParams);
+      }
+      return endpointParams;
+    }, "resolveParams");
+    var import_core6 = (init_dist_es(), __toCommonJS(dist_es_exports));
+    var import_util_middleware6 = require_dist_cjs2();
+    var endpointMiddleware = /* @__PURE__ */ __name(({ config, instructions }) => {
+      return (next, context) => async (args) => {
+        if (config.isCustomEndpoint) {
+          (0, import_core6.setFeature)(context, "ENDPOINT_OVERRIDE", "N");
+        }
+        const endpoint = await getEndpointFromInstructions(
+          args.input,
+          {
+            getEndpointParameterInstructions() {
+              return instructions;
+            },
+          },
+          { ...config },
+          context,
+        );
+        context.endpointV2 = endpoint;
+        context.authSchemes = endpoint.properties?.authSchemes;
+        const authScheme = context.authSchemes?.[0];
+        if (authScheme) {
+          context["signing_region"] = authScheme.signingRegion;
+          context["signing_service"] = authScheme.signingName;
+          const smithyContext = (0, import_util_middleware6.getSmithyContext)(context);
+          const httpAuthOption = smithyContext?.selectedHttpAuthScheme?.httpAuthOption;
+          if (httpAuthOption) {
+            httpAuthOption.signingProperties = Object.assign(
+              httpAuthOption.signingProperties || {},
+              {
+                signing_region: authScheme.signingRegion,
+                signingRegion: authScheme.signingRegion,
+                signing_service: authScheme.signingName,
+                signingName: authScheme.signingName,
+                signingRegionSet: authScheme.signingRegionSet,
+              },
+              authScheme.properties,
+            );
+          }
+        }
+        return next({
+          ...args,
+        });
+      };
+    }, "endpointMiddleware");
+    var import_middleware_serde6 = require_dist_cjs4();
+    var endpointMiddlewareOptions = {
+      step: "serialize",
+      tags: ["ENDPOINT_PARAMETERS", "ENDPOINT_V2", "ENDPOINT"],
+      name: "endpointV2Middleware",
+      override: true,
+      relation: "before",
+      toMiddleware: import_middleware_serde6.serializerMiddlewareOption.name,
+    };
+    var getEndpointPlugin5 = /* @__PURE__ */ __name(
+      (config, instructions) => ({
+        applyToStack: (clientStack) => {
+          clientStack.addRelativeTo(
+            endpointMiddleware({
+              config,
+              instructions,
+            }),
+            endpointMiddlewareOptions,
+          );
+        },
+      }),
+      "getEndpointPlugin",
+    );
+    var import_getEndpointFromConfig2 = require_getEndpointFromConfig();
+    var resolveEndpointConfig2 = /* @__PURE__ */ __name((input) => {
+      const tls = input.tls ?? true;
+      const { endpoint, useDualstackEndpoint, useFipsEndpoint } = input;
+      const customEndpointProvider =
+        endpoint != null
+          ? async () => toEndpointV1(await (0, import_util_middleware6.normalizeProvider)(endpoint)())
+          : void 0;
+      const isCustomEndpoint = !!endpoint;
+      const resolvedConfig = Object.assign(input, {
+        endpoint: customEndpointProvider,
+        tls,
+        isCustomEndpoint,
+        useDualstackEndpoint: (0, import_util_middleware6.normalizeProvider)(useDualstackEndpoint ?? false),
+        useFipsEndpoint: (0, import_util_middleware6.normalizeProvider)(useFipsEndpoint ?? false),
+      });
+      let configuredEndpointPromise = void 0;
+      resolvedConfig.serviceConfiguredEndpoint = async () => {
+        if (input.serviceId && !configuredEndpointPromise) {
+          configuredEndpointPromise = (0, import_getEndpointFromConfig2.getEndpointFromConfig)(input.serviceId);
+        }
+        return configuredEndpointPromise;
+      };
+      return resolvedConfig;
+    }, "resolveEndpointConfig");
+    var resolveEndpointRequiredConfig2 = /* @__PURE__ */ __name((input) => {
+      const { endpoint } = input;
+      if (endpoint === void 0) {
+        input.endpoint = async () => {
+          throw new Error(
+            "@smithy/middleware-endpoint: (default endpointRuleSet) endpoint is not set - you must configure an endpoint.",
+          );
+        };
+      }
+      return input;
+    }, "resolveEndpointRequiredConfig");
+  },
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/index.js
 var dist_es_exports3 = {};
 __export(dist_es_exports3, {
@@ -14437,7 +16341,7 @@ __export(dist_es_exports3, {
   Weather: () => Weather,
   WeatherClient: () => WeatherClient,
   WeatherServiceException: () => WeatherServiceException,
-  __Client: () => import_smithy_client8.Client,
+  __Client: () => import_smithy_client11.Client,
   paginateListCities: () => paginateListCities,
 });
 module.exports = __toCommonJS(dist_es_exports3);
@@ -14469,6 +16373,16 @@ var resolveHttpAuthSchemeConfig = (config) => {
   });
 };
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/endpoint/EndpointParameters.js
+var resolveClientEndpointParameters = (options) => {
+  return Object.assign(options, {
+    defaultSigningName: "",
+  });
+};
+var commonParams = {
+  endpoint: { type: "builtInParams", name: "endpoint" },
+};
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/package.json
 var package_default = {
   name: "@smithy/typescript-example-client",
@@ -14490,35 +16404,37 @@ var package_default = {
   dependencies: {
     "@aws-crypto/sha256-browser": "5.2.0",
     "@aws-crypto/sha256-js": "5.2.0",
-    "@aws-sdk/middleware-host-header": "3.804.0",
-    "@aws-sdk/middleware-logger": "3.804.0",
-    "@aws-sdk/middleware-recursion-detection": "3.804.0",
-    "@aws-sdk/middleware-user-agent": "3.806.0",
-    "@aws-sdk/types": "3.804.0",
-    "@aws-sdk/util-user-agent-browser": "3.804.0",
-    "@aws-sdk/util-user-agent-node": "3.806.0",
-    "@smithy/config-resolver": "^4.1.1",
-    "@smithy/core": "^3.3.1",
-    "@smithy/fetch-http-handler": "^5.0.2",
-    "@smithy/hash-node": "^4.0.2",
-    "@smithy/invalid-dependency": "^4.0.2",
-    "@smithy/middleware-content-length": "^4.0.2",
-    "@smithy/middleware-retry": "^4.1.4",
-    "@smithy/middleware-serde": "^4.0.3",
-    "@smithy/middleware-stack": "^4.0.2",
-    "@smithy/node-config-provider": "^4.1.0",
-    "@smithy/node-http-handler": "^4.0.4",
-    "@smithy/protocol-http": "^5.1.0",
-    "@smithy/smithy-client": "^4.2.3",
-    "@smithy/types": "^4.2.0",
-    "@smithy/url-parser": "^4.0.2",
+    "@aws-sdk/middleware-host-header": "3.840.0",
+    "@aws-sdk/middleware-logger": "3.840.0",
+    "@aws-sdk/middleware-recursion-detection": "3.840.0",
+    "@aws-sdk/middleware-user-agent": "3.844.0",
+    "@aws-sdk/types": "3.840.0",
+    "@aws-sdk/util-user-agent-browser": "3.840.0",
+    "@aws-sdk/util-user-agent-node": "3.844.0",
+    "@smithy/config-resolver": "^4.1.4",
+    "@smithy/core": "^3.7.0",
+    "@smithy/fetch-http-handler": "^5.1.0",
+    "@smithy/hash-node": "^4.0.4",
+    "@smithy/invalid-dependency": "^4.0.4",
+    "@smithy/middleware-content-length": "^4.0.4",
+    "@smithy/middleware-endpoint": "^4.1.14",
+    "@smithy/middleware-retry": "^4.1.15",
+    "@smithy/middleware-serde": "^4.0.8",
+    "@smithy/middleware-stack": "^4.0.4",
+    "@smithy/node-config-provider": "^4.1.3",
+    "@smithy/node-http-handler": "^4.1.0",
+    "@smithy/protocol-http": "^5.1.2",
+    "@smithy/smithy-client": "^4.4.6",
+    "@smithy/types": "^4.3.1",
+    "@smithy/url-parser": "^4.0.4",
     "@smithy/util-base64": "^4.0.0",
     "@smithy/util-body-length-browser": "^4.0.0",
     "@smithy/util-body-length-node": "^4.0.0",
-    "@smithy/util-defaults-mode-browser": "^4.0.11",
-    "@smithy/util-defaults-mode-node": "^4.0.11",
-    "@smithy/util-middleware": "^4.0.2",
-    "@smithy/util-retry": "^4.0.3",
+    "@smithy/util-defaults-mode-browser": "^4.0.22",
+    "@smithy/util-defaults-mode-node": "^4.0.22",
+    "@smithy/util-endpoints": "^3.0.6",
+    "@smithy/util-middleware": "^4.0.4",
+    "@smithy/util-retry": "^4.0.6",
     "@smithy/util-utf8": "^4.0.0",
     tslib: "^2.6.2",
   },
@@ -14548,26 +16464,79 @@ var package_default = {
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/runtimeConfig.js
-var import_util_user_agent_node = __toESM(require_dist_cjs22());
-var import_hash_node = __toESM(require_dist_cjs23());
-var import_middleware_retry = __toESM(require_dist_cjs26());
-var import_node_config_provider = __toESM(require_dist_cjs28());
+var import_util_user_agent_node = __toESM(require_dist_cjs26());
+var import_hash_node = __toESM(require_dist_cjs27());
+var import_middleware_retry = __toESM(require_dist_cjs30());
+var import_node_config_provider = __toESM(require_dist_cjs32());
 var import_node_http_handler = __toESM(require_dist_cjs11());
-var import_util_body_length_node = __toESM(require_dist_cjs29());
-var import_util_retry = __toESM(require_dist_cjs25());
+var import_util_body_length_node = __toESM(require_dist_cjs33());
+var import_util_retry = __toESM(require_dist_cjs29());
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/endpoint/ruleset.js
+var ruleSet = {
+  version: "1.0",
+  parameters: {
+    endpoint: {
+      type: "string",
+      builtIn: "SDK::Endpoint",
+      documentation: "Endpoint used for making requests. Should be formatted as a URI.",
+    },
+  },
+  rules: [
+    {
+      conditions: [
+        {
+          fn: "isSet",
+          argv: [
+            {
+              ref: "endpoint",
+            },
+          ],
+        },
+      ],
+      endpoint: {
+        url: {
+          ref: "endpoint",
+        },
+      },
+      type: "endpoint",
+    },
+    {
+      conditions: [],
+      error: "(default endpointRuleSet) endpoint is not set - you must configure an endpoint.",
+      type: "error",
+    },
+  ],
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/endpoint/endpointResolver.js
+var import_util_endpoints = __toESM(require_dist_cjs15());
+var cache = new import_util_endpoints.EndpointCache({
+  size: 50,
+  params: ["endpoint"],
+});
+var defaultEndpointResolver = (endpointParams, context = {}) => {
+  return cache.get(endpointParams, () =>
+    (0, import_util_endpoints.resolveEndpoint)(ruleSet, {
+      endpointParams,
+      logger: context.logger,
+    }),
+  );
+};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/runtimeConfig.shared.js
 init_dist_es();
-var import_smithy_client4 = __toESM(require_dist_cjs20());
-var import_url_parser = __toESM(require_dist_cjs31());
-var import_util_base643 = __toESM(require_dist_cjs8());
-var import_util_utf83 = __toESM(require_dist_cjs7());
+var import_smithy_client7 = __toESM(require_dist_cjs23());
+var import_url_parser = __toESM(require_dist_cjs17());
+var import_util_base646 = __toESM(require_dist_cjs8());
+var import_util_utf84 = __toESM(require_dist_cjs7());
 var getRuntimeConfig = (config) => {
   return {
     apiVersion: "2006-03-01",
-    base64Decoder: config?.base64Decoder ?? import_util_base643.fromBase64,
-    base64Encoder: config?.base64Encoder ?? import_util_base643.toBase64,
+    base64Decoder: config?.base64Decoder ?? import_util_base646.fromBase64,
+    base64Encoder: config?.base64Encoder ?? import_util_base646.toBase64,
     disableHostPrefix: config?.disableHostPrefix ?? false,
+    endpointProvider: config?.endpointProvider ?? defaultEndpointResolver,
     extensions: config?.extensions ?? [],
     httpAuthSchemeProvider: config?.httpAuthSchemeProvider ?? defaultWeatherHttpAuthSchemeProvider,
     httpAuthSchemes: config?.httpAuthSchemes ?? [
@@ -14577,23 +16546,26 @@ var getRuntimeConfig = (config) => {
         signer: new NoAuthSigner(),
       },
     ],
-    logger: config?.logger ?? new import_smithy_client4.NoOpLogger(),
+    logger: config?.logger ?? new import_smithy_client7.NoOpLogger(),
     urlParser: config?.urlParser ?? import_url_parser.parseUrl,
-    utf8Decoder: config?.utf8Decoder ?? import_util_utf83.fromUtf8,
-    utf8Encoder: config?.utf8Encoder ?? import_util_utf83.toUtf8,
+    utf8Decoder: config?.utf8Decoder ?? import_util_utf84.fromUtf8,
+    utf8Encoder: config?.utf8Encoder ?? import_util_utf84.toUtf8,
   };
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/runtimeConfig.js
-var import_smithy_client5 = __toESM(require_dist_cjs20());
-var import_util_defaults_mode_node = __toESM(require_dist_cjs35());
-var import_smithy_client6 = __toESM(require_dist_cjs20());
+var import_smithy_client8 = __toESM(require_dist_cjs23());
+var import_util_defaults_mode_node = __toESM(require_dist_cjs37());
+var import_smithy_client9 = __toESM(require_dist_cjs23());
 var getRuntimeConfig2 = (config) => {
-  (0, import_smithy_client6.emitWarningIfUnsupportedVersion)(process.version);
+  (0, import_smithy_client9.emitWarningIfUnsupportedVersion)(process.version);
   const defaultsMode = (0, import_util_defaults_mode_node.resolveDefaultsModeConfig)(config);
-  const defaultConfigProvider = () => defaultsMode().then(import_smithy_client5.loadConfigsForDefaultMode);
+  const defaultConfigProvider = () => defaultsMode().then(import_smithy_client8.loadConfigsForDefaultMode);
   const clientSharedValues = getRuntimeConfig(config);
-  const loaderConfig = { profile: config?.profile, logger: clientSharedValues.logger };
+  const loaderConfig = {
+    profile: config?.profile,
+    logger: clientSharedValues.logger,
+  };
   return {
     ...clientSharedValues,
     ...config,
@@ -14657,45 +16629,47 @@ var resolveHttpAuthRuntimeConfig = (config) => {
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/runtimeExtensions.js
 var import_protocol_http12 = __toESM(require_dist_cjs3());
-var import_smithy_client7 = __toESM(require_dist_cjs20());
+var import_smithy_client10 = __toESM(require_dist_cjs23());
 var resolveRuntimeExtensions = (runtimeConfig, extensions) => {
   const extensionConfiguration = Object.assign(
-    (0, import_smithy_client7.getDefaultExtensionConfiguration)(runtimeConfig),
+    (0, import_smithy_client10.getDefaultExtensionConfiguration)(runtimeConfig),
     (0, import_protocol_http12.getHttpHandlerExtensionConfiguration)(runtimeConfig),
     getHttpAuthExtensionConfiguration(runtimeConfig),
   );
   extensions.forEach((extension) => extension.configure(extensionConfiguration));
   return Object.assign(
     runtimeConfig,
-    (0, import_smithy_client7.resolveDefaultRuntimeConfig)(extensionConfiguration),
+    (0, import_smithy_client10.resolveDefaultRuntimeConfig)(extensionConfiguration),
     (0, import_protocol_http12.resolveHttpHandlerRuntimeConfig)(extensionConfiguration),
     resolveHttpAuthRuntimeConfig(extensionConfiguration),
   );
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/WeatherClient.js
-var import_middleware_host_header = __toESM(require_dist_cjs36());
-var import_middleware_logger = __toESM(require_dist_cjs37());
-var import_middleware_recursion_detection = __toESM(require_dist_cjs38());
-var import_middleware_user_agent = __toESM(require_dist_cjs21());
-var import_config_resolver = __toESM(require_dist_cjs33());
+var import_middleware_host_header = __toESM(require_dist_cjs38());
+var import_middleware_logger = __toESM(require_dist_cjs39());
+var import_middleware_recursion_detection = __toESM(require_dist_cjs40());
+var import_middleware_user_agent = __toESM(require_dist_cjs25());
 init_dist_es();
-var import_middleware_content_length = __toESM(require_dist_cjs39());
-var import_middleware_retry2 = __toESM(require_dist_cjs26());
-var import_smithy_client8 = __toESM(require_dist_cjs20());
-var WeatherClient = class extends import_smithy_client8.Client {
+var import_middleware_content_length = __toESM(require_dist_cjs41());
+var import_middleware_endpoint = __toESM(require_dist_cjs42());
+var import_middleware_retry2 = __toESM(require_dist_cjs30());
+var import_smithy_client11 = __toESM(require_dist_cjs23());
+var WeatherClient = class extends import_smithy_client11.Client {
   constructor(...[configuration]) {
     let _config_0 = getRuntimeConfig2(configuration || {});
     super(_config_0);
     __publicField(this, "config");
     this.initConfig = _config_0;
-    let _config_1 = (0, import_middleware_user_agent.resolveUserAgentConfig)(_config_0);
-    let _config_2 = (0, import_config_resolver.resolveCustomEndpointsConfig)(_config_1);
+    let _config_1 = resolveClientEndpointParameters(_config_0);
+    let _config_2 = (0, import_middleware_user_agent.resolveUserAgentConfig)(_config_1);
     let _config_3 = (0, import_middleware_retry2.resolveRetryConfig)(_config_2);
     let _config_4 = (0, import_middleware_host_header.resolveHostHeaderConfig)(_config_3);
-    let _config_5 = resolveHttpAuthSchemeConfig(_config_4);
-    let _config_6 = resolveRuntimeExtensions(_config_5, configuration?.extensions || []);
-    this.config = _config_6;
+    let _config_5 = (0, import_middleware_endpoint.resolveEndpointConfig)(_config_4);
+    let _config_6 = (0, import_middleware_endpoint.resolveEndpointRequiredConfig)(_config_5);
+    let _config_7 = resolveHttpAuthSchemeConfig(_config_6);
+    let _config_8 = resolveRuntimeExtensions(_config_7, configuration?.extensions || []);
+    this.config = _config_8;
     this.middlewareStack.use((0, import_middleware_user_agent.getUserAgentPlugin)(this.config));
     this.middlewareStack.use((0, import_middleware_retry2.getRetryPlugin)(this.config));
     this.middlewareStack.use((0, import_middleware_content_length.getContentLengthPlugin)(this.config));
@@ -14703,7 +16677,7 @@ var WeatherClient = class extends import_smithy_client8.Client {
     this.middlewareStack.use((0, import_middleware_logger.getLoggerPlugin)(this.config));
     this.middlewareStack.use((0, import_middleware_recursion_detection.getRecursionDetectionPlugin)(this.config));
     this.middlewareStack.use(
-      getHttpAuthSchemePlugin(this.config, {
+      getHttpAuthSchemeEndpointRuleSetPlugin(this.config, {
         httpAuthSchemeParametersProvider: defaultWeatherHttpAuthSchemeParametersProvider,
         identityProviderConfigProvider: async (config) => new DefaultIdentityProviderConfig({}),
       }),
@@ -14716,11 +16690,16 @@ var WeatherClient = class extends import_smithy_client8.Client {
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/GetCityCommand.js
+var import_middleware_endpoint2 = __toESM(require_dist_cjs42());
 var import_middleware_serde2 = __toESM(require_dist_cjs4());
-var import_smithy_client9 = __toESM(require_dist_cjs20());
-var GetCityCommand = class extends import_smithy_client9.Command.classBuilder()
+var import_smithy_client12 = __toESM(require_dist_cjs23());
+var GetCityCommand = class extends import_smithy_client12.Command.classBuilder()
+  .ep(commonParams)
   .m(function (Command, cs, config, o) {
-    return [(0, import_middleware_serde2.getSerdePlugin)(config, this.serialize, this.deserialize)];
+    return [
+      (0, import_middleware_serde2.getSerdePlugin)(config, this.serialize, this.deserialize),
+      (0, import_middleware_endpoint2.getEndpointPlugin)(config, Command.getEndpointParameterInstructions()),
+    ];
   })
   .s("Weather", "GetCity", {})
   .n("WeatherClient", "GetCityCommand")
@@ -14734,11 +16713,16 @@ var GetCityCommand = class extends import_smithy_client9.Command.classBuilder()
   .build() {};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/GetCurrentTimeCommand.js
+var import_middleware_endpoint3 = __toESM(require_dist_cjs42());
 var import_middleware_serde3 = __toESM(require_dist_cjs4());
-var import_smithy_client10 = __toESM(require_dist_cjs20());
-var GetCurrentTimeCommand = class extends import_smithy_client10.Command.classBuilder()
+var import_smithy_client13 = __toESM(require_dist_cjs23());
+var GetCurrentTimeCommand = class extends import_smithy_client13.Command.classBuilder()
+  .ep(commonParams)
   .m(function (Command, cs, config, o) {
-    return [(0, import_middleware_serde3.getSerdePlugin)(config, this.serialize, this.deserialize)];
+    return [
+      (0, import_middleware_serde3.getSerdePlugin)(config, this.serialize, this.deserialize),
+      (0, import_middleware_endpoint3.getEndpointPlugin)(config, Command.getEndpointParameterInstructions()),
+    ];
   })
   .s("Weather", "GetCurrentTime", {})
   .n("WeatherClient", "GetCurrentTimeCommand")
@@ -14752,11 +16736,16 @@ var GetCurrentTimeCommand = class extends import_smithy_client10.Command.classBu
   .build() {};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/GetForecastCommand.js
+var import_middleware_endpoint4 = __toESM(require_dist_cjs42());
 var import_middleware_serde4 = __toESM(require_dist_cjs4());
-var import_smithy_client11 = __toESM(require_dist_cjs20());
-var GetForecastCommand = class extends import_smithy_client11.Command.classBuilder()
+var import_smithy_client14 = __toESM(require_dist_cjs23());
+var GetForecastCommand = class extends import_smithy_client14.Command.classBuilder()
+  .ep(commonParams)
   .m(function (Command, cs, config, o) {
-    return [(0, import_middleware_serde4.getSerdePlugin)(config, this.serialize, this.deserialize)];
+    return [
+      (0, import_middleware_serde4.getSerdePlugin)(config, this.serialize, this.deserialize),
+      (0, import_middleware_endpoint4.getEndpointPlugin)(config, Command.getEndpointParameterInstructions()),
+    ];
   })
   .s("Weather", "GetForecast", {})
   .n("WeatherClient", "GetForecastCommand")
@@ -14770,11 +16759,16 @@ var GetForecastCommand = class extends import_smithy_client11.Command.classBuild
   .build() {};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/ListCitiesCommand.js
+var import_middleware_endpoint5 = __toESM(require_dist_cjs42());
 var import_middleware_serde5 = __toESM(require_dist_cjs4());
-var import_smithy_client12 = __toESM(require_dist_cjs20());
-var ListCitiesCommand = class extends import_smithy_client12.Command.classBuilder()
+var import_smithy_client15 = __toESM(require_dist_cjs23());
+var ListCitiesCommand = class extends import_smithy_client15.Command.classBuilder()
+  .ep(commonParams)
   .m(function (Command, cs, config, o) {
-    return [(0, import_middleware_serde5.getSerdePlugin)(config, this.serialize, this.deserialize)];
+    return [
+      (0, import_middleware_serde5.getSerdePlugin)(config, this.serialize, this.deserialize),
+      (0, import_middleware_endpoint5.getEndpointPlugin)(config, Command.getEndpointParameterInstructions()),
+    ];
   })
   .s("Weather", "ListCities", {})
   .n("WeatherClient", "ListCitiesCommand")
@@ -14788,7 +16782,7 @@ var ListCitiesCommand = class extends import_smithy_client12.Command.classBuilde
   .build() {};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/Weather.js
-var import_smithy_client13 = __toESM(require_dist_cjs20());
+var import_smithy_client16 = __toESM(require_dist_cjs23());
 var commands = {
   GetCityCommand,
   GetCurrentTimeCommand,
@@ -14796,15 +16790,15 @@ var commands = {
   ListCitiesCommand,
 };
 var Weather = class extends WeatherClient {};
-(0, import_smithy_client13.createAggregatedClient)(commands, Weather);
+(0, import_smithy_client16.createAggregatedClient)(commands, Weather);
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/pagination/ListCitiesPaginator.js
 init_dist_es();
 var paginateListCities = createPaginator(WeatherClient, ListCitiesCommand, "nextToken", "nextToken", "pageSize");
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/models/WeatherServiceException.js
-var import_smithy_client14 = __toESM(require_dist_cjs20());
-var WeatherServiceException = class _WeatherServiceException extends import_smithy_client14.ServiceException {
+var import_smithy_client17 = __toESM(require_dist_cjs23());
+var WeatherServiceException = class _WeatherServiceException extends import_smithy_client17.ServiceException {
   constructor(options) {
     super(options);
     Object.setPrototypeOf(this, _WeatherServiceException.prototype);
