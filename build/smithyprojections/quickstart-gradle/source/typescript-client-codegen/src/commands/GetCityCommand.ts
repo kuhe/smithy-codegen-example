@@ -65,6 +65,7 @@ export interface GetCityCommandOutput extends GetCityOutput, __MetadataBearer {}
  * @throws {@link WeatherServiceException}
  * <p>Base exception class for all service exceptions from Weather service.</p>
  *
+ *
  */
 export class GetCityCommand extends $Command.classBuilder<GetCityCommandInput, GetCityCommandOutput, WeatherClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
       .m(function (this: any, Command: any, cs: any, config: WeatherClientResolvedConfig, o: any) {

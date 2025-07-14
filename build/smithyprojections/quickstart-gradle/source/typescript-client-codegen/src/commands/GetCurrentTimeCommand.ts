@@ -54,6 +54,7 @@ export interface GetCurrentTimeCommandOutput extends GetCurrentTimeOutput, __Met
  * @throws {@link WeatherServiceException}
  * <p>Base exception class for all service exceptions from Weather service.</p>
  *
+ *
  */
 export class GetCurrentTimeCommand extends $Command.classBuilder<GetCurrentTimeCommandInput, GetCurrentTimeCommandOutput, WeatherClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
       .m(function (this: any, Command: any, cs: any, config: WeatherClientResolvedConfig, o: any) {

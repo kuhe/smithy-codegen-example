@@ -123,12 +123,11 @@ var require_dist_cjs = __commonJS({
         });
       }
       return {
-        _checksumAlgorithms: checksumAlgorithms,
         addChecksumAlgorithm(algo) {
-          this._checksumAlgorithms.push(algo);
+          checksumAlgorithms.push(algo);
         },
         checksumAlgorithms() {
-          return this._checksumAlgorithms;
+          return checksumAlgorithms;
         },
       };
     }, "getChecksumConfiguration");
@@ -140,14 +139,10 @@ var require_dist_cjs = __commonJS({
       return runtimeConfig;
     }, "resolveChecksumRuntimeConfig");
     var getDefaultClientConfiguration = /* @__PURE__ */ __name((runtimeConfig) => {
-      return {
-        ...getChecksumConfiguration(runtimeConfig),
-      };
+      return getChecksumConfiguration(runtimeConfig);
     }, "getDefaultClientConfiguration");
     var resolveDefaultRuntimeConfig2 = /* @__PURE__ */ __name((config) => {
-      return {
-        ...resolveChecksumRuntimeConfig(config),
-      };
+      return resolveChecksumRuntimeConfig(config);
     }, "resolveDefaultRuntimeConfig");
     var FieldPosition = /* @__PURE__ */ ((FieldPosition2) => {
       FieldPosition2[(FieldPosition2["HEADER"] = 0)] = "HEADER";
@@ -198,16 +193,16 @@ var require_dist_cjs2 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
-      getSmithyContext: () => getSmithyContext5,
-      normalizeProvider: () => normalizeProvider2,
+      getSmithyContext: () => getSmithyContext7,
+      normalizeProvider: () => normalizeProvider3,
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_types5 = require_dist_cjs();
-    var getSmithyContext5 = /* @__PURE__ */ __name(
+    var getSmithyContext7 = /* @__PURE__ */ __name(
       (context) => context[import_types5.SMITHY_CONTEXT_KEY] || (context[import_types5.SMITHY_CONTEXT_KEY] = {}),
       "getSmithyContext",
     );
-    var normalizeProvider2 = /* @__PURE__ */ __name((input) => {
+    var normalizeProvider3 = /* @__PURE__ */ __name((input) => {
       if (typeof input === "function") return input;
       const promisified = Promise.resolve(input);
       return () => promisified;
@@ -225,6 +220,33 @@ var init_getSmithyContext = __esm({
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/resolveAuthOptions.js
+var resolveAuthOptions;
+var init_resolveAuthOptions = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/resolveAuthOptions.js"() {
+    resolveAuthOptions = (candidateAuthOptions, authSchemePreference) => {
+      if (!authSchemePreference || authSchemePreference.length === 0) {
+        return candidateAuthOptions;
+      }
+      const preferredAuthOptions = [];
+      for (const preferredSchemeName of authSchemePreference) {
+        for (const candidateAuthOption of candidateAuthOptions) {
+          const candidateAuthSchemeName = candidateAuthOption.schemeId.split("#")[1];
+          if (candidateAuthSchemeName === preferredSchemeName) {
+            preferredAuthOptions.push(candidateAuthOption);
+          }
+        }
+      }
+      for (const candidateAuthOption of candidateAuthOptions) {
+        if (!preferredAuthOptions.find(({ schemeId }) => schemeId === candidateAuthOption.schemeId)) {
+          preferredAuthOptions.push(candidateAuthOption);
+        }
+      }
+      return preferredAuthOptions;
+    };
+  },
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/httpAuthSchemeMiddleware.js
 function convertHttpAuthSchemesToMap(httpAuthSchemes) {
   const map = /* @__PURE__ */ new Map();
@@ -238,14 +260,17 @@ var init_httpAuthSchemeMiddleware = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/httpAuthSchemeMiddleware.js"() {
     import_types2 = __toESM(require_dist_cjs());
     import_util_middleware2 = __toESM(require_dist_cjs2());
+    init_resolveAuthOptions();
     httpAuthSchemeMiddleware = (config, mwOptions) => (next, context) => async (args) => {
       const options = config.httpAuthSchemeProvider(
         await mwOptions.httpAuthSchemeParametersProvider(config, context, args.input),
       );
+      const authSchemePreference = config.authSchemePreference ? await config.authSchemePreference() : [];
+      const resolvedOptions = resolveAuthOptions(options, authSchemePreference);
       const authSchemes = convertHttpAuthSchemesToMap(config.httpAuthSchemes);
       const smithyContext = (0, import_util_middleware2.getSmithyContext)(context);
       const failureReasons = [];
-      for (const option of options) {
+      for (const option of resolvedOptions) {
         const scheme = authSchemes.get(option.schemeId);
         if (!scheme) {
           failureReasons.push(`HttpAuthScheme \`${option.schemeId}\` was not enabled for this service.`);
@@ -304,148 +329,8 @@ var init_getHttpAuthSchemeEndpointRuleSetPlugin = __esm({
   },
 });
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-serde/dist-cjs/index.js
-var require_dist_cjs3 = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-serde/dist-cjs/index.js"(
-    exports2,
-    module2,
-  ) {
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
-    var __export2 = (target, all) => {
-      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if ((from && typeof from === "object") || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, {
-              get: () => from[key],
-              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
-            });
-      }
-      return to;
-    };
-    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
-      deserializerMiddleware: () => deserializerMiddleware,
-      deserializerMiddlewareOption: () => deserializerMiddlewareOption,
-      getSerdePlugin: () => getSerdePlugin5,
-      serializerMiddleware: () => serializerMiddleware,
-      serializerMiddlewareOption: () => serializerMiddlewareOption2,
-    });
-    module2.exports = __toCommonJS2(src_exports);
-    var deserializerMiddleware = /* @__PURE__ */ __name(
-      (options, deserializer) => (next) => async (args) => {
-        const { response } = await next(args);
-        try {
-          const parsed = await deserializer(response, options);
-          return {
-            response,
-            output: parsed,
-          };
-        } catch (error) {
-          Object.defineProperty(error, "$response", {
-            value: response,
-          });
-          if (!("$metadata" in error)) {
-            const hint = `Deserialization error: to see the raw response, inspect the hidden field {error}.$response on this object.`;
-            error.message += "\n  " + hint;
-            if (typeof error.$responseBodyText !== "undefined") {
-              if (error.$response) {
-                error.$response.body = error.$responseBodyText;
-              }
-            }
-          }
-          throw error;
-        }
-      },
-      "deserializerMiddleware",
-    );
-    var serializerMiddleware = /* @__PURE__ */ __name(
-      (options, serializer) => (next, context) => async (args) => {
-        const endpoint =
-          context.endpointV2?.url && options.urlParser
-            ? async () => options.urlParser(context.endpointV2.url)
-            : options.endpoint;
-        if (!endpoint) {
-          throw new Error("No valid endpoint provider available.");
-        }
-        const request = await serializer(args.input, { ...options, endpoint });
-        return next({
-          ...args,
-          request,
-        });
-      },
-      "serializerMiddleware",
-    );
-    var deserializerMiddlewareOption = {
-      name: "deserializerMiddleware",
-      step: "deserialize",
-      tags: ["DESERIALIZER"],
-      override: true,
-    };
-    var serializerMiddlewareOption2 = {
-      name: "serializerMiddleware",
-      step: "serialize",
-      tags: ["SERIALIZER"],
-      override: true,
-    };
-    function getSerdePlugin5(config, serializer, deserializer) {
-      return {
-        applyToStack: (commandStack) => {
-          commandStack.add(deserializerMiddleware(config, deserializer), deserializerMiddlewareOption);
-          commandStack.add(serializerMiddleware(config, serializer), serializerMiddlewareOption2);
-        },
-      };
-    }
-    __name(getSerdePlugin5, "getSerdePlugin");
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/getHttpAuthSchemePlugin.js
-var import_middleware_serde, httpAuthSchemeMiddlewareOptions, getHttpAuthSchemePlugin;
-var init_getHttpAuthSchemePlugin = __esm({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/getHttpAuthSchemePlugin.js"() {
-    import_middleware_serde = __toESM(require_dist_cjs3());
-    init_httpAuthSchemeMiddleware();
-    httpAuthSchemeMiddlewareOptions = {
-      step: "serialize",
-      tags: ["HTTP_AUTH_SCHEME"],
-      name: "httpAuthSchemeMiddleware",
-      override: true,
-      relation: "before",
-      toMiddleware: import_middleware_serde.serializerMiddlewareOption.name,
-    };
-    getHttpAuthSchemePlugin = (config, { httpAuthSchemeParametersProvider, identityProviderConfigProvider }) => ({
-      applyToStack: (clientStack) => {
-        clientStack.addRelativeTo(
-          httpAuthSchemeMiddleware(config, {
-            httpAuthSchemeParametersProvider,
-            identityProviderConfigProvider,
-          }),
-          httpAuthSchemeMiddlewareOptions,
-        );
-      },
-    });
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/index.js
-var init_middleware_http_auth_scheme = __esm({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/index.js"() {
-    init_httpAuthSchemeMiddleware();
-    init_getHttpAuthSchemeEndpointRuleSetPlugin();
-    init_getHttpAuthSchemePlugin();
-  },
-});
-
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/protocol-http/dist-cjs/index.js
-var require_dist_cjs4 = __commonJS({
+var require_dist_cjs3 = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/protocol-http/dist-cjs/index.js"(
     exports2,
     module2,
@@ -474,8 +359,8 @@ var require_dist_cjs4 = __commonJS({
     __export2(src_exports, {
       Field: () => Field,
       Fields: () => Fields,
-      HttpRequest: () => HttpRequest7,
-      HttpResponse: () => HttpResponse2,
+      HttpRequest: () => HttpRequest10,
+      HttpResponse: () => HttpResponse4,
       IHttpRequest: () => import_types5.HttpRequest,
       getHttpHandlerExtensionConfiguration: () => getHttpHandlerExtensionConfiguration2,
       isValidHostname: () => isValidHostname,
@@ -483,19 +368,18 @@ var require_dist_cjs4 = __commonJS({
     });
     module2.exports = __toCommonJS2(src_exports);
     var getHttpHandlerExtensionConfiguration2 = /* @__PURE__ */ __name((runtimeConfig) => {
-      let httpHandler = runtimeConfig.httpHandler;
       return {
         setHttpHandler(handler) {
-          httpHandler = handler;
+          runtimeConfig.httpHandler = handler;
         },
         httpHandler() {
-          return httpHandler;
+          return runtimeConfig.httpHandler;
         },
         updateHttpClientConfig(key, value) {
-          httpHandler.updateHttpClientConfig(key, value);
+          runtimeConfig.httpHandler?.updateHttpClientConfig(key, value);
         },
         httpHandlerConfigs() {
-          return httpHandler.httpHandlerConfigs();
+          return runtimeConfig.httpHandler.httpHandlerConfigs();
         },
       };
     }, "getHttpHandlerExtensionConfiguration");
@@ -606,7 +490,7 @@ var require_dist_cjs4 = __commonJS({
       __name(_a2, "Fields"),
       _a2);
     var _a3;
-    var HttpRequest7 =
+    var HttpRequest10 =
       ((_a3 = class {
         constructor(options) {
           this.method = options.method || "GET";
@@ -681,7 +565,7 @@ var require_dist_cjs4 = __commonJS({
     }
     __name(cloneQuery, "cloneQuery");
     var _a4;
-    var HttpResponse2 =
+    var HttpResponse4 =
       ((_a4 = class {
         constructor(options) {
           this.statusCode = options.statusCode;
@@ -705,6 +589,173 @@ var require_dist_cjs4 = __commonJS({
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-serde/dist-cjs/index.js
+var require_dist_cjs4 = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-serde/dist-cjs/index.js"(
+    exports2,
+    module2,
+  ) {
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __name = (target, value) => __defProp2(target, "name", { value, configurable: true });
+    var __export2 = (target, all) => {
+      for (var name in all) __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if ((from && typeof from === "object") || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, {
+              get: () => from[key],
+              enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable,
+            });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var src_exports = {};
+    __export2(src_exports, {
+      deserializerMiddleware: () => deserializerMiddleware,
+      deserializerMiddlewareOption: () => deserializerMiddlewareOption,
+      getSerdePlugin: () => getSerdePlugin5,
+      serializerMiddleware: () => serializerMiddleware,
+      serializerMiddlewareOption: () => serializerMiddlewareOption2,
+    });
+    module2.exports = __toCommonJS2(src_exports);
+    var import_protocol_http13 = require_dist_cjs3();
+    var deserializerMiddleware = /* @__PURE__ */ __name(
+      (options, deserializer) => (next, context) => async (args) => {
+        const { response } = await next(args);
+        try {
+          const parsed = await deserializer(response, options);
+          return {
+            response,
+            output: parsed,
+          };
+        } catch (error) {
+          Object.defineProperty(error, "$response", {
+            value: response,
+          });
+          if (!("$metadata" in error)) {
+            const hint = `Deserialization error: to see the raw response, inspect the hidden field {error}.$response on this object.`;
+            try {
+              error.message += "\n  " + hint;
+            } catch (e) {
+              if (!context.logger || context.logger?.constructor?.name === "NoOpLogger") {
+                console.warn(hint);
+              } else {
+                context.logger?.warn?.(hint);
+              }
+            }
+            if (typeof error.$responseBodyText !== "undefined") {
+              if (error.$response) {
+                error.$response.body = error.$responseBodyText;
+              }
+            }
+            try {
+              if (import_protocol_http13.HttpResponse.isInstance(response)) {
+                const { headers = {} } = response;
+                const headerEntries = Object.entries(headers);
+                error.$metadata = {
+                  httpStatusCode: response.statusCode,
+                  requestId: findHeader(/^x-[\w-]+-request-?id$/, headerEntries),
+                  extendedRequestId: findHeader(/^x-[\w-]+-id-2$/, headerEntries),
+                  cfId: findHeader(/^x-[\w-]+-cf-id$/, headerEntries),
+                };
+              }
+            } catch (e) {}
+          }
+          throw error;
+        }
+      },
+      "deserializerMiddleware",
+    );
+    var findHeader = /* @__PURE__ */ __name((pattern, headers) => {
+      return (headers.find(([k]) => {
+        return k.match(pattern);
+      }) || [void 0, void 0])[1];
+    }, "findHeader");
+    var serializerMiddleware = /* @__PURE__ */ __name(
+      (options, serializer) => (next, context) => async (args) => {
+        const endpointConfig = options;
+        const endpoint =
+          context.endpointV2?.url && endpointConfig.urlParser
+            ? async () => endpointConfig.urlParser(context.endpointV2.url)
+            : endpointConfig.endpoint;
+        if (!endpoint) {
+          throw new Error("No valid endpoint provider available.");
+        }
+        const request = await serializer(args.input, { ...options, endpoint });
+        return next({
+          ...args,
+          request,
+        });
+      },
+      "serializerMiddleware",
+    );
+    var deserializerMiddlewareOption = {
+      name: "deserializerMiddleware",
+      step: "deserialize",
+      tags: ["DESERIALIZER"],
+      override: true,
+    };
+    var serializerMiddlewareOption2 = {
+      name: "serializerMiddleware",
+      step: "serialize",
+      tags: ["SERIALIZER"],
+      override: true,
+    };
+    function getSerdePlugin5(config, serializer, deserializer) {
+      return {
+        applyToStack: (commandStack) => {
+          commandStack.add(deserializerMiddleware(config, deserializer), deserializerMiddlewareOption);
+          commandStack.add(serializerMiddleware(config, serializer), serializerMiddlewareOption2);
+        },
+      };
+    }
+    __name(getSerdePlugin5, "getSerdePlugin");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/getHttpAuthSchemePlugin.js
+var import_middleware_serde, httpAuthSchemeMiddlewareOptions, getHttpAuthSchemePlugin;
+var init_getHttpAuthSchemePlugin = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/getHttpAuthSchemePlugin.js"() {
+    import_middleware_serde = __toESM(require_dist_cjs4());
+    init_httpAuthSchemeMiddleware();
+    httpAuthSchemeMiddlewareOptions = {
+      step: "serialize",
+      tags: ["HTTP_AUTH_SCHEME"],
+      name: "httpAuthSchemeMiddleware",
+      override: true,
+      relation: "before",
+      toMiddleware: import_middleware_serde.serializerMiddlewareOption.name,
+    };
+    getHttpAuthSchemePlugin = (config, { httpAuthSchemeParametersProvider, identityProviderConfigProvider }) => ({
+      applyToStack: (clientStack) => {
+        clientStack.addRelativeTo(
+          httpAuthSchemeMiddleware(config, {
+            httpAuthSchemeParametersProvider,
+            identityProviderConfigProvider,
+          }),
+          httpAuthSchemeMiddlewareOptions,
+        );
+      },
+    });
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/index.js
+var init_middleware_http_auth_scheme = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/index.js"() {
+    init_httpAuthSchemeMiddleware();
+    init_getHttpAuthSchemeEndpointRuleSetPlugin();
+    init_getHttpAuthSchemePlugin();
+  },
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-signing/httpSigningMiddleware.js
 var import_protocol_http,
   import_types3,
@@ -714,7 +765,7 @@ var import_protocol_http,
   httpSigningMiddleware;
 var init_httpSigningMiddleware = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-signing/httpSigningMiddleware.js"() {
-    import_protocol_http = __toESM(require_dist_cjs4());
+    import_protocol_http = __toESM(require_dist_cjs3());
     import_types3 = __toESM(require_dist_cjs());
     import_util_middleware3 = __toESM(require_dist_cjs2());
     defaultErrorHandler = (signingProperties) => (error) => {
@@ -776,10 +827,10 @@ var init_middleware_http_signing = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/normalizeProvider.js
-var normalizeProvider;
+var normalizeProvider2;
 var init_normalizeProvider = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/normalizeProvider.js"() {
-    normalizeProvider = (input) => {
+    normalizeProvider2 = (input) => {
       if (typeof input === "function") return input;
       const promisified = Promise.resolve(input);
       return () => promisified;
@@ -939,7 +990,7 @@ var require_fromBase64 = __commonJS({
     exports2.fromBase64 = void 0;
     var util_buffer_from_1 = require_dist_cjs6();
     var BASE64_REGEX = /^[A-Za-z0-9+/]*={0,2}$/;
-    var fromBase643 = (input) => {
+    var fromBase644 = (input) => {
       if ((input.length * 3) % 4 !== 0) {
         throw new TypeError(`Incorrect padding on base64 string.`);
       }
@@ -949,7 +1000,7 @@ var require_fromBase64 = __commonJS({
       const buffer = (0, util_buffer_from_1.fromString)(input, "base64");
       return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
     };
-    exports2.fromBase64 = fromBase643;
+    exports2.fromBase64 = fromBase644;
   },
 });
 
@@ -981,26 +1032,26 @@ var require_dist_cjs7 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
-      fromUtf8: () => fromUtf82,
+      fromUtf8: () => fromUtf83,
       toUint8Array: () => toUint8Array,
-      toUtf8: () => toUtf82,
+      toUtf8: () => toUtf84,
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_util_buffer_from = require_dist_cjs6();
-    var fromUtf82 = /* @__PURE__ */ __name((input) => {
+    var fromUtf83 = /* @__PURE__ */ __name((input) => {
       const buf = (0, import_util_buffer_from.fromString)(input, "utf8");
       return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength / Uint8Array.BYTES_PER_ELEMENT);
     }, "fromUtf8");
     var toUint8Array = /* @__PURE__ */ __name((data) => {
       if (typeof data === "string") {
-        return fromUtf82(data);
+        return fromUtf83(data);
       }
       if (ArrayBuffer.isView(data)) {
         return new Uint8Array(data.buffer, data.byteOffset, data.byteLength / Uint8Array.BYTES_PER_ELEMENT);
       }
       return new Uint8Array(data);
     }, "toUint8Array");
-    var toUtf82 = /* @__PURE__ */ __name((input) => {
+    var toUtf84 = /* @__PURE__ */ __name((input) => {
       if (typeof input === "string") {
         return input;
       }
@@ -1024,7 +1075,7 @@ var require_toBase64 = __commonJS({
     exports2.toBase64 = void 0;
     var util_buffer_from_1 = require_dist_cjs6();
     var util_utf8_1 = require_dist_cjs7();
-    var toBase643 = (_input) => {
+    var toBase644 = (_input) => {
       let input;
       if (typeof _input === "string") {
         input = (0, util_utf8_1.fromUtf8)(_input);
@@ -1038,7 +1089,7 @@ var require_toBase64 = __commonJS({
         "base64",
       );
     };
-    exports2.toBase64 = toBase643;
+    exports2.toBase64 = toBase644;
   },
 });
 
@@ -1071,6 +1122,419 @@ var require_dist_cjs8 = __commonJS({
     module2.exports = __toCommonJS2(src_exports);
     __reExport(src_exports, require_fromBase64(), module2.exports);
     __reExport(src_exports, require_toBase64(), module2.exports);
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.js
+var require_ChecksumStream = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ChecksumStream = void 0;
+    var util_base64_1 = require_dist_cjs8();
+    var stream_1 = require("stream");
+    var ChecksumStream2 = class extends stream_1.Duplex {
+      constructor({ expectedChecksum, checksum, source, checksumSourceLocation, base64Encoder }) {
+        var _a, _b;
+        super();
+        if (typeof source.pipe === "function") {
+          this.source = source;
+        } else {
+          throw new Error(
+            `@smithy/util-stream: unsupported source type ${(_b = (_a = source === null || source === void 0 ? void 0 : source.constructor) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : source} in ChecksumStream.`,
+          );
+        }
+        this.base64Encoder =
+          base64Encoder !== null && base64Encoder !== void 0 ? base64Encoder : util_base64_1.toBase64;
+        this.expectedChecksum = expectedChecksum;
+        this.checksum = checksum;
+        this.checksumSourceLocation = checksumSourceLocation;
+        this.source.pipe(this);
+      }
+      _read(size) {}
+      _write(chunk, encoding, callback) {
+        try {
+          this.checksum.update(chunk);
+          this.push(chunk);
+        } catch (e) {
+          return callback(e);
+        }
+        return callback();
+      }
+      async _final(callback) {
+        try {
+          const digest = await this.checksum.digest();
+          const received = this.base64Encoder(digest);
+          if (this.expectedChecksum !== received) {
+            return callback(
+              new Error(
+                `Checksum mismatch: expected "${this.expectedChecksum}" but received "${received}" in response header "${this.checksumSourceLocation}".`,
+              ),
+            );
+          }
+        } catch (e) {
+          return callback(e);
+        }
+        this.push(null);
+        return callback();
+      }
+    };
+    exports2.ChecksumStream = ChecksumStream2;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/stream-type-check.js
+var require_stream_type_check = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/stream-type-check.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.isBlob = exports2.isReadableStream = void 0;
+    var isReadableStream2 = (stream) => {
+      var _a;
+      return (
+        typeof ReadableStream === "function" &&
+        (((_a = stream === null || stream === void 0 ? void 0 : stream.constructor) === null || _a === void 0
+          ? void 0
+          : _a.name) === ReadableStream.name ||
+          stream instanceof ReadableStream)
+      );
+    };
+    exports2.isReadableStream = isReadableStream2;
+    var isBlob2 = (blob) => {
+      var _a;
+      return (
+        typeof Blob === "function" &&
+        (((_a = blob === null || blob === void 0 ? void 0 : blob.constructor) === null || _a === void 0
+          ? void 0
+          : _a.name) === Blob.name ||
+          blob instanceof Blob)
+      );
+    };
+    exports2.isBlob = isBlob2;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.browser.js
+var require_ChecksumStream_browser = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.browser.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ChecksumStream = void 0;
+    var ReadableStreamRef = typeof ReadableStream === "function" ? ReadableStream : function () {};
+    var ChecksumStream2 = class extends ReadableStreamRef {};
+    exports2.ChecksumStream = ChecksumStream2;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.browser.js
+var require_createChecksumStream_browser = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.browser.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createChecksumStream = void 0;
+    var util_base64_1 = require_dist_cjs8();
+    var stream_type_check_1 = require_stream_type_check();
+    var ChecksumStream_browser_1 = require_ChecksumStream_browser();
+    var createChecksumStream2 = ({ expectedChecksum, checksum, source, checksumSourceLocation, base64Encoder }) => {
+      var _a, _b;
+      if (!(0, stream_type_check_1.isReadableStream)(source)) {
+        throw new Error(
+          `@smithy/util-stream: unsupported source type ${(_b = (_a = source === null || source === void 0 ? void 0 : source.constructor) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : source} in ChecksumStream.`,
+        );
+      }
+      const encoder = base64Encoder !== null && base64Encoder !== void 0 ? base64Encoder : util_base64_1.toBase64;
+      if (typeof TransformStream !== "function") {
+        throw new Error(
+          "@smithy/util-stream: unable to instantiate ChecksumStream because API unavailable: ReadableStream/TransformStream.",
+        );
+      }
+      const transform = new TransformStream({
+        start() {},
+        async transform(chunk, controller) {
+          checksum.update(chunk);
+          controller.enqueue(chunk);
+        },
+        async flush(controller) {
+          const digest = await checksum.digest();
+          const received = encoder(digest);
+          if (expectedChecksum !== received) {
+            const error = new Error(
+              `Checksum mismatch: expected "${expectedChecksum}" but received "${received}" in response header "${checksumSourceLocation}".`,
+            );
+            controller.error(error);
+          } else {
+            controller.terminate();
+          }
+        },
+      });
+      source.pipeThrough(transform);
+      const readable = transform.readable;
+      Object.setPrototypeOf(readable, ChecksumStream_browser_1.ChecksumStream.prototype);
+      return readable;
+    };
+    exports2.createChecksumStream = createChecksumStream2;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.js
+var require_createChecksumStream = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createChecksumStream = createChecksumStream2;
+    var stream_type_check_1 = require_stream_type_check();
+    var ChecksumStream_1 = require_ChecksumStream();
+    var createChecksumStream_browser_1 = require_createChecksumStream_browser();
+    function createChecksumStream2(init) {
+      if (typeof ReadableStream === "function" && (0, stream_type_check_1.isReadableStream)(init.source)) {
+        return (0, createChecksumStream_browser_1.createChecksumStream)(init);
+      }
+      return new ChecksumStream_1.ChecksumStream(init);
+    }
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/ByteArrayCollector.js
+var require_ByteArrayCollector = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/ByteArrayCollector.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ByteArrayCollector = void 0;
+    var ByteArrayCollector = class {
+      constructor(allocByteArray) {
+        this.allocByteArray = allocByteArray;
+        this.byteLength = 0;
+        this.byteArrays = [];
+      }
+      push(byteArray) {
+        this.byteArrays.push(byteArray);
+        this.byteLength += byteArray.byteLength;
+      }
+      flush() {
+        if (this.byteArrays.length === 1) {
+          const bytes = this.byteArrays[0];
+          this.reset();
+          return bytes;
+        }
+        const aggregation = this.allocByteArray(this.byteLength);
+        let cursor = 0;
+        for (let i = 0; i < this.byteArrays.length; ++i) {
+          const bytes = this.byteArrays[i];
+          aggregation.set(bytes, cursor);
+          cursor += bytes.byteLength;
+        }
+        this.reset();
+        return aggregation;
+      }
+      reset() {
+        this.byteArrays = [];
+        this.byteLength = 0;
+      }
+    };
+    exports2.ByteArrayCollector = ByteArrayCollector;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/createBufferedReadableStream.js
+var require_createBufferedReadableStream = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/createBufferedReadableStream.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createBufferedReadable = void 0;
+    exports2.createBufferedReadableStream = createBufferedReadableStream;
+    exports2.merge = merge;
+    exports2.flush = flush;
+    exports2.sizeOf = sizeOf;
+    exports2.modeOf = modeOf;
+    var ByteArrayCollector_1 = require_ByteArrayCollector();
+    function createBufferedReadableStream(upstream, size, logger3) {
+      const reader = upstream.getReader();
+      let streamBufferingLoggedWarning = false;
+      let bytesSeen = 0;
+      const buffers = ["", new ByteArrayCollector_1.ByteArrayCollector((size2) => new Uint8Array(size2))];
+      let mode = -1;
+      const pull = async (controller) => {
+        const { value, done } = await reader.read();
+        const chunk = value;
+        if (done) {
+          if (mode !== -1) {
+            const remainder = flush(buffers, mode);
+            if (sizeOf(remainder) > 0) {
+              controller.enqueue(remainder);
+            }
+          }
+          controller.close();
+        } else {
+          const chunkMode = modeOf(chunk, false);
+          if (mode !== chunkMode) {
+            if (mode >= 0) {
+              controller.enqueue(flush(buffers, mode));
+            }
+            mode = chunkMode;
+          }
+          if (mode === -1) {
+            controller.enqueue(chunk);
+            return;
+          }
+          const chunkSize = sizeOf(chunk);
+          bytesSeen += chunkSize;
+          const bufferSize = sizeOf(buffers[mode]);
+          if (chunkSize >= size && bufferSize === 0) {
+            controller.enqueue(chunk);
+          } else {
+            const newSize = merge(buffers, mode, chunk);
+            if (!streamBufferingLoggedWarning && bytesSeen > size * 2) {
+              streamBufferingLoggedWarning = true;
+              logger3 === null || logger3 === void 0
+                ? void 0
+                : logger3.warn(
+                    `@smithy/util-stream - stream chunk size ${chunkSize} is below threshold of ${size}, automatically buffering.`,
+                  );
+            }
+            if (newSize >= size) {
+              controller.enqueue(flush(buffers, mode));
+            } else {
+              await pull(controller);
+            }
+          }
+        }
+      };
+      return new ReadableStream({
+        pull,
+      });
+    }
+    exports2.createBufferedReadable = createBufferedReadableStream;
+    function merge(buffers, mode, chunk) {
+      switch (mode) {
+        case 0:
+          buffers[0] += chunk;
+          return sizeOf(buffers[0]);
+        case 1:
+        case 2:
+          buffers[mode].push(chunk);
+          return sizeOf(buffers[mode]);
+      }
+    }
+    function flush(buffers, mode) {
+      switch (mode) {
+        case 0:
+          const s = buffers[0];
+          buffers[0] = "";
+          return s;
+        case 1:
+        case 2:
+          return buffers[mode].flush();
+      }
+      throw new Error(`@smithy/util-stream - invalid index ${mode} given to flush()`);
+    }
+    function sizeOf(chunk) {
+      var _a, _b;
+      return (_b =
+        (_a = chunk === null || chunk === void 0 ? void 0 : chunk.byteLength) !== null && _a !== void 0
+          ? _a
+          : chunk === null || chunk === void 0
+            ? void 0
+            : chunk.length) !== null && _b !== void 0
+        ? _b
+        : 0;
+    }
+    function modeOf(chunk, allowBuffer = true) {
+      if (allowBuffer && typeof Buffer !== "undefined" && chunk instanceof Buffer) {
+        return 2;
+      }
+      if (chunk instanceof Uint8Array) {
+        return 1;
+      }
+      if (typeof chunk === "string") {
+        return 0;
+      }
+      return -1;
+    }
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/createBufferedReadable.js
+var require_createBufferedReadable = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/createBufferedReadable.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createBufferedReadable = createBufferedReadable2;
+    var node_stream_1 = require("node:stream");
+    var ByteArrayCollector_1 = require_ByteArrayCollector();
+    var createBufferedReadableStream_1 = require_createBufferedReadableStream();
+    var stream_type_check_1 = require_stream_type_check();
+    function createBufferedReadable2(upstream, size, logger3) {
+      if ((0, stream_type_check_1.isReadableStream)(upstream)) {
+        return (0, createBufferedReadableStream_1.createBufferedReadableStream)(upstream, size, logger3);
+      }
+      const downstream = new node_stream_1.Readable({ read() {} });
+      let streamBufferingLoggedWarning = false;
+      let bytesSeen = 0;
+      const buffers = [
+        "",
+        new ByteArrayCollector_1.ByteArrayCollector((size2) => new Uint8Array(size2)),
+        new ByteArrayCollector_1.ByteArrayCollector((size2) => Buffer.from(new Uint8Array(size2))),
+      ];
+      let mode = -1;
+      upstream.on("data", (chunk) => {
+        const chunkMode = (0, createBufferedReadableStream_1.modeOf)(chunk, true);
+        if (mode !== chunkMode) {
+          if (mode >= 0) {
+            downstream.push((0, createBufferedReadableStream_1.flush)(buffers, mode));
+          }
+          mode = chunkMode;
+        }
+        if (mode === -1) {
+          downstream.push(chunk);
+          return;
+        }
+        const chunkSize = (0, createBufferedReadableStream_1.sizeOf)(chunk);
+        bytesSeen += chunkSize;
+        const bufferSize = (0, createBufferedReadableStream_1.sizeOf)(buffers[mode]);
+        if (chunkSize >= size && bufferSize === 0) {
+          downstream.push(chunk);
+        } else {
+          const newSize = (0, createBufferedReadableStream_1.merge)(buffers, mode, chunk);
+          if (!streamBufferingLoggedWarning && bytesSeen > size * 2) {
+            streamBufferingLoggedWarning = true;
+            logger3 === null || logger3 === void 0
+              ? void 0
+              : logger3.warn(
+                  `@smithy/util-stream - stream chunk size ${chunkSize} is below threshold of ${size}, automatically buffering.`,
+                );
+          }
+          if (newSize >= size) {
+            downstream.push((0, createBufferedReadableStream_1.flush)(buffers, mode));
+          }
+        }
+      });
+      upstream.on("end", () => {
+        if (mode !== -1) {
+          const remainder = (0, createBufferedReadableStream_1.flush)(buffers, mode);
+          if ((0, createBufferedReadableStream_1.sizeOf)(remainder) > 0) {
+            downstream.push(remainder);
+          }
+        }
+        downstream.push(null);
+      });
+      return downstream;
+    }
   },
 });
 
@@ -1114,6 +1578,103 @@ var require_getAwsChunkedEncodingStream = __commonJS({
       return awsChunkedEncodingStream;
     };
     exports2.getAwsChunkedEncodingStream = getAwsChunkedEncodingStream2;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.browser.js
+var require_headStream_browser = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.browser.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.headStream = headStream2;
+    async function headStream2(stream, bytes) {
+      var _a;
+      let byteLengthCounter = 0;
+      const chunks = [];
+      const reader = stream.getReader();
+      let isDone = false;
+      while (!isDone) {
+        const { done, value } = await reader.read();
+        if (value) {
+          chunks.push(value);
+          byteLengthCounter +=
+            (_a = value === null || value === void 0 ? void 0 : value.byteLength) !== null && _a !== void 0 ? _a : 0;
+        }
+        if (byteLengthCounter >= bytes) {
+          break;
+        }
+        isDone = done;
+      }
+      reader.releaseLock();
+      const collected = new Uint8Array(Math.min(bytes, byteLengthCounter));
+      let offset = 0;
+      for (const chunk of chunks) {
+        if (chunk.byteLength > collected.byteLength - offset) {
+          collected.set(chunk.subarray(0, collected.byteLength - offset), offset);
+          break;
+        } else {
+          collected.set(chunk, offset);
+        }
+        offset += chunk.length;
+      }
+      return collected;
+    }
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.js
+var require_headStream = __commonJS({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.js"(
+    exports2,
+  ) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.headStream = void 0;
+    var stream_1 = require("stream");
+    var headStream_browser_1 = require_headStream_browser();
+    var stream_type_check_1 = require_stream_type_check();
+    var headStream2 = (stream, bytes) => {
+      if ((0, stream_type_check_1.isReadableStream)(stream)) {
+        return (0, headStream_browser_1.headStream)(stream, bytes);
+      }
+      return new Promise((resolve, reject) => {
+        const collector = new Collector();
+        collector.limit = bytes;
+        stream.pipe(collector);
+        stream.on("error", (err) => {
+          collector.end();
+          reject(err);
+        });
+        collector.on("error", reject);
+        collector.on("finish", function () {
+          const bytes2 = new Uint8Array(Buffer.concat(this.buffers));
+          resolve(bytes2);
+        });
+      });
+    };
+    exports2.headStream = headStream2;
+    var Collector = class extends stream_1.Writable {
+      constructor() {
+        super(...arguments);
+        this.buffers = [];
+        this.limit = Infinity;
+        this.bytesBuffered = 0;
+      }
+      _write(chunk, encoding, callback) {
+        var _a;
+        this.buffers.push(chunk);
+        this.bytesBuffered += (_a = chunk.byteLength) !== null && _a !== void 0 ? _a : 0;
+        if (this.bytesBuffered >= this.limit) {
+          const excess = this.bytesBuffered - this.limit;
+          const tailBuffer = this.buffers[this.buffers.length - 1];
+          this.buffers[this.buffers.length - 1] = tailBuffer.subarray(0, tailBuffer.byteLength - excess);
+          this.emit("finish");
+        }
+        callback();
+      }
+    };
   },
 });
 
@@ -1264,7 +1825,7 @@ var require_dist_cjs11 = __commonJS({
       streamCollector: () => streamCollector2,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_protocol_http9 = require_dist_cjs4();
+    var import_protocol_http13 = require_dist_cjs3();
     var import_querystring_builder = require_dist_cjs10();
     var import_http = require("http");
     var import_https = require("https");
@@ -1349,6 +1910,7 @@ var require_dist_cjs11 = __commonJS({
         }, "onTimeout");
         if (request.socket) {
           request.socket.setTimeout(timeout, onTimeout);
+          request.on("close", () => request.socket?.removeListener("timeout", onTimeout));
         } else {
           request.setTimeout(timeout, onTimeout);
         }
@@ -1458,7 +2020,7 @@ var require_dist_cjs11 = __commonJS({
          * @param logger - channel for the warning.
          * @returns timestamp of last emitted warning.
          */
-        static checkSocketUsage(agent, socketWarningTimestamp, logger = console) {
+        static checkSocketUsage(agent, socketWarningTimestamp, logger3 = console) {
           const { sockets, requests, maxSockets } = agent;
           if (typeof maxSockets !== "number" || maxSockets === Infinity) {
             return socketWarningTimestamp;
@@ -1472,7 +2034,7 @@ var require_dist_cjs11 = __commonJS({
               const socketsInUse = sockets[origin]?.length ?? 0;
               const requestsEnqueued = requests[origin]?.length ?? 0;
               if (socketsInUse >= maxSockets && requestsEnqueued >= 2 * maxSockets) {
-                logger?.warn?.(
+                logger3?.warn?.(
                   `@smithy/node-http-handler:WARN - socket usage at capacity=${socketsInUse} and ${requestsEnqueued} additional requests are enqueued.
 See https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/node-configuring-maxsockets.html
 or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler config.`,
@@ -1484,12 +2046,20 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
           return socketWarningTimestamp;
         }
         resolveDefaultConfig(options) {
-          const { requestTimeout, connectionTimeout, socketTimeout, httpAgent, httpsAgent } = options || {};
+          const {
+            requestTimeout,
+            connectionTimeout,
+            socketTimeout,
+            socketAcquisitionWarningTimeout,
+            httpAgent,
+            httpsAgent,
+          } = options || {};
           const keepAlive = true;
           const maxSockets = 50;
           return {
             connectionTimeout,
             requestTimeout: requestTimeout ?? socketTimeout,
+            socketAcquisitionWarningTimeout,
             httpAgent: (() => {
               if (httpAgent instanceof import_http.Agent || typeof httpAgent?.destroy === "function") {
                 return httpAgent;
@@ -1509,7 +2079,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
           this.config?.httpAgent?.destroy();
           this.config?.httpsAgent?.destroy();
         }
-        async handle(request, { abortSignal } = {}) {
+        async handle(request, { abortSignal, requestTimeout } = {}) {
           if (!this.config) {
             this.config = await this.configProvider;
           }
@@ -1581,7 +2151,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             };
             const requestFunc = isSSL ? import_https.request : import_http.request;
             const req = requestFunc(nodeHttpsOptions, (res) => {
-              const httpResponse = new import_protocol_http9.HttpResponse({
+              const httpResponse = new import_protocol_http13.HttpResponse({
                 statusCode: res.statusCode || -1,
                 reason: res.statusMessage,
                 headers: getTransformedHeaders(res.headers),
@@ -1611,8 +2181,9 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
                 abortSignal.onabort = onAbort;
               }
             }
+            const effectiveRequestTimeout = requestTimeout ?? this.config.requestTimeout;
             timeouts.push(setConnectionTimeout(req, reject, this.config.connectionTimeout));
-            timeouts.push(setSocketTimeout(req, reject, this.config.requestTimeout));
+            timeouts.push(setSocketTimeout(req, reject, effectiveRequestTimeout));
             const httpAgent = nodeHttpsOptions.agent;
             if (typeof httpAgent === "object" && "keepAlive" in httpAgent) {
               timeouts.push(
@@ -1624,7 +2195,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
                 }),
               );
             }
-            writeRequestBodyPromise = writeRequestBody(req, request, this.config.requestTimeout).catch((e) => {
+            writeRequestBodyPromise = writeRequestBody(req, request, effectiveRequestTimeout).catch((e) => {
               timeouts.forEach(timing.clearTimeout);
               return _reject(e);
             });
@@ -1809,7 +2380,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
         destroy() {
           this.connectionManager.destroy();
         }
-        async handle(request, { abortSignal } = {}) {
+        async handle(request, { abortSignal, requestTimeout } = {}) {
           if (!this.config) {
             this.config = await this.configProvider;
             this.connectionManager.setDisableConcurrentStreams(this.config.disableConcurrentStreams || false);
@@ -1817,7 +2388,8 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
               this.connectionManager.setMaxConcurrentStreams(this.config.maxConcurrentStreams);
             }
           }
-          const { requestTimeout, disableConcurrentStreams } = this.config;
+          const { requestTimeout: configRequestTimeout, disableConcurrentStreams } = this.config;
+          const effectiveRequestTimeout = requestTimeout ?? configRequestTimeout;
           return new Promise((_resolve, _reject) => {
             let fulfilled = false;
             let writeRequestBodyPromise = void 0;
@@ -1871,7 +2443,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             });
             session.ref();
             req.on("response", (headers) => {
-              const httpResponse = new import_protocol_http9.HttpResponse({
+              const httpResponse = new import_protocol_http13.HttpResponse({
                 statusCode: headers[":status"] || -1,
                 headers: getTransformedHeaders(headers),
                 body: req,
@@ -1883,10 +2455,12 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
                 this.connectionManager.deleteSession(authority, session);
               }
             });
-            if (requestTimeout) {
-              req.setTimeout(requestTimeout, () => {
+            if (effectiveRequestTimeout) {
+              req.setTimeout(effectiveRequestTimeout, () => {
                 req.close();
-                const timeoutError = new Error(`Stream timed out because of no activity for ${requestTimeout} ms`);
+                const timeoutError = new Error(
+                  `Stream timed out because of no activity for ${effectiveRequestTimeout} ms`,
+                );
                 timeoutError.name = "TimeoutError";
                 rejectWithDestroy(timeoutError);
               });
@@ -1924,7 +2498,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
                 rejectWithDestroy(new Error("Unexpected error: http2 request did not get a response"));
               }
             });
-            writeRequestBodyPromise = writeRequestBody(req, request, requestTimeout);
+            writeRequestBodyPromise = writeRequestBody(req, request, effectiveRequestTimeout);
           });
         }
         updateHttpClientConfig(key, value) {
@@ -2045,7 +2619,7 @@ var require_dist_cjs12 = __commonJS({
       streamCollector: () => streamCollector2,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_protocol_http9 = require_dist_cjs4();
+    var import_protocol_http13 = require_dist_cjs3();
     var import_querystring_builder = require_dist_cjs10();
     function createRequest(url, requestOptions) {
       return new Request(url, requestOptions);
@@ -2093,11 +2667,11 @@ var require_dist_cjs12 = __commonJS({
           }
         }
         destroy() {}
-        async handle(request, { abortSignal } = {}) {
+        async handle(request, { abortSignal, requestTimeout: requestTimeout2 } = {}) {
           if (!this.config) {
             this.config = await this.configProvider;
           }
-          const requestTimeoutInMs = this.config.requestTimeout;
+          const requestTimeoutInMs = requestTimeout2 ?? this.config.requestTimeout;
           const keepAlive = this.config.keepAlive === true;
           const credentials = this.config.credentials;
           if (abortSignal?.aborted) {
@@ -2155,7 +2729,7 @@ var require_dist_cjs12 = __commonJS({
               const hasReadableStream = response.body != void 0;
               if (!hasReadableStream) {
                 return response.blob().then((body2) => ({
-                  response: new import_protocol_http9.HttpResponse({
+                  response: new import_protocol_http13.HttpResponse({
                     headers: transformedHeaders,
                     reason: response.statusText,
                     statusCode: response.status,
@@ -2164,7 +2738,7 @@ var require_dist_cjs12 = __commonJS({
                 }));
               }
               return {
-                response: new import_protocol_http9.HttpResponse({
+                response: new import_protocol_http13.HttpResponse({
                   headers: transformedHeaders,
                   reason: response.statusText,
                   statusCode: response.status,
@@ -2210,7 +2784,7 @@ var require_dist_cjs12 = __commonJS({
       }),
       __name(_a, "FetchHttpHandler"),
       _a);
-    var import_util_base642 = require_dist_cjs8();
+    var import_util_base644 = require_dist_cjs8();
     var streamCollector2 = /* @__PURE__ */ __name(async (stream) => {
       if ((typeof Blob === "function" && stream instanceof Blob) || stream.constructor?.name === "Blob") {
         if (Blob.prototype.arrayBuffer !== void 0) {
@@ -2222,7 +2796,7 @@ var require_dist_cjs12 = __commonJS({
     }, "streamCollector");
     async function collectBlob(blob) {
       const base64 = await readToBase64(blob);
-      const arrayBuffer = (0, import_util_base642.fromBase64)(base64);
+      const arrayBuffer = (0, import_util_base644.fromBase64)(base64);
       return new Uint8Array(arrayBuffer);
     }
     __name(collectBlob, "collectBlob");
@@ -2338,39 +2912,6 @@ var require_dist_cjs13 = __commonJS({
   },
 });
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/stream-type-check.js
-var require_stream_type_check = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/stream-type-check.js"(
-    exports2,
-  ) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.isBlob = exports2.isReadableStream = void 0;
-    var isReadableStream2 = (stream) => {
-      var _a;
-      return (
-        typeof ReadableStream === "function" &&
-        (((_a = stream === null || stream === void 0 ? void 0 : stream.constructor) === null || _a === void 0
-          ? void 0
-          : _a.name) === ReadableStream.name ||
-          stream instanceof ReadableStream)
-      );
-    };
-    exports2.isReadableStream = isReadableStream2;
-    var isBlob2 = (blob) => {
-      var _a;
-      return (
-        typeof Blob === "function" &&
-        (((_a = blob === null || blob === void 0 ? void 0 : blob.constructor) === null || _a === void 0
-          ? void 0
-          : _a.name) === Blob.name ||
-          blob instanceof Blob)
-      );
-    };
-    exports2.isBlob = isBlob2;
-  },
-});
-
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/sdk-stream-mixin.browser.js
 var require_sdk_stream_mixin_browser = __commonJS({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/sdk-stream-mixin.browser.js"(
@@ -2385,7 +2926,7 @@ var require_sdk_stream_mixin_browser = __commonJS({
     var util_utf8_1 = require_dist_cjs7();
     var stream_type_check_1 = require_stream_type_check();
     var ERR_MSG_STREAM_HAS_BEEN_TRANSFORMED = "The stream has already been transformed.";
-    var sdkStreamMixin2 = (stream) => {
+    var sdkStreamMixin3 = (stream) => {
       var _a, _b;
       if (!isBlobInstance(stream) && !(0, stream_type_check_1.isReadableStream)(stream)) {
         const name =
@@ -2444,7 +2985,7 @@ var require_sdk_stream_mixin_browser = __commonJS({
         },
       });
     };
-    exports2.sdkStreamMixin = sdkStreamMixin2;
+    exports2.sdkStreamMixin = sdkStreamMixin3;
     var isBlobInstance = (stream) => typeof Blob === "function" && stream instanceof Blob;
   },
 });
@@ -2462,7 +3003,7 @@ var require_sdk_stream_mixin = __commonJS({
     var stream_1 = require("stream");
     var sdk_stream_mixin_browser_1 = require_sdk_stream_mixin_browser();
     var ERR_MSG_STREAM_HAS_BEEN_TRANSFORMED = "The stream has already been transformed.";
-    var sdkStreamMixin2 = (stream) => {
+    var sdkStreamMixin3 = (stream) => {
       var _a, _b;
       if (!(stream instanceof stream_1.Readable)) {
         try {
@@ -2514,7 +3055,7 @@ var require_sdk_stream_mixin = __commonJS({
         },
       });
     };
-    exports2.sdkStreamMixin = sdkStreamMixin2;
+    exports2.sdkStreamMixin = sdkStreamMixin3;
   },
 });
 
@@ -2525,7 +3066,7 @@ var require_splitStream_browser = __commonJS({
   ) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.splitStream = void 0;
+    exports2.splitStream = splitStream2;
     async function splitStream2(stream) {
       if (typeof stream.stream === "function") {
         stream = stream.stream();
@@ -2533,7 +3074,6 @@ var require_splitStream_browser = __commonJS({
       const readableStream = stream;
       return readableStream.tee();
     }
-    exports2.splitStream = splitStream2;
   },
 });
 
@@ -2544,7 +3084,7 @@ var require_splitStream = __commonJS({
   ) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.splitStream = void 0;
+    exports2.splitStream = splitStream2;
     var stream_1 = require("stream");
     var splitStream_browser_1 = require_splitStream_browser();
     var stream_type_check_1 = require_stream_type_check();
@@ -2558,252 +3098,6 @@ var require_splitStream = __commonJS({
       stream.pipe(stream2);
       return [stream1, stream2];
     }
-    exports2.splitStream = splitStream2;
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.browser.js
-var require_headStream_browser = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.browser.js"(
-    exports2,
-  ) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.headStream = void 0;
-    async function headStream2(stream, bytes) {
-      var _a;
-      let byteLengthCounter = 0;
-      const chunks = [];
-      const reader = stream.getReader();
-      let isDone = false;
-      while (!isDone) {
-        const { done, value } = await reader.read();
-        if (value) {
-          chunks.push(value);
-          byteLengthCounter +=
-            (_a = value === null || value === void 0 ? void 0 : value.byteLength) !== null && _a !== void 0 ? _a : 0;
-        }
-        if (byteLengthCounter >= bytes) {
-          break;
-        }
-        isDone = done;
-      }
-      reader.releaseLock();
-      const collected = new Uint8Array(Math.min(bytes, byteLengthCounter));
-      let offset = 0;
-      for (const chunk of chunks) {
-        if (chunk.byteLength > collected.byteLength - offset) {
-          collected.set(chunk.subarray(0, collected.byteLength - offset), offset);
-          break;
-        } else {
-          collected.set(chunk, offset);
-        }
-        offset += chunk.length;
-      }
-      return collected;
-    }
-    exports2.headStream = headStream2;
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.js
-var require_headStream = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/headStream.js"(
-    exports2,
-  ) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.headStream = void 0;
-    var stream_1 = require("stream");
-    var headStream_browser_1 = require_headStream_browser();
-    var stream_type_check_1 = require_stream_type_check();
-    var headStream2 = (stream, bytes) => {
-      if ((0, stream_type_check_1.isReadableStream)(stream)) {
-        return (0, headStream_browser_1.headStream)(stream, bytes);
-      }
-      return new Promise((resolve, reject) => {
-        const collector = new Collector();
-        collector.limit = bytes;
-        stream.pipe(collector);
-        stream.on("error", (err) => {
-          collector.end();
-          reject(err);
-        });
-        collector.on("error", reject);
-        collector.on("finish", function () {
-          const bytes2 = new Uint8Array(Buffer.concat(this.buffers));
-          resolve(bytes2);
-        });
-      });
-    };
-    exports2.headStream = headStream2;
-    var Collector = class extends stream_1.Writable {
-      constructor() {
-        super(...arguments);
-        this.buffers = [];
-        this.limit = Infinity;
-        this.bytesBuffered = 0;
-      }
-      _write(chunk, encoding, callback) {
-        var _a;
-        this.buffers.push(chunk);
-        this.bytesBuffered += (_a = chunk.byteLength) !== null && _a !== void 0 ? _a : 0;
-        if (this.bytesBuffered >= this.limit) {
-          const excess = this.bytesBuffered - this.limit;
-          const tailBuffer = this.buffers[this.buffers.length - 1];
-          this.buffers[this.buffers.length - 1] = tailBuffer.subarray(0, tailBuffer.byteLength - excess);
-          this.emit("finish");
-        }
-        callback();
-      }
-    };
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.js
-var require_ChecksumStream = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.js"(
-    exports2,
-  ) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ChecksumStream = void 0;
-    var util_base64_1 = require_dist_cjs8();
-    var stream_1 = require("stream");
-    var ChecksumStream2 = class extends stream_1.Duplex {
-      constructor({ expectedChecksum, checksum, source, checksumSourceLocation, base64Encoder }) {
-        var _a, _b;
-        super();
-        if (typeof source.pipe === "function") {
-          this.source = source;
-        } else {
-          throw new Error(
-            `@smithy/util-stream: unsupported source type ${(_b = (_a = source === null || source === void 0 ? void 0 : source.constructor) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : source} in ChecksumStream.`,
-          );
-        }
-        this.base64Encoder =
-          base64Encoder !== null && base64Encoder !== void 0 ? base64Encoder : util_base64_1.toBase64;
-        this.expectedChecksum = expectedChecksum;
-        this.checksum = checksum;
-        this.checksumSourceLocation = checksumSourceLocation;
-        this.source.pipe(this);
-      }
-      _read(size) {}
-      _write(chunk, encoding, callback) {
-        try {
-          this.checksum.update(chunk);
-          this.push(chunk);
-        } catch (e) {
-          return callback(e);
-        }
-        return callback();
-      }
-      async _final(callback) {
-        try {
-          const digest = await this.checksum.digest();
-          const received = this.base64Encoder(digest);
-          if (this.expectedChecksum !== received) {
-            return callback(
-              new Error(
-                `Checksum mismatch: expected "${this.expectedChecksum}" but received "${received}" in response header "${this.checksumSourceLocation}".`,
-              ),
-            );
-          }
-        } catch (e) {
-          return callback(e);
-        }
-        this.push(null);
-        return callback();
-      }
-    };
-    exports2.ChecksumStream = ChecksumStream2;
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.browser.js
-var require_ChecksumStream_browser = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/ChecksumStream.browser.js"(
-    exports2,
-  ) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ChecksumStream = void 0;
-    var ReadableStreamRef = typeof ReadableStream === "function" ? ReadableStream : function () {};
-    var ChecksumStream2 = class extends ReadableStreamRef {};
-    exports2.ChecksumStream = ChecksumStream2;
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.browser.js
-var require_createChecksumStream_browser = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.browser.js"(
-    exports2,
-  ) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createChecksumStream = void 0;
-    var util_base64_1 = require_dist_cjs8();
-    var stream_type_check_1 = require_stream_type_check();
-    var ChecksumStream_browser_1 = require_ChecksumStream_browser();
-    var createChecksumStream2 = ({ expectedChecksum, checksum, source, checksumSourceLocation, base64Encoder }) => {
-      var _a, _b;
-      if (!(0, stream_type_check_1.isReadableStream)(source)) {
-        throw new Error(
-          `@smithy/util-stream: unsupported source type ${(_b = (_a = source === null || source === void 0 ? void 0 : source.constructor) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : source} in ChecksumStream.`,
-        );
-      }
-      const encoder = base64Encoder !== null && base64Encoder !== void 0 ? base64Encoder : util_base64_1.toBase64;
-      if (typeof TransformStream !== "function") {
-        throw new Error(
-          "@smithy/util-stream: unable to instantiate ChecksumStream because API unavailable: ReadableStream/TransformStream.",
-        );
-      }
-      const transform = new TransformStream({
-        start() {},
-        async transform(chunk, controller) {
-          checksum.update(chunk);
-          controller.enqueue(chunk);
-        },
-        async flush(controller) {
-          const digest = await checksum.digest();
-          const received = encoder(digest);
-          if (expectedChecksum !== received) {
-            const error = new Error(
-              `Checksum mismatch: expected "${expectedChecksum}" but received "${received}" in response header "${checksumSourceLocation}".`,
-            );
-            controller.error(error);
-          } else {
-            controller.terminate();
-          }
-        },
-      });
-      source.pipeThrough(transform);
-      const readable = transform.readable;
-      Object.setPrototypeOf(readable, ChecksumStream_browser_1.ChecksumStream.prototype);
-      return readable;
-    };
-    exports2.createChecksumStream = createChecksumStream2;
-  },
-});
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.js
-var require_createChecksumStream = __commonJS({
-  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-stream/dist-cjs/checksum/createChecksumStream.js"(
-    exports2,
-  ) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createChecksumStream = void 0;
-    var stream_type_check_1 = require_stream_type_check();
-    var ChecksumStream_1 = require_ChecksumStream();
-    var createChecksumStream_browser_1 = require_createChecksumStream_browser();
-    function createChecksumStream2(init) {
-      if (typeof ReadableStream === "function" && (0, stream_type_check_1.isReadableStream)(init.source)) {
-        return (0, createChecksumStream_browser_1.createChecksumStream)(init);
-      }
-      return new ChecksumStream_1.ChecksumStream(init);
-    }
-    exports2.createChecksumStream = createChecksumStream2;
   },
 });
 
@@ -2841,20 +3135,20 @@ var require_dist_cjs14 = __commonJS({
       Uint8ArrayBlobAdapter: () => Uint8ArrayBlobAdapter2,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_util_base642 = require_dist_cjs8();
-    var import_util_utf82 = require_dist_cjs7();
+    var import_util_base644 = require_dist_cjs8();
+    var import_util_utf84 = require_dist_cjs7();
     function transformToString(payload, encoding = "utf-8") {
       if (encoding === "base64") {
-        return (0, import_util_base642.toBase64)(payload);
+        return (0, import_util_base644.toBase64)(payload);
       }
-      return (0, import_util_utf82.toUtf8)(payload);
+      return (0, import_util_utf84.toUtf8)(payload);
     }
     __name(transformToString, "transformToString");
     function transformFromString(str, encoding) {
       if (encoding === "base64") {
-        return Uint8ArrayBlobAdapter2.mutate((0, import_util_base642.fromBase64)(str));
+        return Uint8ArrayBlobAdapter2.mutate((0, import_util_base644.fromBase64)(str));
       }
-      return Uint8ArrayBlobAdapter2.mutate((0, import_util_utf82.fromUtf8)(str));
+      return Uint8ArrayBlobAdapter2.mutate((0, import_util_utf84.fromUtf8)(str));
     }
     __name(transformFromString, "transformFromString");
     var _a;
@@ -2890,13 +3184,14 @@ var require_dist_cjs14 = __commonJS({
       }),
       __name(_a, "Uint8ArrayBlobAdapter"),
       _a);
+    __reExport(src_exports, require_ChecksumStream(), module2.exports);
+    __reExport(src_exports, require_createChecksumStream(), module2.exports);
+    __reExport(src_exports, require_createBufferedReadable(), module2.exports);
     __reExport(src_exports, require_getAwsChunkedEncodingStream(), module2.exports);
+    __reExport(src_exports, require_headStream(), module2.exports);
     __reExport(src_exports, require_sdk_stream_mixin(), module2.exports);
     __reExport(src_exports, require_splitStream(), module2.exports);
-    __reExport(src_exports, require_headStream(), module2.exports);
     __reExport(src_exports, require_stream_type_check(), module2.exports);
-    __reExport(src_exports, require_createChecksumStream(), module2.exports);
-    __reExport(src_exports, require_ChecksumStream(), module2.exports);
   },
 });
 
@@ -2926,6 +3221,1860 @@ function extendedEncodeURIComponent2(str) {
 }
 var init_extended_encode_uri_component = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/extended-encode-uri-component.js"() {},
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/deref.js
+var deref;
+var init_deref = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/deref.js"() {
+    deref = (schemaRef) => {
+      if (typeof schemaRef === "function") {
+        return schemaRef();
+      }
+      return schemaRef;
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/middleware/schemaDeserializationMiddleware.js
+var import_protocol_http2, import_util_middleware4;
+var init_schemaDeserializationMiddleware = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/middleware/schemaDeserializationMiddleware.js"() {
+    import_protocol_http2 = __toESM(require_dist_cjs3());
+    import_util_middleware4 = __toESM(require_dist_cjs2());
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/middleware/schemaSerializationMiddleware.js
+var import_util_middleware5;
+var init_schemaSerializationMiddleware = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/middleware/schemaSerializationMiddleware.js"() {
+    import_util_middleware5 = __toESM(require_dist_cjs2());
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/middleware/getSchemaSerdePlugin.js
+var init_getSchemaSerdePlugin = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/middleware/getSchemaSerdePlugin.js"() {
+    init_schemaDeserializationMiddleware();
+    init_schemaSerializationMiddleware();
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/TypeRegistry.js
+var TypeRegistry;
+var init_TypeRegistry = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/TypeRegistry.js"() {
+    TypeRegistry = class _TypeRegistry {
+      constructor(namespace, schemas = /* @__PURE__ */ new Map()) {
+        this.namespace = namespace;
+        this.schemas = schemas;
+      }
+      static for(namespace) {
+        if (!_TypeRegistry.registries.has(namespace)) {
+          _TypeRegistry.registries.set(namespace, new _TypeRegistry(namespace));
+        }
+        return _TypeRegistry.registries.get(namespace);
+      }
+      register(shapeId, schema) {
+        const qualifiedName = this.normalizeShapeId(shapeId);
+        const registry = _TypeRegistry.for(this.getNamespace(shapeId));
+        registry.schemas.set(qualifiedName, schema);
+      }
+      getSchema(shapeId) {
+        const id = this.normalizeShapeId(shapeId);
+        if (!this.schemas.has(id)) {
+          throw new Error(`@smithy/core/schema - schema not found for ${id}`);
+        }
+        return this.schemas.get(id);
+      }
+      getBaseException() {
+        for (const [id, schema] of this.schemas.entries()) {
+          if (id.startsWith("smithy.ts.sdk.synthetic.") && id.endsWith("ServiceException")) {
+            return schema;
+          }
+        }
+        return void 0;
+      }
+      find(predicate) {
+        return [...this.schemas.values()].find(predicate);
+      }
+      destroy() {
+        _TypeRegistry.registries.delete(this.namespace);
+        this.schemas.clear();
+      }
+      normalizeShapeId(shapeId) {
+        if (shapeId.includes("#")) {
+          return shapeId;
+        }
+        return this.namespace + "#" + shapeId;
+      }
+      getNamespace(shapeId) {
+        return this.normalizeShapeId(shapeId).split("#")[0];
+      }
+    };
+    TypeRegistry.registries = /* @__PURE__ */ new Map();
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/Schema.js
+var Schema;
+var init_Schema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/Schema.js"() {
+    Schema = class {
+      constructor(name, traits) {
+        this.name = name;
+        this.traits = traits;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/ListSchema.js
+var ListSchema;
+var init_ListSchema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/ListSchema.js"() {
+    init_TypeRegistry();
+    init_Schema();
+    ListSchema = class _ListSchema extends Schema {
+      constructor(name, traits, valueSchema) {
+        super(name, traits);
+        this.name = name;
+        this.traits = traits;
+        this.valueSchema = valueSchema;
+        this.symbol = _ListSchema.symbol;
+      }
+      static [Symbol.hasInstance](lhs) {
+        const isPrototype = _ListSchema.prototype.isPrototypeOf(lhs);
+        if (!isPrototype && typeof lhs === "object" && lhs !== null) {
+          const list = lhs;
+          return list.symbol === _ListSchema.symbol;
+        }
+        return isPrototype;
+      }
+    };
+    ListSchema.symbol = Symbol.for("@smithy/core/schema::ListSchema");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/MapSchema.js
+var MapSchema;
+var init_MapSchema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/MapSchema.js"() {
+    init_TypeRegistry();
+    init_Schema();
+    MapSchema = class _MapSchema extends Schema {
+      constructor(name, traits, keySchema, valueSchema) {
+        super(name, traits);
+        this.name = name;
+        this.traits = traits;
+        this.keySchema = keySchema;
+        this.valueSchema = valueSchema;
+        this.symbol = _MapSchema.symbol;
+      }
+      static [Symbol.hasInstance](lhs) {
+        const isPrototype = _MapSchema.prototype.isPrototypeOf(lhs);
+        if (!isPrototype && typeof lhs === "object" && lhs !== null) {
+          const map = lhs;
+          return map.symbol === _MapSchema.symbol;
+        }
+        return isPrototype;
+      }
+    };
+    MapSchema.symbol = Symbol.for("@smithy/core/schema::MapSchema");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/OperationSchema.js
+var init_OperationSchema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/OperationSchema.js"() {
+    init_TypeRegistry();
+    init_Schema();
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/StructureSchema.js
+var StructureSchema;
+var init_StructureSchema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/StructureSchema.js"() {
+    init_TypeRegistry();
+    init_Schema();
+    StructureSchema = class _StructureSchema extends Schema {
+      constructor(name, traits, memberNames, memberList) {
+        super(name, traits);
+        this.name = name;
+        this.traits = traits;
+        this.memberNames = memberNames;
+        this.memberList = memberList;
+        this.symbol = _StructureSchema.symbol;
+        this.members = {};
+        for (let i = 0; i < memberNames.length; ++i) {
+          this.members[memberNames[i]] = Array.isArray(memberList[i]) ? memberList[i] : [memberList[i], 0];
+        }
+      }
+      static [Symbol.hasInstance](lhs) {
+        const isPrototype = _StructureSchema.prototype.isPrototypeOf(lhs);
+        if (!isPrototype && typeof lhs === "object" && lhs !== null) {
+          const struct = lhs;
+          return struct.symbol === _StructureSchema.symbol;
+        }
+        return isPrototype;
+      }
+    };
+    StructureSchema.symbol = Symbol.for("@smithy/core/schema::StructureSchema");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/ErrorSchema.js
+var ErrorSchema;
+var init_ErrorSchema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/ErrorSchema.js"() {
+    init_TypeRegistry();
+    init_StructureSchema();
+    ErrorSchema = class _ErrorSchema extends StructureSchema {
+      constructor(name, traits, memberNames, memberList, ctor) {
+        super(name, traits, memberNames, memberList);
+        this.name = name;
+        this.traits = traits;
+        this.memberNames = memberNames;
+        this.memberList = memberList;
+        this.ctor = ctor;
+        this.symbol = _ErrorSchema.symbol;
+      }
+      static [Symbol.hasInstance](lhs) {
+        const isPrototype = _ErrorSchema.prototype.isPrototypeOf(lhs);
+        if (!isPrototype && typeof lhs === "object" && lhs !== null) {
+          const err = lhs;
+          return err.symbol === _ErrorSchema.symbol;
+        }
+        return isPrototype;
+      }
+    };
+    ErrorSchema.symbol = Symbol.for("@smithy/core/schema::ErrorSchema");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/sentinels.js
+var SCHEMA;
+var init_sentinels = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/sentinels.js"() {
+    SCHEMA = {
+      BLOB: 21,
+      STREAMING_BLOB: 42,
+      BOOLEAN: 2,
+      STRING: 0,
+      NUMERIC: 1,
+      BIG_INTEGER: 17,
+      BIG_DECIMAL: 19,
+      DOCUMENT: 15,
+      TIMESTAMP_DEFAULT: 4,
+      TIMESTAMP_DATE_TIME: 5,
+      TIMESTAMP_HTTP_DATE: 6,
+      TIMESTAMP_EPOCH_SECONDS: 7,
+      LIST_MODIFIER: 64,
+      MAP_MODIFIER: 128,
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/SimpleSchema.js
+var SimpleSchema;
+var init_SimpleSchema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/SimpleSchema.js"() {
+    init_TypeRegistry();
+    init_Schema();
+    SimpleSchema = class _SimpleSchema extends Schema {
+      constructor(name, schemaRef, traits) {
+        super(name, traits);
+        this.name = name;
+        this.schemaRef = schemaRef;
+        this.traits = traits;
+        this.symbol = _SimpleSchema.symbol;
+      }
+      static [Symbol.hasInstance](lhs) {
+        const isPrototype = _SimpleSchema.prototype.isPrototypeOf(lhs);
+        if (!isPrototype && typeof lhs === "object" && lhs !== null) {
+          const sim = lhs;
+          return sim.symbol === _SimpleSchema.symbol;
+        }
+        return isPrototype;
+      }
+    };
+    SimpleSchema.symbol = Symbol.for("@smithy/core/schema::SimpleSchema");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/NormalizedSchema.js
+var NormalizedSchema;
+var init_NormalizedSchema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/schemas/NormalizedSchema.js"() {
+    init_deref();
+    init_ListSchema();
+    init_MapSchema();
+    init_sentinels();
+    init_SimpleSchema();
+    init_StructureSchema();
+    NormalizedSchema = class _NormalizedSchema {
+      constructor(ref, memberName) {
+        this.ref = ref;
+        this.memberName = memberName;
+        this.symbol = _NormalizedSchema.symbol;
+        const traitStack = [];
+        let _ref = ref;
+        let schema = ref;
+        this._isMemberSchema = false;
+        while (Array.isArray(_ref)) {
+          traitStack.push(_ref[1]);
+          _ref = _ref[0];
+          schema = deref(_ref);
+          this._isMemberSchema = true;
+        }
+        if (traitStack.length > 0) {
+          this.memberTraits = {};
+          for (let i = traitStack.length - 1; i >= 0; --i) {
+            const traitSet = traitStack[i];
+            Object.assign(this.memberTraits, _NormalizedSchema.translateTraits(traitSet));
+          }
+        } else {
+          this.memberTraits = 0;
+        }
+        if (schema instanceof _NormalizedSchema) {
+          this.name = schema.name;
+          this.traits = schema.traits;
+          this._isMemberSchema = schema._isMemberSchema;
+          this.schema = schema.schema;
+          this.memberTraits = Object.assign({}, schema.getMemberTraits(), this.getMemberTraits());
+          this.normalizedTraits = void 0;
+          this.ref = schema.ref;
+          this.memberName = memberName ?? schema.memberName;
+          return;
+        }
+        this.schema = deref(schema);
+        if (this.schema && typeof this.schema === "object") {
+          this.traits = this.schema?.traits ?? {};
+        } else {
+          this.traits = 0;
+        }
+        this.name =
+          (typeof this.schema === "object" ? this.schema?.name : void 0) ?? this.memberName ?? this.getSchemaName();
+        if (this._isMemberSchema && !memberName) {
+          throw new Error(
+            `@smithy/core/schema - NormalizedSchema member schema ${this.getName(true)} must initialize with memberName argument.`,
+          );
+        }
+      }
+      static [Symbol.hasInstance](lhs) {
+        const isPrototype = _NormalizedSchema.prototype.isPrototypeOf(lhs);
+        if (!isPrototype && typeof lhs === "object" && lhs !== null) {
+          const ns = lhs;
+          return ns.symbol === _NormalizedSchema.symbol;
+        }
+        return isPrototype;
+      }
+      static of(ref, memberName) {
+        if (ref instanceof _NormalizedSchema) {
+          return ref;
+        }
+        return new _NormalizedSchema(ref, memberName);
+      }
+      static translateTraits(indicator) {
+        if (typeof indicator === "object") {
+          return indicator;
+        }
+        indicator = indicator | 0;
+        const traits = {};
+        if ((indicator & 1) === 1) {
+          traits.httpLabel = 1;
+        }
+        if (((indicator >> 1) & 1) === 1) {
+          traits.idempotent = 1;
+        }
+        if (((indicator >> 2) & 1) === 1) {
+          traits.idempotencyToken = 1;
+        }
+        if (((indicator >> 3) & 1) === 1) {
+          traits.sensitive = 1;
+        }
+        if (((indicator >> 4) & 1) === 1) {
+          traits.httpPayload = 1;
+        }
+        if (((indicator >> 5) & 1) === 1) {
+          traits.httpResponseCode = 1;
+        }
+        if (((indicator >> 6) & 1) === 1) {
+          traits.httpQueryParams = 1;
+        }
+        return traits;
+      }
+      static memberFrom(memberSchema, memberName) {
+        if (memberSchema instanceof _NormalizedSchema) {
+          memberSchema.memberName = memberName;
+          memberSchema._isMemberSchema = true;
+          return memberSchema;
+        }
+        return new _NormalizedSchema(memberSchema, memberName);
+      }
+      getSchema() {
+        if (this.schema instanceof _NormalizedSchema) {
+          return (this.schema = this.schema.getSchema());
+        }
+        if (this.schema instanceof SimpleSchema) {
+          return deref(this.schema.schemaRef);
+        }
+        return deref(this.schema);
+      }
+      getName(withNamespace = false) {
+        if (!withNamespace) {
+          if (this.name && this.name.includes("#")) {
+            return this.name.split("#")[1];
+          }
+        }
+        return this.name || void 0;
+      }
+      getMemberName() {
+        if (!this.isMemberSchema()) {
+          throw new Error(`@smithy/core/schema - cannot get member name on non-member schema: ${this.getName(true)}`);
+        }
+        return this.memberName;
+      }
+      isMemberSchema() {
+        return this._isMemberSchema;
+      }
+      isUnitSchema() {
+        return this.getSchema() === "unit";
+      }
+      isListSchema() {
+        const inner = this.getSchema();
+        if (typeof inner === "number") {
+          return inner >= SCHEMA.LIST_MODIFIER && inner < SCHEMA.MAP_MODIFIER;
+        }
+        return inner instanceof ListSchema;
+      }
+      isMapSchema() {
+        const inner = this.getSchema();
+        if (typeof inner === "number") {
+          return inner >= SCHEMA.MAP_MODIFIER && inner <= 255;
+        }
+        return inner instanceof MapSchema;
+      }
+      isDocumentSchema() {
+        return this.getSchema() === SCHEMA.DOCUMENT;
+      }
+      isStructSchema() {
+        const inner = this.getSchema();
+        return (inner !== null && typeof inner === "object" && "members" in inner) || inner instanceof StructureSchema;
+      }
+      isBlobSchema() {
+        return this.getSchema() === SCHEMA.BLOB || this.getSchema() === SCHEMA.STREAMING_BLOB;
+      }
+      isTimestampSchema() {
+        const schema = this.getSchema();
+        return (
+          typeof schema === "number" && schema >= SCHEMA.TIMESTAMP_DEFAULT && schema <= SCHEMA.TIMESTAMP_EPOCH_SECONDS
+        );
+      }
+      isStringSchema() {
+        return this.getSchema() === SCHEMA.STRING;
+      }
+      isBooleanSchema() {
+        return this.getSchema() === SCHEMA.BOOLEAN;
+      }
+      isNumericSchema() {
+        return this.getSchema() === SCHEMA.NUMERIC;
+      }
+      isBigIntegerSchema() {
+        return this.getSchema() === SCHEMA.BIG_INTEGER;
+      }
+      isBigDecimalSchema() {
+        return this.getSchema() === SCHEMA.BIG_DECIMAL;
+      }
+      isStreaming() {
+        const streaming = !!this.getMergedTraits().streaming;
+        if (streaming) {
+          return true;
+        }
+        return this.getSchema() === SCHEMA.STREAMING_BLOB;
+      }
+      getMergedTraits() {
+        if (this.normalizedTraits) {
+          return this.normalizedTraits;
+        }
+        this.normalizedTraits = {
+          ...this.getOwnTraits(),
+          ...this.getMemberTraits(),
+        };
+        return this.normalizedTraits;
+      }
+      getMemberTraits() {
+        return _NormalizedSchema.translateTraits(this.memberTraits);
+      }
+      getOwnTraits() {
+        return _NormalizedSchema.translateTraits(this.traits);
+      }
+      getKeySchema() {
+        if (this.isDocumentSchema()) {
+          return _NormalizedSchema.memberFrom([SCHEMA.DOCUMENT, 0], "key");
+        }
+        if (!this.isMapSchema()) {
+          throw new Error(`@smithy/core/schema - cannot get key schema for non-map schema: ${this.getName(true)}`);
+        }
+        const schema = this.getSchema();
+        if (typeof schema === "number") {
+          return _NormalizedSchema.memberFrom([63 & schema, 0], "key");
+        }
+        return _NormalizedSchema.memberFrom([schema.keySchema, 0], "key");
+      }
+      getValueSchema() {
+        const schema = this.getSchema();
+        if (typeof schema === "number") {
+          if (this.isMapSchema()) {
+            return _NormalizedSchema.memberFrom([63 & schema, 0], "value");
+          } else if (this.isListSchema()) {
+            return _NormalizedSchema.memberFrom([63 & schema, 0], "member");
+          }
+        }
+        if (schema && typeof schema === "object") {
+          if (this.isStructSchema()) {
+            throw new Error(`cannot call getValueSchema() with StructureSchema ${this.getName(true)}`);
+          }
+          const collection = schema;
+          if ("valueSchema" in collection) {
+            if (this.isMapSchema()) {
+              return _NormalizedSchema.memberFrom([collection.valueSchema, 0], "value");
+            } else if (this.isListSchema()) {
+              return _NormalizedSchema.memberFrom([collection.valueSchema, 0], "member");
+            }
+          }
+        }
+        if (this.isDocumentSchema()) {
+          return _NormalizedSchema.memberFrom([SCHEMA.DOCUMENT, 0], "value");
+        }
+        throw new Error(`@smithy/core/schema - the schema ${this.getName(true)} does not have a value member.`);
+      }
+      getMemberSchema(member) {
+        if (this.isStructSchema()) {
+          const struct = this.getSchema();
+          if (!(member in struct.members)) {
+            throw new Error(
+              `@smithy/core/schema - the schema ${this.getName(true)} does not have a member with name=${member}.`,
+            );
+          }
+          return _NormalizedSchema.memberFrom(struct.members[member], member);
+        }
+        if (this.isDocumentSchema()) {
+          return _NormalizedSchema.memberFrom([SCHEMA.DOCUMENT, 0], member);
+        }
+        throw new Error(`@smithy/core/schema - the schema ${this.getName(true)} does not have members.`);
+      }
+      getMemberSchemas() {
+        const { schema } = this;
+        const struct = schema;
+        if (!struct || typeof struct !== "object") {
+          return {};
+        }
+        if ("members" in struct) {
+          const buffer = {};
+          for (const member of struct.memberNames) {
+            buffer[member] = this.getMemberSchema(member);
+          }
+          return buffer;
+        }
+        return {};
+      }
+      *structIterator() {
+        if (this.isUnitSchema()) {
+          return;
+        }
+        if (!this.isStructSchema()) {
+          throw new Error("@smithy/core/schema - cannot acquire structIterator on non-struct schema.");
+        }
+        const struct = this.getSchema();
+        for (let i = 0; i < struct.memberNames.length; ++i) {
+          yield [struct.memberNames[i], _NormalizedSchema.memberFrom([struct.memberList[i], 0], struct.memberNames[i])];
+        }
+      }
+      getSchemaName() {
+        const schema = this.getSchema();
+        if (typeof schema === "number") {
+          const _schema = 63 & schema;
+          const container = 192 & schema;
+          const type =
+            Object.entries(SCHEMA).find(([, value]) => {
+              return value === _schema;
+            })?.[0] ?? "Unknown";
+          switch (container) {
+            case SCHEMA.MAP_MODIFIER:
+              return `${type}Map`;
+            case SCHEMA.LIST_MODIFIER:
+              return `${type}List`;
+            case 0:
+              return type;
+          }
+        }
+        return "Unknown";
+      }
+    };
+    NormalizedSchema.symbol = Symbol.for("@smithy/core/schema::NormalizedSchema");
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/index.js
+var init_schema = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/schema/index.js"() {
+    init_deref();
+    init_getSchemaSerdePlugin();
+    init_ListSchema();
+    init_MapSchema();
+    init_OperationSchema();
+    init_ErrorSchema();
+    init_NormalizedSchema();
+    init_Schema();
+    init_SimpleSchema();
+    init_StructureSchema();
+    init_sentinels();
+    init_TypeRegistry();
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/copyDocumentWithTransform.js
+var copyDocumentWithTransform2;
+var init_copyDocumentWithTransform = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/copyDocumentWithTransform.js"() {
+    init_schema();
+    copyDocumentWithTransform2 = (source, schemaRef, transform = (_) => _) => {
+      const ns = NormalizedSchema.of(schemaRef);
+      switch (typeof source) {
+        case "undefined":
+        case "boolean":
+        case "number":
+        case "string":
+        case "bigint":
+        case "symbol":
+          return transform(source, ns);
+        case "function":
+        case "object":
+          if (source === null) {
+            return transform(null, ns);
+          }
+          if (Array.isArray(source)) {
+            const newArray = new Array(source.length);
+            let i = 0;
+            for (const item of source) {
+              newArray[i++] = copyDocumentWithTransform2(item, ns.getValueSchema(), transform);
+            }
+            return transform(newArray, ns);
+          }
+          if ("byteLength" in source) {
+            const newBytes = new Uint8Array(source.byteLength);
+            newBytes.set(source, 0);
+            return transform(newBytes, ns);
+          }
+          if (source instanceof Date) {
+            return transform(source, ns);
+          }
+          const newObject = {};
+          if (ns.isMapSchema()) {
+            for (const key of Object.keys(source)) {
+              newObject[key] = copyDocumentWithTransform2(source[key], ns.getValueSchema(), transform);
+            }
+          } else if (ns.isStructSchema()) {
+            for (const [key, memberSchema] of ns.structIterator()) {
+              newObject[key] = copyDocumentWithTransform2(source[key], memberSchema, transform);
+            }
+          } else if (ns.isDocumentSchema()) {
+            for (const key of Object.keys(source)) {
+              newObject[key] = copyDocumentWithTransform2(source[key], ns.getValueSchema(), transform);
+            }
+          }
+          return transform(newObject, ns);
+        default:
+          return transform(source, ns);
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/parse-utils.js
+var parseBoolean2,
+  expectBoolean2,
+  expectNumber2,
+  MAX_FLOAT,
+  expectFloat322,
+  expectLong2,
+  expectInt2,
+  expectInt322,
+  expectShort2,
+  expectByte2,
+  expectSizedInt,
+  castInt,
+  expectNonNull2,
+  expectObject2,
+  expectString2,
+  expectUnion2,
+  strictParseDouble2,
+  strictParseFloat2,
+  strictParseFloat322,
+  NUMBER_REGEX,
+  parseNumber,
+  limitedParseDouble2,
+  handleFloat2,
+  limitedParseFloat2,
+  limitedParseFloat322,
+  parseFloatString,
+  strictParseLong2,
+  strictParseInt2,
+  strictParseInt322,
+  strictParseShort2,
+  strictParseByte2,
+  stackTraceWarning,
+  logger2;
+var init_parse_utils = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/parse-utils.js"() {
+    parseBoolean2 = (value) => {
+      switch (value) {
+        case "true":
+          return true;
+        case "false":
+          return false;
+        default:
+          throw new Error(`Unable to parse boolean value "${value}"`);
+      }
+    };
+    expectBoolean2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (typeof value === "number") {
+        if (value === 0 || value === 1) {
+          logger2.warn(stackTraceWarning(`Expected boolean, got ${typeof value}: ${value}`));
+        }
+        if (value === 0) {
+          return false;
+        }
+        if (value === 1) {
+          return true;
+        }
+      }
+      if (typeof value === "string") {
+        const lower = value.toLowerCase();
+        if (lower === "false" || lower === "true") {
+          logger2.warn(stackTraceWarning(`Expected boolean, got ${typeof value}: ${value}`));
+        }
+        if (lower === "false") {
+          return false;
+        }
+        if (lower === "true") {
+          return true;
+        }
+      }
+      if (typeof value === "boolean") {
+        return value;
+      }
+      throw new TypeError(`Expected boolean, got ${typeof value}: ${value}`);
+    };
+    expectNumber2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (typeof value === "string") {
+        const parsed = parseFloat(value);
+        if (!Number.isNaN(parsed)) {
+          if (String(parsed) !== String(value)) {
+            logger2.warn(stackTraceWarning(`Expected number but observed string: ${value}`));
+          }
+          return parsed;
+        }
+      }
+      if (typeof value === "number") {
+        return value;
+      }
+      throw new TypeError(`Expected number, got ${typeof value}: ${value}`);
+    };
+    MAX_FLOAT = Math.ceil(2 ** 127 * (2 - 2 ** -23));
+    expectFloat322 = (value) => {
+      const expected = expectNumber2(value);
+      if (expected !== void 0 && !Number.isNaN(expected) && expected !== Infinity && expected !== -Infinity) {
+        if (Math.abs(expected) > MAX_FLOAT) {
+          throw new TypeError(`Expected 32-bit float, got ${value}`);
+        }
+      }
+      return expected;
+    };
+    expectLong2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (Number.isInteger(value) && !Number.isNaN(value)) {
+        return value;
+      }
+      throw new TypeError(`Expected integer, got ${typeof value}: ${value}`);
+    };
+    expectInt2 = expectLong2;
+    expectInt322 = (value) => expectSizedInt(value, 32);
+    expectShort2 = (value) => expectSizedInt(value, 16);
+    expectByte2 = (value) => expectSizedInt(value, 8);
+    expectSizedInt = (value, size) => {
+      const expected = expectLong2(value);
+      if (expected !== void 0 && castInt(expected, size) !== expected) {
+        throw new TypeError(`Expected ${size}-bit integer, got ${value}`);
+      }
+      return expected;
+    };
+    castInt = (value, size) => {
+      switch (size) {
+        case 32:
+          return Int32Array.of(value)[0];
+        case 16:
+          return Int16Array.of(value)[0];
+        case 8:
+          return Int8Array.of(value)[0];
+      }
+    };
+    expectNonNull2 = (value, location) => {
+      if (value === null || value === void 0) {
+        if (location) {
+          throw new TypeError(`Expected a non-null value for ${location}`);
+        }
+        throw new TypeError("Expected a non-null value");
+      }
+      return value;
+    };
+    expectObject2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (typeof value === "object" && !Array.isArray(value)) {
+        return value;
+      }
+      const receivedType = Array.isArray(value) ? "array" : typeof value;
+      throw new TypeError(`Expected object, got ${receivedType}: ${value}`);
+    };
+    expectString2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (typeof value === "string") {
+        return value;
+      }
+      if (["boolean", "number", "bigint"].includes(typeof value)) {
+        logger2.warn(stackTraceWarning(`Expected string, got ${typeof value}: ${value}`));
+        return String(value);
+      }
+      throw new TypeError(`Expected string, got ${typeof value}: ${value}`);
+    };
+    expectUnion2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      const asObject = expectObject2(value);
+      const setKeys = Object.entries(asObject)
+        .filter(([, v]) => v != null)
+        .map(([k]) => k);
+      if (setKeys.length === 0) {
+        throw new TypeError(`Unions must have exactly one non-null member. None were found.`);
+      }
+      if (setKeys.length > 1) {
+        throw new TypeError(`Unions must have exactly one non-null member. Keys ${setKeys} were not null.`);
+      }
+      return asObject;
+    };
+    strictParseDouble2 = (value) => {
+      if (typeof value == "string") {
+        return expectNumber2(parseNumber(value));
+      }
+      return expectNumber2(value);
+    };
+    strictParseFloat2 = strictParseDouble2;
+    strictParseFloat322 = (value) => {
+      if (typeof value == "string") {
+        return expectFloat322(parseNumber(value));
+      }
+      return expectFloat322(value);
+    };
+    NUMBER_REGEX = /(-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)|(-?Infinity)|(NaN)/g;
+    parseNumber = (value) => {
+      const matches = value.match(NUMBER_REGEX);
+      if (matches === null || matches[0].length !== value.length) {
+        throw new TypeError(`Expected real number, got implicit NaN`);
+      }
+      return parseFloat(value);
+    };
+    limitedParseDouble2 = (value) => {
+      if (typeof value == "string") {
+        return parseFloatString(value);
+      }
+      return expectNumber2(value);
+    };
+    handleFloat2 = limitedParseDouble2;
+    limitedParseFloat2 = limitedParseDouble2;
+    limitedParseFloat322 = (value) => {
+      if (typeof value == "string") {
+        return parseFloatString(value);
+      }
+      return expectFloat322(value);
+    };
+    parseFloatString = (value) => {
+      switch (value) {
+        case "NaN":
+          return NaN;
+        case "Infinity":
+          return Infinity;
+        case "-Infinity":
+          return -Infinity;
+        default:
+          throw new Error(`Unable to parse float value: ${value}`);
+      }
+    };
+    strictParseLong2 = (value) => {
+      if (typeof value === "string") {
+        return expectLong2(parseNumber(value));
+      }
+      return expectLong2(value);
+    };
+    strictParseInt2 = strictParseLong2;
+    strictParseInt322 = (value) => {
+      if (typeof value === "string") {
+        return expectInt322(parseNumber(value));
+      }
+      return expectInt322(value);
+    };
+    strictParseShort2 = (value) => {
+      if (typeof value === "string") {
+        return expectShort2(parseNumber(value));
+      }
+      return expectShort2(value);
+    };
+    strictParseByte2 = (value) => {
+      if (typeof value === "string") {
+        return expectByte2(parseNumber(value));
+      }
+      return expectByte2(value);
+    };
+    stackTraceWarning = (message) => {
+      return String(new TypeError(message).stack || message)
+        .split("\n")
+        .slice(0, 5)
+        .filter((s) => !s.includes("stackTraceWarning"))
+        .join("\n");
+    };
+    logger2 = {
+      warn: console.warn,
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/date-utils.js
+function dateToUtcString2(date) {
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth();
+  const dayOfWeek = date.getUTCDay();
+  const dayOfMonthInt = date.getUTCDate();
+  const hoursInt = date.getUTCHours();
+  const minutesInt = date.getUTCMinutes();
+  const secondsInt = date.getUTCSeconds();
+  const dayOfMonthString = dayOfMonthInt < 10 ? `0${dayOfMonthInt}` : `${dayOfMonthInt}`;
+  const hoursString = hoursInt < 10 ? `0${hoursInt}` : `${hoursInt}`;
+  const minutesString = minutesInt < 10 ? `0${minutesInt}` : `${minutesInt}`;
+  const secondsString = secondsInt < 10 ? `0${secondsInt}` : `${secondsInt}`;
+  return `${DAYS[dayOfWeek]}, ${dayOfMonthString} ${MONTHS[month]} ${year} ${hoursString}:${minutesString}:${secondsString} GMT`;
+}
+var DAYS,
+  MONTHS,
+  RFC3339,
+  parseRfc3339DateTime2,
+  RFC3339_WITH_OFFSET,
+  parseRfc3339DateTimeWithOffset2,
+  IMF_FIXDATE,
+  RFC_850_DATE,
+  ASC_TIME,
+  parseRfc7231DateTime2,
+  parseEpochTimestamp2,
+  buildDate,
+  parseTwoDigitYear,
+  FIFTY_YEARS_IN_MILLIS,
+  adjustRfc850Year,
+  parseMonthByShortName,
+  DAYS_IN_MONTH,
+  validateDayOfMonth,
+  isLeapYear,
+  parseDateValue,
+  parseMilliseconds,
+  parseOffsetToMilliseconds,
+  stripLeadingZeroes;
+var init_date_utils = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/date-utils.js"() {
+    init_parse_utils();
+    DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    RFC3339 = new RegExp(/^(\d{4})-(\d{2})-(\d{2})[tT](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?[zZ]$/);
+    parseRfc3339DateTime2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (typeof value !== "string") {
+        throw new TypeError("RFC-3339 date-times must be expressed as strings");
+      }
+      const match = RFC3339.exec(value);
+      if (!match) {
+        throw new TypeError("Invalid RFC-3339 date-time value");
+      }
+      const [_, yearStr, monthStr, dayStr, hours, minutes, seconds, fractionalMilliseconds] = match;
+      const year = strictParseShort2(stripLeadingZeroes(yearStr));
+      const month = parseDateValue(monthStr, "month", 1, 12);
+      const day = parseDateValue(dayStr, "day", 1, 31);
+      return buildDate(year, month, day, { hours, minutes, seconds, fractionalMilliseconds });
+    };
+    RFC3339_WITH_OFFSET = new RegExp(
+      /^(\d{4})-(\d{2})-(\d{2})[tT](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(([-+]\d{2}\:\d{2})|[zZ])$/,
+    );
+    parseRfc3339DateTimeWithOffset2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (typeof value !== "string") {
+        throw new TypeError("RFC-3339 date-times must be expressed as strings");
+      }
+      const match = RFC3339_WITH_OFFSET.exec(value);
+      if (!match) {
+        throw new TypeError("Invalid RFC-3339 date-time value");
+      }
+      const [_, yearStr, monthStr, dayStr, hours, minutes, seconds, fractionalMilliseconds, offsetStr] = match;
+      const year = strictParseShort2(stripLeadingZeroes(yearStr));
+      const month = parseDateValue(monthStr, "month", 1, 12);
+      const day = parseDateValue(dayStr, "day", 1, 31);
+      const date = buildDate(year, month, day, { hours, minutes, seconds, fractionalMilliseconds });
+      if (offsetStr.toUpperCase() != "Z") {
+        date.setTime(date.getTime() - parseOffsetToMilliseconds(offsetStr));
+      }
+      return date;
+    };
+    IMF_FIXDATE = new RegExp(
+      /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d{1,2}):(\d{2}):(\d{2})(?:\.(\d+))? GMT$/,
+    );
+    RFC_850_DATE = new RegExp(
+      /^(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (\d{2})-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d{2}) (\d{1,2}):(\d{2}):(\d{2})(?:\.(\d+))? GMT$/,
+    );
+    ASC_TIME = new RegExp(
+      /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( [1-9]|\d{2}) (\d{1,2}):(\d{2}):(\d{2})(?:\.(\d+))? (\d{4})$/,
+    );
+    parseRfc7231DateTime2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      if (typeof value !== "string") {
+        throw new TypeError("RFC-7231 date-times must be expressed as strings");
+      }
+      let match = IMF_FIXDATE.exec(value);
+      if (match) {
+        const [_, dayStr, monthStr, yearStr, hours, minutes, seconds, fractionalMilliseconds] = match;
+        return buildDate(
+          strictParseShort2(stripLeadingZeroes(yearStr)),
+          parseMonthByShortName(monthStr),
+          parseDateValue(dayStr, "day", 1, 31),
+          { hours, minutes, seconds, fractionalMilliseconds },
+        );
+      }
+      match = RFC_850_DATE.exec(value);
+      if (match) {
+        const [_, dayStr, monthStr, yearStr, hours, minutes, seconds, fractionalMilliseconds] = match;
+        return adjustRfc850Year(
+          buildDate(parseTwoDigitYear(yearStr), parseMonthByShortName(monthStr), parseDateValue(dayStr, "day", 1, 31), {
+            hours,
+            minutes,
+            seconds,
+            fractionalMilliseconds,
+          }),
+        );
+      }
+      match = ASC_TIME.exec(value);
+      if (match) {
+        const [_, monthStr, dayStr, hours, minutes, seconds, fractionalMilliseconds, yearStr] = match;
+        return buildDate(
+          strictParseShort2(stripLeadingZeroes(yearStr)),
+          parseMonthByShortName(monthStr),
+          parseDateValue(dayStr.trimLeft(), "day", 1, 31),
+          { hours, minutes, seconds, fractionalMilliseconds },
+        );
+      }
+      throw new TypeError("Invalid RFC-7231 date-time value");
+    };
+    parseEpochTimestamp2 = (value) => {
+      if (value === null || value === void 0) {
+        return void 0;
+      }
+      let valueAsDouble;
+      if (typeof value === "number") {
+        valueAsDouble = value;
+      } else if (typeof value === "string") {
+        valueAsDouble = strictParseDouble2(value);
+      } else if (typeof value === "object" && value.tag === 1) {
+        valueAsDouble = value.value;
+      } else {
+        throw new TypeError(
+          "Epoch timestamps must be expressed as floating point numbers or their string representation",
+        );
+      }
+      if (Number.isNaN(valueAsDouble) || valueAsDouble === Infinity || valueAsDouble === -Infinity) {
+        throw new TypeError("Epoch timestamps must be valid, non-Infinite, non-NaN numerics");
+      }
+      return new Date(Math.round(valueAsDouble * 1e3));
+    };
+    buildDate = (year, month, day, time) => {
+      const adjustedMonth = month - 1;
+      validateDayOfMonth(year, adjustedMonth, day);
+      return new Date(
+        Date.UTC(
+          year,
+          adjustedMonth,
+          day,
+          parseDateValue(time.hours, "hour", 0, 23),
+          parseDateValue(time.minutes, "minute", 0, 59),
+          parseDateValue(time.seconds, "seconds", 0, 60),
+          parseMilliseconds(time.fractionalMilliseconds),
+        ),
+      );
+    };
+    parseTwoDigitYear = (value) => {
+      const thisYear = /* @__PURE__ */ new Date().getUTCFullYear();
+      const valueInThisCentury = Math.floor(thisYear / 100) * 100 + strictParseShort2(stripLeadingZeroes(value));
+      if (valueInThisCentury < thisYear) {
+        return valueInThisCentury + 100;
+      }
+      return valueInThisCentury;
+    };
+    FIFTY_YEARS_IN_MILLIS = 50 * 365 * 24 * 60 * 60 * 1e3;
+    adjustRfc850Year = (input) => {
+      if (input.getTime() - /* @__PURE__ */ new Date().getTime() > FIFTY_YEARS_IN_MILLIS) {
+        return new Date(
+          Date.UTC(
+            input.getUTCFullYear() - 100,
+            input.getUTCMonth(),
+            input.getUTCDate(),
+            input.getUTCHours(),
+            input.getUTCMinutes(),
+            input.getUTCSeconds(),
+            input.getUTCMilliseconds(),
+          ),
+        );
+      }
+      return input;
+    };
+    parseMonthByShortName = (value) => {
+      const monthIdx = MONTHS.indexOf(value);
+      if (monthIdx < 0) {
+        throw new TypeError(`Invalid month: ${value}`);
+      }
+      return monthIdx + 1;
+    };
+    DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    validateDayOfMonth = (year, month, day) => {
+      let maxDays = DAYS_IN_MONTH[month];
+      if (month === 1 && isLeapYear(year)) {
+        maxDays = 29;
+      }
+      if (day > maxDays) {
+        throw new TypeError(`Invalid day for ${MONTHS[month]} in ${year}: ${day}`);
+      }
+    };
+    isLeapYear = (year) => {
+      return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+    };
+    parseDateValue = (value, type, lower, upper) => {
+      const dateVal = strictParseByte2(stripLeadingZeroes(value));
+      if (dateVal < lower || dateVal > upper) {
+        throw new TypeError(`${type} must be between ${lower} and ${upper}, inclusive`);
+      }
+      return dateVal;
+    };
+    parseMilliseconds = (value) => {
+      if (value === null || value === void 0) {
+        return 0;
+      }
+      return strictParseFloat322("0." + value) * 1e3;
+    };
+    parseOffsetToMilliseconds = (value) => {
+      const directionStr = value[0];
+      let direction = 1;
+      if (directionStr == "+") {
+        direction = 1;
+      } else if (directionStr == "-") {
+        direction = -1;
+      } else {
+        throw new TypeError(`Offset direction, ${directionStr}, must be "+" or "-"`);
+      }
+      const hour = Number(value.substring(1, 3));
+      const minute = Number(value.substring(4, 6));
+      return direction * (hour * 60 + minute) * 60 * 1e3;
+    };
+    stripLeadingZeroes = (value) => {
+      let idx = 0;
+      while (idx < value.length - 1 && value.charAt(idx) === "0") {
+        idx++;
+      }
+      if (idx === 0) {
+        return value;
+      }
+      return value.slice(idx);
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/lazy-json.js
+var LazyJsonString2;
+var init_lazy_json = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/lazy-json.js"() {
+    LazyJsonString2 = function LazyJsonString3(val2) {
+      const str = Object.assign(new String(val2), {
+        deserializeJSON() {
+          return JSON.parse(String(val2));
+        },
+        toString() {
+          return String(val2);
+        },
+        toJSON() {
+          return String(val2);
+        },
+      });
+      return str;
+    };
+    LazyJsonString2.from = (object) => {
+      if (object && typeof object === "object" && (object instanceof LazyJsonString2 || "deserializeJSON" in object)) {
+        return object;
+      } else if (typeof object === "string" || Object.getPrototypeOf(object) === String.prototype) {
+        return LazyJsonString2(String(object));
+      }
+      return LazyJsonString2(JSON.stringify(object));
+    };
+    LazyJsonString2.fromObject = LazyJsonString2.from;
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/quote-header.js
+function quoteHeader2(part) {
+  if (part.includes(",") || part.includes('"')) {
+    part = `"${part.replace(/"/g, '\\"')}"`;
+  }
+  return part;
+}
+var init_quote_header = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/quote-header.js"() {},
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/split-every.js
+function splitEvery2(value, delimiter, numDelimiters) {
+  if (numDelimiters <= 0 || !Number.isInteger(numDelimiters)) {
+    throw new Error("Invalid number of delimiters (" + numDelimiters + ") for splitEvery.");
+  }
+  const segments = value.split(delimiter);
+  if (numDelimiters === 1) {
+    return segments;
+  }
+  const compoundSegments = [];
+  let currentSegment = "";
+  for (let i = 0; i < segments.length; i++) {
+    if (currentSegment === "") {
+      currentSegment = segments[i];
+    } else {
+      currentSegment += delimiter + segments[i];
+    }
+    if ((i + 1) % numDelimiters === 0) {
+      compoundSegments.push(currentSegment);
+      currentSegment = "";
+    }
+  }
+  if (currentSegment !== "") {
+    compoundSegments.push(currentSegment);
+  }
+  return compoundSegments;
+}
+var init_split_every = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/split-every.js"() {},
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/split-header.js
+var splitHeader2;
+var init_split_header = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/split-header.js"() {
+    splitHeader2 = (value) => {
+      const z = value.length;
+      const values = [];
+      let withinQuotes = false;
+      let prevChar = void 0;
+      let anchor = 0;
+      for (let i = 0; i < z; ++i) {
+        const char = value[i];
+        switch (char) {
+          case `"`:
+            if (prevChar !== "\\") {
+              withinQuotes = !withinQuotes;
+            }
+            break;
+          case ",":
+            if (!withinQuotes) {
+              values.push(value.slice(anchor, i));
+              anchor = i + 1;
+            }
+            break;
+          default:
+        }
+        prevChar = char;
+      }
+      values.push(value.slice(anchor));
+      return values.map((v) => {
+        v = v.trim();
+        const z2 = v.length;
+        if (z2 < 2) {
+          return v;
+        }
+        if (v[0] === `"` && v[z2 - 1] === `"`) {
+          v = v.slice(1, z2 - 1);
+        }
+        return v.replace(/\\"/g, '"');
+      });
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/value/NumericValue.js
+function nv2(input) {
+  return new NumericValue2(String(input), "bigDecimal");
+}
+var NumericValue2;
+var init_NumericValue = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/value/NumericValue.js"() {
+    NumericValue2 = class {
+      constructor(string, type) {
+        this.string = string;
+        this.type = type;
+        let dot = 0;
+        for (let i = 0; i < string.length; ++i) {
+          const char = string.charCodeAt(i);
+          if (i === 0 && char === 45) {
+            continue;
+          }
+          if (char === 46) {
+            if (dot) {
+              throw new Error("@smithy/core/serde - NumericValue must contain at most one decimal point.");
+            }
+            dot = 1;
+            continue;
+          }
+          if (char < 48 || char > 57) {
+            throw new Error(
+              `@smithy/core/serde - NumericValue must only contain [0-9], at most one decimal point ".", and an optional negation prefix "-".`,
+            );
+          }
+        }
+      }
+      toString() {
+        return this.string;
+      }
+      [Symbol.hasInstance](object) {
+        if (!object || typeof object !== "object") {
+          return false;
+        }
+        const _nv = object;
+        if (
+          typeof _nv.string === "string" &&
+          typeof _nv.type === "string" &&
+          _nv.constructor?.name === "NumericValue"
+        ) {
+          return true;
+        }
+        return false;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/index.js
+var serde_exports = {};
+__export(serde_exports, {
+  LazyJsonString: () => LazyJsonString2,
+  NumericValue: () => NumericValue2,
+  copyDocumentWithTransform: () => copyDocumentWithTransform2,
+  dateToUtcString: () => dateToUtcString2,
+  expectBoolean: () => expectBoolean2,
+  expectByte: () => expectByte2,
+  expectFloat32: () => expectFloat322,
+  expectInt: () => expectInt2,
+  expectInt32: () => expectInt322,
+  expectLong: () => expectLong2,
+  expectNonNull: () => expectNonNull2,
+  expectNumber: () => expectNumber2,
+  expectObject: () => expectObject2,
+  expectShort: () => expectShort2,
+  expectString: () => expectString2,
+  expectUnion: () => expectUnion2,
+  handleFloat: () => handleFloat2,
+  limitedParseDouble: () => limitedParseDouble2,
+  limitedParseFloat: () => limitedParseFloat2,
+  limitedParseFloat32: () => limitedParseFloat322,
+  logger: () => logger2,
+  nv: () => nv2,
+  parseBoolean: () => parseBoolean2,
+  parseEpochTimestamp: () => parseEpochTimestamp2,
+  parseRfc3339DateTime: () => parseRfc3339DateTime2,
+  parseRfc3339DateTimeWithOffset: () => parseRfc3339DateTimeWithOffset2,
+  parseRfc7231DateTime: () => parseRfc7231DateTime2,
+  quoteHeader: () => quoteHeader2,
+  splitEvery: () => splitEvery2,
+  splitHeader: () => splitHeader2,
+  strictParseByte: () => strictParseByte2,
+  strictParseDouble: () => strictParseDouble2,
+  strictParseFloat: () => strictParseFloat2,
+  strictParseFloat32: () => strictParseFloat322,
+  strictParseInt: () => strictParseInt2,
+  strictParseInt32: () => strictParseInt322,
+  strictParseLong: () => strictParseLong2,
+  strictParseShort: () => strictParseShort2,
+});
+var init_serde = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/serde/index.js"() {
+    init_copyDocumentWithTransform();
+    init_date_utils();
+    init_lazy_json();
+    init_parse_utils();
+    init_quote_header();
+    init_split_every();
+    init_split_header();
+    init_NumericValue();
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/HttpProtocol.js
+var import_protocol_http3, import_util_stream2, HttpProtocol;
+var init_HttpProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/HttpProtocol.js"() {
+    init_schema();
+    init_serde();
+    import_protocol_http3 = __toESM(require_dist_cjs3());
+    import_util_stream2 = __toESM(require_dist_cjs14());
+    init_collect_stream_body();
+    HttpProtocol = class {
+      constructor(options) {
+        this.options = options;
+      }
+      getRequestType() {
+        return import_protocol_http3.HttpRequest;
+      }
+      getResponseType() {
+        return import_protocol_http3.HttpResponse;
+      }
+      setSerdeContext(serdeContext) {
+        this.serdeContext = serdeContext;
+        this.serializer.setSerdeContext(serdeContext);
+        this.deserializer.setSerdeContext(serdeContext);
+        if (this.getPayloadCodec()) {
+          this.getPayloadCodec().setSerdeContext(serdeContext);
+        }
+      }
+      updateServiceEndpoint(request, endpoint) {
+        if ("url" in endpoint) {
+          request.protocol = endpoint.url.protocol;
+          request.hostname = endpoint.url.hostname;
+          request.port = endpoint.url.port ? Number(endpoint.url.port) : void 0;
+          request.path = endpoint.url.pathname;
+          request.fragment = endpoint.url.hash || void 0;
+          request.username = endpoint.url.username || void 0;
+          request.password = endpoint.url.password || void 0;
+          for (const [k, v] of endpoint.url.searchParams.entries()) {
+            if (!request.query) {
+              request.query = {};
+            }
+            request.query[k] = v;
+          }
+          return request;
+        } else {
+          request.protocol = endpoint.protocol;
+          request.hostname = endpoint.hostname;
+          request.port = endpoint.port ? Number(endpoint.port) : void 0;
+          request.path = endpoint.path;
+          request.query = {
+            ...endpoint.query,
+          };
+          return request;
+        }
+      }
+      setHostPrefix(request, operationSchema, input) {
+        const operationNs = NormalizedSchema.of(operationSchema);
+        const inputNs = NormalizedSchema.of(operationSchema.input);
+        if (operationNs.getMergedTraits().endpoint) {
+          let hostPrefix = operationNs.getMergedTraits().endpoint?.[0];
+          if (typeof hostPrefix === "string") {
+            const hostLabelInputs = [...inputNs.structIterator()].filter(
+              ([, member]) => member.getMergedTraits().hostLabel,
+            );
+            for (const [name] of hostLabelInputs) {
+              const replacement = input[name];
+              if (typeof replacement !== "string") {
+                throw new Error(`@smithy/core/schema - ${name} in input must be a string as hostLabel.`);
+              }
+              hostPrefix = hostPrefix.replace(`{${name}}`, replacement);
+            }
+            request.hostname = hostPrefix + request.hostname;
+          }
+        }
+      }
+      deserializeMetadata(output) {
+        return {
+          httpStatusCode: output.statusCode,
+          requestId:
+            output.headers["x-amzn-requestid"] ??
+            output.headers["x-amzn-request-id"] ??
+            output.headers["x-amz-request-id"],
+          extendedRequestId: output.headers["x-amz-id-2"],
+          cfId: output.headers["x-amz-cf-id"],
+        };
+      }
+      async deserializeHttpMessage(schema, context, response, arg4, arg5) {
+        let dataObject;
+        if (arg4 instanceof Set) {
+          dataObject = arg5;
+        } else {
+          dataObject = arg4;
+        }
+        const deserializer = this.deserializer;
+        const ns = NormalizedSchema.of(schema);
+        const nonHttpBindingMembers = [];
+        for (const [memberName, memberSchema] of ns.structIterator()) {
+          const memberTraits = memberSchema.getMemberTraits();
+          if (memberTraits.httpPayload) {
+            const isStreaming = memberSchema.isStreaming();
+            if (isStreaming) {
+              const isEventStream = memberSchema.isStructSchema();
+              if (isEventStream) {
+                const context2 = this.serdeContext;
+                if (!context2.eventStreamMarshaller) {
+                  throw new Error("@smithy/core - HttpProtocol: eventStreamMarshaller missing in serdeContext.");
+                }
+                const memberSchemas = memberSchema.getMemberSchemas();
+                dataObject[memberName] = context2.eventStreamMarshaller.deserialize(response.body, async (event) => {
+                  const unionMember =
+                    Object.keys(event).find((key) => {
+                      return key !== "__type";
+                    }) ?? "";
+                  if (unionMember in memberSchemas) {
+                    const eventStreamSchema = memberSchemas[unionMember];
+                    return {
+                      [unionMember]: await deserializer.read(eventStreamSchema, event[unionMember].body),
+                    };
+                  } else {
+                    return {
+                      $unknown: event,
+                    };
+                  }
+                });
+              } else {
+                dataObject[memberName] = (0, import_util_stream2.sdkStreamMixin)(response.body);
+              }
+            } else if (response.body) {
+              const bytes = await collectBody2(response.body, context);
+              if (bytes.byteLength > 0) {
+                dataObject[memberName] = await deserializer.read(memberSchema, bytes);
+              }
+            }
+          } else if (memberTraits.httpHeader) {
+            const key = String(memberTraits.httpHeader).toLowerCase();
+            const value = response.headers[key];
+            if (null != value) {
+              if (memberSchema.isListSchema()) {
+                const headerListValueSchema = memberSchema.getValueSchema();
+                let sections;
+                if (
+                  headerListValueSchema.isTimestampSchema() &&
+                  headerListValueSchema.getSchema() === SCHEMA.TIMESTAMP_DEFAULT
+                ) {
+                  sections = splitEvery2(value, ",", 2);
+                } else {
+                  sections = splitHeader2(value);
+                }
+                const list = [];
+                for (const section of sections) {
+                  list.push(await deserializer.read([headerListValueSchema, { httpHeader: key }], section.trim()));
+                }
+                dataObject[memberName] = list;
+              } else {
+                dataObject[memberName] = await deserializer.read(memberSchema, value);
+              }
+            }
+          } else if (memberTraits.httpPrefixHeaders !== void 0) {
+            dataObject[memberName] = {};
+            for (const [header, value] of Object.entries(response.headers)) {
+              if (header.startsWith(memberTraits.httpPrefixHeaders)) {
+                dataObject[memberName][header.slice(memberTraits.httpPrefixHeaders.length)] = await deserializer.read(
+                  [memberSchema.getValueSchema(), { httpHeader: header }],
+                  value,
+                );
+              }
+            }
+          } else if (memberTraits.httpResponseCode) {
+            dataObject[memberName] = response.statusCode;
+          } else {
+            nonHttpBindingMembers.push(memberName);
+          }
+        }
+        return nonHttpBindingMembers;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/HttpBindingProtocol.js
+var import_protocol_http4, HttpBindingProtocol;
+var init_HttpBindingProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/HttpBindingProtocol.js"() {
+    init_schema();
+    import_protocol_http4 = __toESM(require_dist_cjs3());
+    init_collect_stream_body();
+    init_extended_encode_uri_component();
+    init_HttpProtocol();
+    HttpBindingProtocol = class extends HttpProtocol {
+      async serializeRequest(operationSchema, _input, context) {
+        const input = {
+          ...(_input ?? {}),
+        };
+        const serializer = this.serializer;
+        const query = {};
+        const headers = {};
+        const endpoint = await context.endpoint();
+        const ns = NormalizedSchema.of(operationSchema?.input);
+        const schema = ns.getSchema();
+        let hasNonHttpBindingMember = false;
+        let payload;
+        const request = new import_protocol_http4.HttpRequest({
+          protocol: "",
+          hostname: "",
+          port: void 0,
+          path: "",
+          fragment: void 0,
+          query,
+          headers,
+          body: void 0,
+        });
+        if (endpoint) {
+          this.updateServiceEndpoint(request, endpoint);
+          this.setHostPrefix(request, operationSchema, input);
+          const opTraits = NormalizedSchema.translateTraits(operationSchema.traits);
+          if (opTraits.http) {
+            request.method = opTraits.http[0];
+            const [path, search] = opTraits.http[1].split("?");
+            if (request.path == "/") {
+              request.path = path;
+            } else {
+              request.path += path;
+            }
+            const traitSearchParams = new URLSearchParams(search ?? "");
+            Object.assign(query, Object.fromEntries(traitSearchParams));
+          }
+        }
+        for (const [memberName, memberNs] of ns.structIterator()) {
+          const memberTraits = memberNs.getMergedTraits() ?? {};
+          const inputMemberValue = input[memberName];
+          if (inputMemberValue == null) {
+            continue;
+          }
+          if (memberTraits.httpPayload) {
+            const isStreaming = memberNs.isStreaming();
+            if (isStreaming) {
+              const isEventStream = memberNs.isStructSchema();
+              if (isEventStream) {
+                throw new Error("serialization of event streams is not yet implemented");
+              } else {
+                payload = inputMemberValue;
+              }
+            } else {
+              serializer.write(memberNs, inputMemberValue);
+              payload = serializer.flush();
+            }
+            delete input[memberName];
+          } else if (memberTraits.httpLabel) {
+            serializer.write(memberNs, inputMemberValue);
+            const replacement = serializer.flush();
+            if (request.path.includes(`{${memberName}+}`)) {
+              request.path = request.path.replace(
+                `{${memberName}+}`,
+                replacement.split("/").map(extendedEncodeURIComponent2).join("/"),
+              );
+            } else if (request.path.includes(`{${memberName}}`)) {
+              request.path = request.path.replace(`{${memberName}}`, extendedEncodeURIComponent2(replacement));
+            }
+            delete input[memberName];
+          } else if (memberTraits.httpHeader) {
+            serializer.write(memberNs, inputMemberValue);
+            headers[memberTraits.httpHeader.toLowerCase()] = String(serializer.flush());
+            delete input[memberName];
+          } else if (typeof memberTraits.httpPrefixHeaders === "string") {
+            for (const [key, val2] of Object.entries(inputMemberValue)) {
+              const amalgam = memberTraits.httpPrefixHeaders + key;
+              serializer.write([memberNs.getValueSchema(), { httpHeader: amalgam }], val2);
+              headers[amalgam.toLowerCase()] = serializer.flush();
+            }
+            delete input[memberName];
+          } else if (memberTraits.httpQuery || memberTraits.httpQueryParams) {
+            this.serializeQuery(memberNs, inputMemberValue, query);
+            delete input[memberName];
+          } else {
+            hasNonHttpBindingMember = true;
+          }
+        }
+        if (hasNonHttpBindingMember && input) {
+          serializer.write(schema, input);
+          payload = serializer.flush();
+        }
+        request.headers = headers;
+        request.query = query;
+        request.body = payload;
+        return request;
+      }
+      serializeQuery(ns, data, query) {
+        const serializer = this.serializer;
+        const traits = ns.getMergedTraits();
+        if (traits.httpQueryParams) {
+          for (const [key, val2] of Object.entries(data)) {
+            if (!(key in query)) {
+              this.serializeQuery(
+                NormalizedSchema.of([
+                  ns.getValueSchema(),
+                  {
+                    ...traits,
+                    httpQuery: key,
+                    httpQueryParams: void 0,
+                  },
+                ]),
+                val2,
+                query,
+              );
+            }
+          }
+          return;
+        }
+        if (ns.isListSchema()) {
+          const sparse = !!ns.getMergedTraits().sparse;
+          const buffer = [];
+          for (const item of data) {
+            serializer.write([ns.getValueSchema(), traits], item);
+            const serializable = serializer.flush();
+            if (sparse || serializable !== void 0) {
+              buffer.push(serializable);
+            }
+          }
+          query[traits.httpQuery] = buffer;
+        } else {
+          serializer.write([ns, traits], data);
+          query[traits.httpQuery] = serializer.flush();
+        }
+      }
+      async deserializeResponse(operationSchema, context, response) {
+        const deserializer = this.deserializer;
+        const ns = NormalizedSchema.of(operationSchema.output);
+        const dataObject = {};
+        if (response.statusCode >= 300) {
+          const bytes = await collectBody2(response.body, context);
+          if (bytes.byteLength > 0) {
+            Object.assign(dataObject, await deserializer.read(SCHEMA.DOCUMENT, bytes));
+          }
+          await this.handleError(operationSchema, context, response, dataObject, this.deserializeMetadata(response));
+          throw new Error("@smithy/core/protocols - HTTP Protocol error handler failed to throw.");
+        }
+        for (const header in response.headers) {
+          const value = response.headers[header];
+          delete response.headers[header];
+          response.headers[header.toLowerCase()] = value;
+        }
+        const nonHttpBindingMembers = await this.deserializeHttpMessage(ns, context, response, dataObject);
+        if (nonHttpBindingMembers.length) {
+          const bytes = await collectBody2(response.body, context);
+          if (bytes.byteLength > 0) {
+            const dataFromBody = await deserializer.read(ns, bytes);
+            for (const member of nonHttpBindingMembers) {
+              dataObject[member] = dataFromBody[member];
+            }
+          }
+        }
+        const output = {
+          $metadata: this.deserializeMetadata(response),
+          ...dataObject,
+        };
+        return output;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/RpcProtocol.js
+var import_protocol_http5, RpcProtocol;
+var init_RpcProtocol = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/RpcProtocol.js"() {
+    init_schema();
+    import_protocol_http5 = __toESM(require_dist_cjs3());
+    init_collect_stream_body();
+    init_HttpProtocol();
+    RpcProtocol = class extends HttpProtocol {
+      async serializeRequest(operationSchema, input, context) {
+        const serializer = this.serializer;
+        const query = {};
+        const headers = {};
+        const endpoint = await context.endpoint();
+        const ns = NormalizedSchema.of(operationSchema?.input);
+        const schema = ns.getSchema();
+        let payload;
+        const request = new import_protocol_http5.HttpRequest({
+          protocol: "",
+          hostname: "",
+          port: void 0,
+          path: "/",
+          fragment: void 0,
+          query,
+          headers,
+          body: void 0,
+        });
+        if (endpoint) {
+          this.updateServiceEndpoint(request, endpoint);
+          this.setHostPrefix(request, operationSchema, input);
+        }
+        const _input = {
+          ...input,
+        };
+        if (input) {
+          serializer.write(schema, _input);
+          payload = serializer.flush();
+        }
+        request.headers = headers;
+        request.query = query;
+        request.body = payload;
+        request.method = "POST";
+        return request;
+      }
+      async deserializeResponse(operationSchema, context, response) {
+        const deserializer = this.deserializer;
+        const ns = NormalizedSchema.of(operationSchema.output);
+        const dataObject = {};
+        if (response.statusCode >= 300) {
+          const bytes2 = await collectBody2(response.body, context);
+          if (bytes2.byteLength > 0) {
+            Object.assign(dataObject, await deserializer.read(SCHEMA.DOCUMENT, bytes2));
+          }
+          await this.handleError(operationSchema, context, response, dataObject, this.deserializeMetadata(response));
+          throw new Error("@smithy/core/protocols - RPC Protocol error handler failed to throw.");
+        }
+        for (const header in response.headers) {
+          const value = response.headers[header];
+          delete response.headers[header];
+          response.headers[header.toLowerCase()] = value;
+        }
+        const bytes = await collectBody2(response.body, context);
+        if (bytes.byteLength > 0) {
+          Object.assign(dataObject, await deserializer.read(ns, bytes));
+        }
+        const output = {
+          $metadata: this.deserializeMetadata(response),
+          ...dataObject,
+        };
+        return output;
+      }
+    };
+  },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/resolve-path.js
@@ -2960,10 +5109,10 @@ var init_resolve_path = __esm({
 function requestBuilder(input, context) {
   return new RequestBuilder(input, context);
 }
-var import_protocol_http2, RequestBuilder;
+var import_protocol_http6, RequestBuilder;
 var init_requestBuilder = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/requestBuilder.js"() {
-    import_protocol_http2 = __toESM(require_dist_cjs4());
+    import_protocol_http6 = __toESM(require_dist_cjs3());
     init_resolve_path();
     RequestBuilder = class {
       constructor(input, context) {
@@ -2983,7 +5132,7 @@ var init_requestBuilder = __esm({
         for (const resolvePath of this.resolvePathStack) {
           resolvePath(this.path);
         }
-        return new import_protocol_http2.HttpRequest({
+        return new import_protocol_http6.HttpRequest({
           protocol,
           hostname: this.hostname || hostname,
           port,
@@ -3030,11 +5179,298 @@ var init_requestBuilder = __esm({
   },
 });
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/determineTimestampFormat.js
+function determineTimestampFormat(ns, settings) {
+  if (settings.timestampFormat.useTrait) {
+    if (
+      ns.isTimestampSchema() &&
+      (ns.getSchema() === SCHEMA.TIMESTAMP_DATE_TIME ||
+        ns.getSchema() === SCHEMA.TIMESTAMP_HTTP_DATE ||
+        ns.getSchema() === SCHEMA.TIMESTAMP_EPOCH_SECONDS)
+    ) {
+      return ns.getSchema();
+    }
+  }
+  const { httpLabel, httpPrefixHeaders, httpHeader, httpQuery } = ns.getMergedTraits();
+  const bindingFormat = settings.httpBindings
+    ? typeof httpPrefixHeaders === "string" || Boolean(httpHeader)
+      ? SCHEMA.TIMESTAMP_HTTP_DATE
+      : Boolean(httpQuery) || Boolean(httpLabel)
+        ? SCHEMA.TIMESTAMP_DATE_TIME
+        : void 0
+    : void 0;
+  return bindingFormat ?? settings.timestampFormat.default;
+}
+var init_determineTimestampFormat = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/determineTimestampFormat.js"() {
+    init_schema();
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/FromStringShapeDeserializer.js
+var import_util_base64, import_util_utf8, FromStringShapeDeserializer;
+var init_FromStringShapeDeserializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/FromStringShapeDeserializer.js"() {
+    init_schema();
+    init_serde();
+    import_util_base64 = __toESM(require_dist_cjs8());
+    import_util_utf8 = __toESM(require_dist_cjs7());
+    init_determineTimestampFormat();
+    FromStringShapeDeserializer = class {
+      constructor(settings) {
+        this.settings = settings;
+      }
+      setSerdeContext(serdeContext) {
+        this.serdeContext = serdeContext;
+      }
+      read(_schema, data) {
+        const ns = NormalizedSchema.of(_schema);
+        if (ns.isListSchema()) {
+          return splitHeader2(data).map((item) => this.read(ns.getValueSchema(), item));
+        }
+        if (ns.isBlobSchema()) {
+          return (this.serdeContext?.base64Decoder ?? import_util_base64.fromBase64)(data);
+        }
+        if (ns.isTimestampSchema()) {
+          const format = determineTimestampFormat(ns, this.settings);
+          switch (format) {
+            case SCHEMA.TIMESTAMP_DATE_TIME:
+              return parseRfc3339DateTimeWithOffset2(data);
+            case SCHEMA.TIMESTAMP_HTTP_DATE:
+              return parseRfc7231DateTime2(data);
+            case SCHEMA.TIMESTAMP_EPOCH_SECONDS:
+              return parseEpochTimestamp2(data);
+            default:
+              console.warn("Missing timestamp format, parsing value with Date constructor:", data);
+              return new Date(data);
+          }
+        }
+        if (ns.isStringSchema()) {
+          const mediaType = ns.getMergedTraits().mediaType;
+          let intermediateValue = data;
+          if (mediaType) {
+            if (ns.getMergedTraits().httpHeader) {
+              intermediateValue = this.base64ToUtf8(intermediateValue);
+            }
+            const isJson = mediaType === "application/json" || mediaType.endsWith("+json");
+            if (isJson) {
+              intermediateValue = LazyJsonString2.from(intermediateValue);
+            }
+            return intermediateValue;
+          }
+        }
+        switch (true) {
+          case ns.isNumericSchema():
+            return Number(data);
+          case ns.isBigIntegerSchema():
+            return BigInt(data);
+          case ns.isBigDecimalSchema():
+            return new NumericValue2(data, "bigDecimal");
+          case ns.isBooleanSchema():
+            return String(data).toLowerCase() === "true";
+        }
+        return data;
+      }
+      base64ToUtf8(base64String) {
+        return (this.serdeContext?.utf8Encoder ?? import_util_utf8.toUtf8)(
+          (this.serdeContext?.base64Decoder ?? import_util_base64.fromBase64)(base64String),
+        );
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/HttpInterceptingShapeDeserializer.js
+var import_util_utf82, HttpInterceptingShapeDeserializer;
+var init_HttpInterceptingShapeDeserializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/HttpInterceptingShapeDeserializer.js"() {
+    init_schema();
+    import_util_utf82 = __toESM(require_dist_cjs7());
+    init_FromStringShapeDeserializer();
+    HttpInterceptingShapeDeserializer = class {
+      constructor(codecDeserializer, codecSettings) {
+        this.codecDeserializer = codecDeserializer;
+        this.stringDeserializer = new FromStringShapeDeserializer(codecSettings);
+      }
+      setSerdeContext(serdeContext) {
+        this.stringDeserializer.setSerdeContext(serdeContext);
+        this.codecDeserializer.setSerdeContext(serdeContext);
+        this.serdeContext = serdeContext;
+      }
+      read(schema, data) {
+        const ns = NormalizedSchema.of(schema);
+        const traits = ns.getMergedTraits();
+        const toString = this.serdeContext?.utf8Encoder ?? import_util_utf82.toUtf8;
+        if (traits.httpHeader || traits.httpResponseCode) {
+          return this.stringDeserializer.read(ns, toString(data));
+        }
+        if (traits.httpPayload) {
+          if (ns.isBlobSchema()) {
+            const toBytes = this.serdeContext?.utf8Decoder ?? import_util_utf82.fromUtf8;
+            if (typeof data === "string") {
+              return toBytes(data);
+            }
+            return data;
+          } else if (ns.isStringSchema()) {
+            if ("byteLength" in data) {
+              return toString(data);
+            }
+            return data;
+          }
+        }
+        return this.codecDeserializer.read(ns, data);
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/ToStringShapeSerializer.js
+var import_util_base642, ToStringShapeSerializer;
+var init_ToStringShapeSerializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/ToStringShapeSerializer.js"() {
+    init_schema();
+    init_serde();
+    import_util_base642 = __toESM(require_dist_cjs8());
+    init_determineTimestampFormat();
+    ToStringShapeSerializer = class {
+      constructor(settings) {
+        this.settings = settings;
+        this.stringBuffer = "";
+        this.serdeContext = void 0;
+      }
+      setSerdeContext(serdeContext) {
+        this.serdeContext = serdeContext;
+      }
+      write(schema, value) {
+        const ns = NormalizedSchema.of(schema);
+        switch (typeof value) {
+          case "object":
+            if (value === null) {
+              this.stringBuffer = "null";
+              return;
+            }
+            if (ns.isTimestampSchema()) {
+              if (!(value instanceof Date)) {
+                throw new Error(
+                  `@smithy/core/protocols - received non-Date value ${value} when schema expected Date in ${ns.getName(true)}`,
+                );
+              }
+              const format = determineTimestampFormat(ns, this.settings);
+              switch (format) {
+                case SCHEMA.TIMESTAMP_DATE_TIME:
+                  this.stringBuffer = value.toISOString().replace(".000Z", "Z");
+                  break;
+                case SCHEMA.TIMESTAMP_HTTP_DATE:
+                  this.stringBuffer = dateToUtcString2(value);
+                  break;
+                case SCHEMA.TIMESTAMP_EPOCH_SECONDS:
+                  this.stringBuffer = String(value.getTime() / 1e3);
+                  break;
+                default:
+                  console.warn("Missing timestamp format, using epoch seconds", value);
+                  this.stringBuffer = String(value.getTime() / 1e3);
+              }
+              return;
+            }
+            if (ns.isBlobSchema() && "byteLength" in value) {
+              this.stringBuffer = (this.serdeContext?.base64Encoder ?? import_util_base642.toBase64)(value);
+              return;
+            }
+            if (ns.isListSchema() && Array.isArray(value)) {
+              let buffer = "";
+              for (const item of value) {
+                this.write([ns.getValueSchema(), ns.getMergedTraits()], item);
+                const headerItem = this.flush();
+                const serialized = ns.getValueSchema().isTimestampSchema() ? headerItem : quoteHeader2(headerItem);
+                if (buffer !== "") {
+                  buffer += ", ";
+                }
+                buffer += serialized;
+              }
+              this.stringBuffer = buffer;
+              return;
+            }
+            this.stringBuffer = JSON.stringify(value, null, 2);
+            break;
+          case "string":
+            const mediaType = ns.getMergedTraits().mediaType;
+            let intermediateValue = value;
+            if (mediaType) {
+              const isJson = mediaType === "application/json" || mediaType.endsWith("+json");
+              if (isJson) {
+                intermediateValue = LazyJsonString2.from(intermediateValue);
+              }
+              if (ns.getMergedTraits().httpHeader) {
+                this.stringBuffer = (this.serdeContext?.base64Encoder ?? import_util_base642.toBase64)(
+                  intermediateValue.toString(),
+                );
+                return;
+              }
+            }
+            this.stringBuffer = value;
+            break;
+          default:
+            this.stringBuffer = String(value);
+        }
+      }
+      flush() {
+        const buffer = this.stringBuffer;
+        this.stringBuffer = "";
+        return buffer;
+      }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/HttpInterceptingShapeSerializer.js
+var HttpInterceptingShapeSerializer;
+var init_HttpInterceptingShapeSerializer = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/serde/HttpInterceptingShapeSerializer.js"() {
+    init_schema();
+    init_ToStringShapeSerializer();
+    HttpInterceptingShapeSerializer = class {
+      constructor(codecSerializer, codecSettings, stringSerializer = new ToStringShapeSerializer(codecSettings)) {
+        this.codecSerializer = codecSerializer;
+        this.stringSerializer = stringSerializer;
+      }
+      setSerdeContext(serdeContext) {
+        this.codecSerializer.setSerdeContext(serdeContext);
+        this.stringSerializer.setSerdeContext(serdeContext);
+      }
+      write(schema, value) {
+        const ns = NormalizedSchema.of(schema);
+        const traits = ns.getMergedTraits();
+        if (traits.httpHeader || traits.httpLabel || traits.httpQuery) {
+          this.stringSerializer.write(ns, value);
+          this.buffer = this.stringSerializer.flush();
+          return;
+        }
+        return this.codecSerializer.write(ns, value);
+      }
+      flush() {
+        if (this.buffer !== void 0) {
+          const buffer = this.buffer;
+          this.buffer = void 0;
+          return buffer;
+        }
+        return this.codecSerializer.flush();
+      }
+    };
+  },
+});
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/index.js
 var protocols_exports = {};
 __export(protocols_exports, {
+  FromStringShapeDeserializer: () => FromStringShapeDeserializer,
+  HttpBindingProtocol: () => HttpBindingProtocol,
+  HttpInterceptingShapeDeserializer: () => HttpInterceptingShapeDeserializer,
+  HttpInterceptingShapeSerializer: () => HttpInterceptingShapeSerializer,
   RequestBuilder: () => RequestBuilder,
+  RpcProtocol: () => RpcProtocol,
+  ToStringShapeSerializer: () => ToStringShapeSerializer,
   collectBody: () => collectBody2,
+  determineTimestampFormat: () => determineTimestampFormat,
   extendedEncodeURIComponent: () => extendedEncodeURIComponent2,
   requestBuilder: () => requestBuilder,
   resolvedPath: () => resolvedPath2,
@@ -3043,8 +5479,15 @@ var init_protocols = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/submodules/protocols/index.js"() {
     init_collect_stream_body();
     init_extended_encode_uri_component();
+    init_HttpBindingProtocol();
+    init_RpcProtocol();
     init_requestBuilder();
     init_resolve_path();
+    init_FromStringShapeDeserializer();
+    init_HttpInterceptingShapeDeserializer();
+    init_HttpInterceptingShapeSerializer();
+    init_ToStringShapeSerializer();
+    init_determineTimestampFormat();
   },
 });
 
@@ -3091,10 +5534,10 @@ var init_DefaultIdentityProviderConfig = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/util-identity-and-auth/httpAuthSchemes/httpApiKeyAuth.js
-var import_protocol_http3, import_types4, HttpApiKeyAuthSigner;
+var import_protocol_http7, import_types4, HttpApiKeyAuthSigner;
 var init_httpApiKeyAuth = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/util-identity-and-auth/httpAuthSchemes/httpApiKeyAuth.js"() {
-    import_protocol_http3 = __toESM(require_dist_cjs4());
+    import_protocol_http7 = __toESM(require_dist_cjs3());
     import_types4 = __toESM(require_dist_cjs());
     HttpApiKeyAuthSigner = class {
       async sign(httpRequest, identity, signingProperties) {
@@ -3112,7 +5555,7 @@ var init_httpApiKeyAuth = __esm({
         if (!identity.apiKey) {
           throw new Error("request could not be signed with `apiKey` since the `apiKey` is not defined");
         }
-        const clonedRequest = import_protocol_http3.HttpRequest.clone(httpRequest);
+        const clonedRequest = import_protocol_http7.HttpRequest.clone(httpRequest);
         if (signingProperties.in === import_types4.HttpApiKeyAuthLocation.QUERY) {
           clonedRequest.query[signingProperties.name] = identity.apiKey;
         } else if (signingProperties.in === import_types4.HttpApiKeyAuthLocation.HEADER) {
@@ -3133,13 +5576,13 @@ var init_httpApiKeyAuth = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/util-identity-and-auth/httpAuthSchemes/httpBearerAuth.js
-var import_protocol_http4, HttpBearerAuthSigner;
+var import_protocol_http8, HttpBearerAuthSigner;
 var init_httpBearerAuth = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/util-identity-and-auth/httpAuthSchemes/httpBearerAuth.js"() {
-    import_protocol_http4 = __toESM(require_dist_cjs4());
+    import_protocol_http8 = __toESM(require_dist_cjs3());
     HttpBearerAuthSigner = class {
       async sign(httpRequest, identity, signingProperties) {
-        const clonedRequest = import_protocol_http4.HttpRequest.clone(httpRequest);
+        const clonedRequest = import_protocol_http8.HttpRequest.clone(httpRequest);
         if (!identity.token) {
           throw new Error("request could not be signed with `token` since the `token` is not defined");
         }
@@ -3266,7 +5709,7 @@ __export(dist_es_exports, {
   httpSigningMiddlewareOptions: () => httpSigningMiddlewareOptions,
   isIdentityExpired: () => isIdentityExpired,
   memoizeIdentityProvider: () => memoizeIdentityProvider,
-  normalizeProvider: () => normalizeProvider,
+  normalizeProvider: () => normalizeProvider2,
   requestBuilder: () => requestBuilder,
   setFeature: () => setFeature,
 });
@@ -3763,7 +6206,7 @@ var require_dist_cjs15 = __commonJS({
       throw new EndpointError2(`Rules evaluation failed`);
     }, "evaluateRules");
     var resolveEndpoint2 = /* @__PURE__ */ __name((ruleSetObject, options) => {
-      const { endpointParams, logger } = options;
+      const { endpointParams, logger: logger3 } = options;
       const { parameters, rules } = ruleSetObject;
       options.logger?.debug?.(`${debugId} Initial EndpointParams: ${toDebugString(endpointParams)}`);
       const paramsWithDefault = Object.entries(parameters)
@@ -3782,7 +6225,7 @@ var require_dist_cjs15 = __commonJS({
           throw new EndpointError2(`Missing required parameter: '${requiredParam}'`);
         }
       }
-      const endpoint = evaluateRules(rules, { endpointParams, logger, referenceRecord: {} });
+      const endpoint = evaluateRules(rules, { endpointParams, logger: logger3, referenceRecord: {} });
       options.logger?.debug?.(`${debugId} Resolved endpoint: ${toDebugString(endpoint)}`);
       return endpoint;
     }, "resolveEndpoint");
@@ -3816,8 +6259,8 @@ var require_dist_cjs16 = __commonJS({
       return to;
     };
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
+    var index_exports = {};
+    __export2(index_exports, {
       ConditionObject: () => import_util_endpoints.ConditionObject,
       DeprecatedObject: () => import_util_endpoints.DeprecatedObject,
       EndpointError: () => import_util_endpoints.EndpointError,
@@ -3847,7 +6290,7 @@ var require_dist_cjs16 = __commonJS({
       setPartitionInfo: () => setPartitionInfo,
       useDefaultPartitionInfo: () => useDefaultPartitionInfo,
     });
-    module2.exports = __toCommonJS2(src_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_util_endpoints = require_dist_cjs15();
     var isVirtualHostableS3Bucket = /* @__PURE__ */ __name((value, allowSubDomains = false) => {
       if (allowSubDomains) {
@@ -4104,6 +6547,9 @@ var require_dist_cjs16 = __commonJS({
           },
           regionRegex: "^eu\\-isoe\\-\\w+\\-\\d+$",
           regions: {
+            "aws-iso-e-global": {
+              description: "AWS ISOE (Europe) global region",
+            },
             "eu-isoe-west-1": {
               description: "EU ISOE West",
             },
@@ -4120,7 +6566,34 @@ var require_dist_cjs16 = __commonJS({
             supportsFIPS: true,
           },
           regionRegex: "^us\\-isof\\-\\w+\\-\\d+$",
-          regions: {},
+          regions: {
+            "aws-iso-f-global": {
+              description: "AWS ISOF global region",
+            },
+            "us-isof-east-1": {
+              description: "US ISOF EAST",
+            },
+            "us-isof-south-1": {
+              description: "US ISOF SOUTH",
+            },
+          },
+        },
+        {
+          id: "aws-eusc",
+          outputs: {
+            dnsSuffix: "amazonaws.eu",
+            dualStackDnsSuffix: "amazonaws.eu",
+            implicitGlobalRegion: "eusc-de-east-1",
+            name: "aws-eusc",
+            supportsDualStack: false,
+            supportsFIPS: true,
+          },
+          regionRegex: "^eusc\\-(de)\\-\\w+\\-\\d+$",
+          regions: {
+            "eusc-de-east-1": {
+              description: "EU (Germany)",
+            },
+          },
         },
       ],
       version: "1.1",
@@ -4234,12 +6707,12 @@ var init_client = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/utils/getDateHeader.js
-var import_protocol_http5, getDateHeader;
+var import_protocol_http9, getDateHeader;
 var init_getDateHeader = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/utils/getDateHeader.js"() {
-    import_protocol_http5 = __toESM(require_dist_cjs4());
+    import_protocol_http9 = __toESM(require_dist_cjs3());
     getDateHeader = (response) =>
-      import_protocol_http5.HttpResponse.isInstance(response)
+      import_protocol_http9.HttpResponse.isInstance(response)
         ? (response.headers?.date ?? response.headers?.Date)
         : void 0;
   },
@@ -4288,10 +6761,10 @@ var init_utils = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/AwsSdkSigV4Signer.js
-var import_protocol_http6, throwSigningPropertyError, validateSigningProperties, AwsSdkSigV4Signer, AWSSDKSigV4Signer;
+var import_protocol_http10, throwSigningPropertyError, validateSigningProperties, AwsSdkSigV4Signer, AWSSDKSigV4Signer;
 var init_AwsSdkSigV4Signer = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/AwsSdkSigV4Signer.js"() {
-    import_protocol_http6 = __toESM(require_dist_cjs4());
+    import_protocol_http10 = __toESM(require_dist_cjs3());
     init_utils();
     throwSigningPropertyError = (name, property) => {
       if (!property) {
@@ -4318,7 +6791,7 @@ var init_AwsSdkSigV4Signer = __esm({
     };
     AwsSdkSigV4Signer = class {
       async sign(httpRequest, identity, signingProperties) {
-        if (!import_protocol_http6.HttpRequest.isInstance(httpRequest)) {
+        if (!import_protocol_http10.HttpRequest.isInstance(httpRequest)) {
           throw new Error("The request is not an instance of `HttpRequest` and cannot be signed");
         }
         const validatedProps = await validateSigningProperties(signingProperties);
@@ -4367,15 +6840,15 @@ var init_AwsSdkSigV4Signer = __esm({
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/AwsSdkSigV4ASigner.js
-var import_protocol_http7, AwsSdkSigV4ASigner;
+var import_protocol_http11, AwsSdkSigV4ASigner;
 var init_AwsSdkSigV4ASigner = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/AwsSdkSigV4ASigner.js"() {
-    import_protocol_http7 = __toESM(require_dist_cjs4());
+    import_protocol_http11 = __toESM(require_dist_cjs3());
     init_utils();
     init_AwsSdkSigV4Signer();
     AwsSdkSigV4ASigner = class extends AwsSdkSigV4Signer {
       async sign(httpRequest, identity, signingProperties) {
-        if (!import_protocol_http7.HttpRequest.isInstance(httpRequest)) {
+        if (!import_protocol_http11.HttpRequest.isInstance(httpRequest)) {
           throw new Error("The request is not an instance of `HttpRequest` and cannot be signed");
         }
         const { config, signer, signingRegion, signingRegionSet, signingName } =
@@ -4389,6 +6862,36 @@ var init_AwsSdkSigV4ASigner = __esm({
         });
         return signedRequest;
       }
+    };
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/utils/getArrayForCommaSeparatedString.js
+var getArrayForCommaSeparatedString;
+var init_getArrayForCommaSeparatedString = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/utils/getArrayForCommaSeparatedString.js"() {
+    getArrayForCommaSeparatedString = (str) =>
+      typeof str === "string" && str.length > 0 ? str.split(",").map((item) => item.trim()) : [];
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/NODE_AUTH_SCHEME_PREFERENCE_OPTIONS.js
+var NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY, NODE_AUTH_SCHEME_PREFERENCE_CONFIG_KEY, NODE_AUTH_SCHEME_PREFERENCE_OPTIONS;
+var init_NODE_AUTH_SCHEME_PREFERENCE_OPTIONS = __esm({
+  "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/NODE_AUTH_SCHEME_PREFERENCE_OPTIONS.js"() {
+    init_getArrayForCommaSeparatedString();
+    NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY = "AWS_AUTH_SCHEME_PREFERENCE";
+    NODE_AUTH_SCHEME_PREFERENCE_CONFIG_KEY = "auth_scheme_preference";
+    NODE_AUTH_SCHEME_PREFERENCE_OPTIONS = {
+      environmentVariableSelector: (env) => {
+        if (!(NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY in env)) return void 0;
+        return getArrayForCommaSeparatedString(env[NODE_AUTH_SCHEME_PREFERENCE_ENV_KEY]);
+      },
+      configFileSelector: (profile) => {
+        if (!(NODE_AUTH_SCHEME_PREFERENCE_CONFIG_KEY in profile)) return void 0;
+        return getArrayForCommaSeparatedString(profile[NODE_AUTH_SCHEME_PREFERENCE_CONFIG_KEY]);
+      },
+      default: [],
     };
   },
 });
@@ -4433,20 +6936,20 @@ var require_dist_cjs17 = __commonJS({
     var ProviderError2 =
       ((_a = class extends Error {
         constructor(message, options = true) {
-          let logger;
+          let logger3;
           let tryNextLink = true;
           if (typeof options === "boolean") {
-            logger = void 0;
+            logger3 = void 0;
             tryNextLink = options;
           } else if (options != null && typeof options === "object") {
-            logger = options.logger;
+            logger3 = options.logger;
             tryNextLink = options.tryNextLink ?? true;
           }
           super(message);
           this.name = "ProviderError";
           this.tryNextLink = tryNextLink;
           Object.setPrototypeOf(this, _a.prototype);
-          logger?.debug?.(`@smithy/property-provider ${tryNextLink ? "->" : "(!)"} ${message}`);
+          logger3?.debug?.(`@smithy/property-provider ${tryNextLink ? "->" : "(!)"} ${message}`);
         }
         /**
          * @deprecated use new operator.
@@ -4563,7 +7066,7 @@ var init_resolveAwsSdkSigV4AConfig = __esm({
     init_dist_es();
     import_property_provider = __toESM(require_dist_cjs17());
     resolveAwsSdkSigV4AConfig = (config) => {
-      config.sigv4aSigningRegionSet = normalizeProvider(config.sigv4aSigningRegionSet);
+      config.sigv4aSigningRegionSet = normalizeProvider2(config.sigv4aSigningRegionSet);
       return config;
     };
     NODE_SIGV4A_CONFIG_OPTIONS = {
@@ -4616,19 +7119,48 @@ var require_dist_cjs18 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
+      ALGORITHM_IDENTIFIER: () => ALGORITHM_IDENTIFIER,
+      ALGORITHM_IDENTIFIER_V4A: () => ALGORITHM_IDENTIFIER_V4A,
+      ALGORITHM_QUERY_PARAM: () => ALGORITHM_QUERY_PARAM,
+      ALWAYS_UNSIGNABLE_HEADERS: () => ALWAYS_UNSIGNABLE_HEADERS,
+      AMZ_DATE_HEADER: () => AMZ_DATE_HEADER,
+      AMZ_DATE_QUERY_PARAM: () => AMZ_DATE_QUERY_PARAM,
+      AUTH_HEADER: () => AUTH_HEADER,
+      CREDENTIAL_QUERY_PARAM: () => CREDENTIAL_QUERY_PARAM,
+      DATE_HEADER: () => DATE_HEADER,
+      EVENT_ALGORITHM_IDENTIFIER: () => EVENT_ALGORITHM_IDENTIFIER,
+      EXPIRES_QUERY_PARAM: () => EXPIRES_QUERY_PARAM,
+      GENERATED_HEADERS: () => GENERATED_HEADERS,
+      HOST_HEADER: () => HOST_HEADER,
+      KEY_TYPE_IDENTIFIER: () => KEY_TYPE_IDENTIFIER,
+      MAX_CACHE_SIZE: () => MAX_CACHE_SIZE,
+      MAX_PRESIGNED_TTL: () => MAX_PRESIGNED_TTL,
+      PROXY_HEADER_PATTERN: () => PROXY_HEADER_PATTERN,
+      REGION_SET_PARAM: () => REGION_SET_PARAM,
+      SEC_HEADER_PATTERN: () => SEC_HEADER_PATTERN,
+      SHA256_HEADER: () => SHA256_HEADER,
+      SIGNATURE_HEADER: () => SIGNATURE_HEADER,
+      SIGNATURE_QUERY_PARAM: () => SIGNATURE_QUERY_PARAM,
+      SIGNED_HEADERS_QUERY_PARAM: () => SIGNED_HEADERS_QUERY_PARAM,
       SignatureV4: () => SignatureV42,
+      SignatureV4Base: () => SignatureV4Base,
+      TOKEN_HEADER: () => TOKEN_HEADER,
+      TOKEN_QUERY_PARAM: () => TOKEN_QUERY_PARAM,
+      UNSIGNABLE_PATTERNS: () => UNSIGNABLE_PATTERNS,
+      UNSIGNED_PAYLOAD: () => UNSIGNED_PAYLOAD,
       clearCredentialCache: () => clearCredentialCache,
       createScope: () => createScope,
       getCanonicalHeaders: () => getCanonicalHeaders,
       getCanonicalQuery: () => getCanonicalQuery,
       getPayloadHash: () => getPayloadHash,
       getSigningKey: () => getSigningKey,
+      hasHeader: () => hasHeader,
       moveHeadersToQuery: () => moveHeadersToQuery,
       prepareRequest: () => prepareRequest,
+      signatureV4aContainer: () => signatureV4aContainer,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_util_middleware4 = require_dist_cjs2();
-    var import_util_utf84 = require_dist_cjs7();
+    var import_util_utf85 = require_dist_cjs7();
     var ALGORITHM_QUERY_PARAM = "X-Amz-Algorithm";
     var CREDENTIAL_QUERY_PARAM = "X-Amz-Credential";
     var AMZ_DATE_QUERY_PARAM = "X-Amz-Date";
@@ -4636,6 +7168,7 @@ var require_dist_cjs18 = __commonJS({
     var EXPIRES_QUERY_PARAM = "X-Amz-Expires";
     var SIGNATURE_QUERY_PARAM = "X-Amz-Signature";
     var TOKEN_QUERY_PARAM = "X-Amz-Security-Token";
+    var REGION_SET_PARAM = "X-Amz-Region-Set";
     var AUTH_HEADER = "authorization";
     var AMZ_DATE_HEADER = AMZ_DATE_QUERY_PARAM.toLowerCase();
     var DATE_HEADER = "date";
@@ -4643,6 +7176,7 @@ var require_dist_cjs18 = __commonJS({
     var SIGNATURE_HEADER = SIGNATURE_QUERY_PARAM.toLowerCase();
     var SHA256_HEADER = "x-amz-content-sha256";
     var TOKEN_HEADER = TOKEN_QUERY_PARAM.toLowerCase();
+    var HOST_HEADER = "host";
     var ALWAYS_UNSIGNABLE_HEADERS = {
       authorization: true,
       "cache-control": true,
@@ -4662,14 +7196,16 @@ var require_dist_cjs18 = __commonJS({
     };
     var PROXY_HEADER_PATTERN = /^proxy-/;
     var SEC_HEADER_PATTERN = /^sec-/;
+    var UNSIGNABLE_PATTERNS = [/^proxy-/i, /^sec-/i];
     var ALGORITHM_IDENTIFIER = "AWS4-HMAC-SHA256";
+    var ALGORITHM_IDENTIFIER_V4A = "AWS4-ECDSA-P256-SHA256";
     var EVENT_ALGORITHM_IDENTIFIER = "AWS4-HMAC-SHA256-PAYLOAD";
     var UNSIGNED_PAYLOAD = "UNSIGNED-PAYLOAD";
     var MAX_CACHE_SIZE = 50;
     var KEY_TYPE_IDENTIFIER = "aws4_request";
     var MAX_PRESIGNED_TTL = 60 * 60 * 24 * 7;
     var import_util_hex_encoding = require_dist_cjs13();
-    var import_util_utf82 = require_dist_cjs7();
+    var import_util_utf84 = require_dist_cjs7();
     var signingKeyCache = {};
     var cacheQueue = [];
     var createScope = /* @__PURE__ */ __name(
@@ -4700,7 +7236,7 @@ var require_dist_cjs18 = __commonJS({
     }, "clearCredentialCache");
     var hmac = /* @__PURE__ */ __name((ctor, secret, data) => {
       const hash = new ctor(secret);
-      hash.update((0, import_util_utf82.toUint8Array)(data));
+      hash.update((0, import_util_utf84.toUint8Array)(data));
       return hash.digest();
     }, "hmac");
     var getCanonicalHeaders = /* @__PURE__ */ __name(({ headers }, unsignableHeaders, signableHeaders) => {
@@ -4724,36 +7260,6 @@ var require_dist_cjs18 = __commonJS({
       }
       return canonical;
     }, "getCanonicalHeaders");
-    var import_util_uri_escape = require_dist_cjs9();
-    var getCanonicalQuery = /* @__PURE__ */ __name(({ query = {} }) => {
-      const keys = [];
-      const serialized = {};
-      for (const key of Object.keys(query)) {
-        if (key.toLowerCase() === SIGNATURE_HEADER) {
-          continue;
-        }
-        const encodedKey = (0, import_util_uri_escape.escapeUri)(key);
-        keys.push(encodedKey);
-        const value = query[key];
-        if (typeof value === "string") {
-          serialized[encodedKey] = `${encodedKey}=${(0, import_util_uri_escape.escapeUri)(value)}`;
-        } else if (Array.isArray(value)) {
-          serialized[encodedKey] = value
-            .slice(0)
-            .reduce(
-              (encoded, value2) => encoded.concat([`${encodedKey}=${(0, import_util_uri_escape.escapeUri)(value2)}`]),
-              [],
-            )
-            .sort()
-            .join("&");
-        }
-      }
-      return keys
-        .sort()
-        .map((key) => serialized[key])
-        .filter((serialized2) => serialized2)
-        .join("&");
-    }, "getCanonicalQuery");
     var import_is_array_buffer = require_dist_cjs5();
     var import_util_utf822 = require_dist_cjs7();
     var getPayloadHash = /* @__PURE__ */ __name(async ({ headers, body }, hashConstructor) => {
@@ -4775,14 +7281,14 @@ var require_dist_cjs18 = __commonJS({
       }
       return UNSIGNED_PAYLOAD;
     }, "getPayloadHash");
-    var import_util_utf83 = require_dist_cjs7();
+    var import_util_utf832 = require_dist_cjs7();
     var _a;
     var HeaderFormatter =
       ((_a = class {
         format(headers) {
           const chunks = [];
           for (const headerName of Object.keys(headers)) {
-            const bytes = (0, import_util_utf83.fromUtf8)(headerName);
+            const bytes = (0, import_util_utf832.fromUtf8)(headerName);
             chunks.push(Uint8Array.from([bytes.byteLength]), bytes, this.formatHeaderValue(headers[headerName]));
           }
           const out = new Uint8Array(chunks.reduce((carry, bytes) => carry + bytes.byteLength, 0));
@@ -4837,7 +7343,7 @@ var require_dist_cjs18 = __commonJS({
               binBytes.set(header.value, 3);
               return binBytes;
             case "string":
-              const utf8Bytes = (0, import_util_utf83.fromUtf8)(header.value);
+              const utf8Bytes = (0, import_util_utf832.fromUtf8)(header.value);
               const strView = new DataView(new ArrayBuffer(3 + utf8Bytes.byteLength));
               strView.setUint8(
                 0,
@@ -4925,9 +7431,9 @@ var require_dist_cjs18 = __commonJS({
       }
       return false;
     }, "hasHeader");
-    var import_protocol_http9 = require_dist_cjs4();
+    var import_protocol_http13 = require_dist_cjs3();
     var moveHeadersToQuery = /* @__PURE__ */ __name((request, options = {}) => {
-      const { headers, query = {} } = import_protocol_http9.HttpRequest.clone(request);
+      const { headers, query = {} } = import_protocol_http13.HttpRequest.clone(request);
       for (const name of Object.keys(headers)) {
         const lname = name.toLowerCase();
         if (
@@ -4945,7 +7451,7 @@ var require_dist_cjs18 = __commonJS({
       };
     }, "moveHeadersToQuery");
     var prepareRequest = /* @__PURE__ */ __name((request) => {
-      request = import_protocol_http9.HttpRequest.clone(request);
+      request = import_protocol_http13.HttpRequest.clone(request);
       for (const headerName of Object.keys(request.headers)) {
         if (GENERATED_HEADERS.indexOf(headerName.toLowerCase()) > -1) {
           delete request.headers[headerName];
@@ -4953,6 +7459,38 @@ var require_dist_cjs18 = __commonJS({
       }
       return request;
     }, "prepareRequest");
+    var import_util_middleware6 = require_dist_cjs2();
+    var import_util_utf842 = require_dist_cjs7();
+    var import_util_uri_escape = require_dist_cjs9();
+    var getCanonicalQuery = /* @__PURE__ */ __name(({ query = {} }) => {
+      const keys = [];
+      const serialized = {};
+      for (const key of Object.keys(query)) {
+        if (key.toLowerCase() === SIGNATURE_HEADER) {
+          continue;
+        }
+        const encodedKey = (0, import_util_uri_escape.escapeUri)(key);
+        keys.push(encodedKey);
+        const value = query[key];
+        if (typeof value === "string") {
+          serialized[encodedKey] = `${encodedKey}=${(0, import_util_uri_escape.escapeUri)(value)}`;
+        } else if (Array.isArray(value)) {
+          serialized[encodedKey] = value
+            .slice(0)
+            .reduce(
+              (encoded, value2) => encoded.concat([`${encodedKey}=${(0, import_util_uri_escape.escapeUri)(value2)}`]),
+              [],
+            )
+            .sort()
+            .join("&");
+        }
+      }
+      return keys
+        .sort()
+        .map((key) => serialized[key])
+        .filter((serialized2) => serialized2)
+        .join("&");
+    }, "getCanonicalQuery");
     var iso8601 = /* @__PURE__ */ __name(
       (time) =>
         toDate(time)
@@ -4973,16 +7511,88 @@ var require_dist_cjs18 = __commonJS({
       return time;
     }, "toDate");
     var _a3;
-    var SignatureV42 =
+    var SignatureV4Base =
       ((_a3 = class {
         constructor({ applyChecksum, credentials, region, service, sha256, uriEscapePath = true }) {
-          this.headerFormatter = new HeaderFormatter();
           this.service = service;
           this.sha256 = sha256;
           this.uriEscapePath = uriEscapePath;
           this.applyChecksum = typeof applyChecksum === "boolean" ? applyChecksum : true;
-          this.regionProvider = (0, import_util_middleware4.normalizeProvider)(region);
-          this.credentialProvider = (0, import_util_middleware4.normalizeProvider)(credentials);
+          this.regionProvider = (0, import_util_middleware6.normalizeProvider)(region);
+          this.credentialProvider = (0, import_util_middleware6.normalizeProvider)(credentials);
+        }
+        createCanonicalRequest(request, canonicalHeaders, payloadHash) {
+          const sortedHeaders = Object.keys(canonicalHeaders).sort();
+          return `${request.method}
+${this.getCanonicalPath(request)}
+${getCanonicalQuery(request)}
+${sortedHeaders.map((name) => `${name}:${canonicalHeaders[name]}`).join("\n")}
+
+${sortedHeaders.join(";")}
+${payloadHash}`;
+        }
+        async createStringToSign(longDate, credentialScope, canonicalRequest, algorithmIdentifier) {
+          const hash = new this.sha256();
+          hash.update((0, import_util_utf842.toUint8Array)(canonicalRequest));
+          const hashedRequest = await hash.digest();
+          return `${algorithmIdentifier}
+${longDate}
+${credentialScope}
+${(0, import_util_hex_encoding.toHex)(hashedRequest)}`;
+        }
+        getCanonicalPath({ path }) {
+          if (this.uriEscapePath) {
+            const normalizedPathSegments = [];
+            for (const pathSegment of path.split("/")) {
+              if (pathSegment?.length === 0) continue;
+              if (pathSegment === ".") continue;
+              if (pathSegment === "..") {
+                normalizedPathSegments.pop();
+              } else {
+                normalizedPathSegments.push(pathSegment);
+              }
+            }
+            const normalizedPath = `${path?.startsWith("/") ? "/" : ""}${normalizedPathSegments.join("/")}${normalizedPathSegments.length > 0 && path?.endsWith("/") ? "/" : ""}`;
+            const doubleEncoded = (0, import_util_uri_escape.escapeUri)(normalizedPath);
+            return doubleEncoded.replace(/%2F/g, "/");
+          }
+          return path;
+        }
+        validateResolvedCredentials(credentials) {
+          if (
+            typeof credentials !== "object" || // @ts-expect-error: Property 'accessKeyId' does not exist on type 'object'.ts(2339)
+            typeof credentials.accessKeyId !== "string" || // @ts-expect-error: Property 'secretAccessKey' does not exist on type 'object'.ts(2339)
+            typeof credentials.secretAccessKey !== "string"
+          ) {
+            throw new Error("Resolved credential object is not valid");
+          }
+        }
+        formatDate(now) {
+          const longDate = iso8601(now).replace(/[\-:]/g, "");
+          return {
+            longDate,
+            shortDate: longDate.slice(0, 8),
+          };
+        }
+        getCanonicalHeaderList(headers) {
+          return Object.keys(headers).sort().join(";");
+        }
+      }),
+      __name(_a3, "SignatureV4Base"),
+      _a3);
+    var _a4;
+    var SignatureV42 =
+      ((_a4 = class extends SignatureV4Base {
+        constructor({ applyChecksum, credentials, region, service, sha256, uriEscapePath = true }) {
+          super({
+            applyChecksum,
+            credentials,
+            region,
+            service,
+            sha256,
+            uriEscapePath,
+          });
+          this.headerFormatter = new HeaderFormatter();
         }
         async presign(originalRequest, options = {}) {
           const {
@@ -4998,7 +7608,7 @@ var require_dist_cjs18 = __commonJS({
           const credentials = await this.credentialProvider();
           this.validateResolvedCredentials(credentials);
           const region = signingRegion ?? (await this.regionProvider());
-          const { longDate, shortDate } = formatDate(signingDate);
+          const { longDate, shortDate } = this.formatDate(signingDate);
           if (expiresIn > MAX_PRESIGNED_TTL) {
             return Promise.reject(
               "Signature version 4 presigned URLs must have an expiration date less than one week in the future",
@@ -5014,7 +7624,7 @@ var require_dist_cjs18 = __commonJS({
           request.query[AMZ_DATE_QUERY_PARAM] = longDate;
           request.query[EXPIRES_QUERY_PARAM] = expiresIn.toString(10);
           const canonicalHeaders = getCanonicalHeaders(request, unsignableHeaders, signableHeaders);
-          request.query[SIGNED_HEADERS_QUERY_PARAM] = getCanonicalHeaderList(canonicalHeaders);
+          request.query[SIGNED_HEADERS_QUERY_PARAM] = this.getCanonicalHeaderList(canonicalHeaders);
           request.query[SIGNATURE_QUERY_PARAM] = await this.getSignature(
             longDate,
             scope,
@@ -5039,7 +7649,7 @@ var require_dist_cjs18 = __commonJS({
           { signingDate = /* @__PURE__ */ new Date(), priorSignature, signingRegion, signingService },
         ) {
           const region = signingRegion ?? (await this.regionProvider());
-          const { shortDate, longDate } = formatDate(signingDate);
+          const { shortDate, longDate } = this.formatDate(signingDate);
           const scope = createScope(shortDate, region, signingService ?? this.service);
           const hashedPayload = await getPayloadHash({ headers: {}, body: payload }, this.sha256);
           const hash = new this.sha256();
@@ -5082,9 +7692,9 @@ var require_dist_cjs18 = __commonJS({
           const credentials = await this.credentialProvider();
           this.validateResolvedCredentials(credentials);
           const region = signingRegion ?? (await this.regionProvider());
-          const { shortDate } = formatDate(signingDate);
+          const { shortDate } = this.formatDate(signingDate);
           const hash = new this.sha256(await this.getSigningKey(credentials, region, shortDate, signingService));
-          hash.update((0, import_util_utf84.toUint8Array)(stringToSign));
+          hash.update((0, import_util_utf85.toUint8Array)(stringToSign));
           return (0, import_util_hex_encoding.toHex)(await hash.digest());
         }
         async signRequest(
@@ -5101,7 +7711,7 @@ var require_dist_cjs18 = __commonJS({
           this.validateResolvedCredentials(credentials);
           const region = signingRegion ?? (await this.regionProvider());
           const request = prepareRequest(requestToSign);
-          const { longDate, shortDate } = formatDate(signingDate);
+          const { longDate, shortDate } = this.formatDate(signingDate);
           const scope = createScope(shortDate, region, signingService ?? this.service);
           request.headers[AMZ_DATE_HEADER] = longDate;
           if (credentials.sessionToken) {
@@ -5119,82 +7729,70 @@ var require_dist_cjs18 = __commonJS({
             this.createCanonicalRequest(request, canonicalHeaders, payloadHash),
           );
           request.headers[AUTH_HEADER] =
-            `${ALGORITHM_IDENTIFIER} Credential=${credentials.accessKeyId}/${scope}, SignedHeaders=${getCanonicalHeaderList(canonicalHeaders)}, Signature=${signature}`;
+            `${ALGORITHM_IDENTIFIER} Credential=${credentials.accessKeyId}/${scope}, SignedHeaders=${this.getCanonicalHeaderList(canonicalHeaders)}, Signature=${signature}`;
           return request;
         }
-        createCanonicalRequest(request, canonicalHeaders, payloadHash) {
-          const sortedHeaders = Object.keys(canonicalHeaders).sort();
-          return `${request.method}
-${this.getCanonicalPath(request)}
-${getCanonicalQuery(request)}
-${sortedHeaders.map((name) => `${name}:${canonicalHeaders[name]}`).join("\n")}
-
-${sortedHeaders.join(";")}
-${payloadHash}`;
-        }
-        async createStringToSign(longDate, credentialScope, canonicalRequest) {
-          const hash = new this.sha256();
-          hash.update((0, import_util_utf84.toUint8Array)(canonicalRequest));
-          const hashedRequest = await hash.digest();
-          return `${ALGORITHM_IDENTIFIER}
-${longDate}
-${credentialScope}
-${(0, import_util_hex_encoding.toHex)(hashedRequest)}`;
-        }
-        getCanonicalPath({ path }) {
-          if (this.uriEscapePath) {
-            const normalizedPathSegments = [];
-            for (const pathSegment of path.split("/")) {
-              if (pathSegment?.length === 0) continue;
-              if (pathSegment === ".") continue;
-              if (pathSegment === "..") {
-                normalizedPathSegments.pop();
-              } else {
-                normalizedPathSegments.push(pathSegment);
-              }
-            }
-            const normalizedPath = `${path?.startsWith("/") ? "/" : ""}${normalizedPathSegments.join("/")}${normalizedPathSegments.length > 0 && path?.endsWith("/") ? "/" : ""}`;
-            const doubleEncoded = (0, import_util_uri_escape.escapeUri)(normalizedPath);
-            return doubleEncoded.replace(/%2F/g, "/");
-          }
-          return path;
-        }
         async getSignature(longDate, credentialScope, keyPromise, canonicalRequest) {
-          const stringToSign = await this.createStringToSign(longDate, credentialScope, canonicalRequest);
+          const stringToSign = await this.createStringToSign(
+            longDate,
+            credentialScope,
+            canonicalRequest,
+            ALGORITHM_IDENTIFIER,
+          );
           const hash = new this.sha256(await keyPromise);
-          hash.update((0, import_util_utf84.toUint8Array)(stringToSign));
+          hash.update((0, import_util_utf85.toUint8Array)(stringToSign));
           return (0, import_util_hex_encoding.toHex)(await hash.digest());
         }
         getSigningKey(credentials, region, shortDate, service) {
           return getSigningKey(this.sha256, credentials, shortDate, region, service || this.service);
         }
-        validateResolvedCredentials(credentials) {
-          if (
-            typeof credentials !== "object" || // @ts-expect-error: Property 'accessKeyId' does not exist on type 'object'.ts(2339)
-            typeof credentials.accessKeyId !== "string" || // @ts-expect-error: Property 'secretAccessKey' does not exist on type 'object'.ts(2339)
-            typeof credentials.secretAccessKey !== "string"
-          ) {
-            throw new Error("Resolved credential object is not valid");
-          }
-        }
       }),
-      __name(_a3, "SignatureV4"),
-      _a3);
-    var formatDate = /* @__PURE__ */ __name((now) => {
-      const longDate = iso8601(now).replace(/[\-:]/g, "");
-      return {
-        longDate,
-        shortDate: longDate.slice(0, 8),
-      };
-    }, "formatDate");
-    var getCanonicalHeaderList = /* @__PURE__ */ __name(
-      (headers) => Object.keys(headers).sort().join(";"),
-      "getCanonicalHeaderList",
-    );
+      __name(_a4, "SignatureV4"),
+      _a4);
+    var signatureV4aContainer = {
+      SignatureV4a: null,
+    };
   },
 });
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/resolveAwsSdkSigV4Config.js
+function normalizeCredentialProvider(config, { credentials, credentialDefaultProvider }) {
+  let credentialsProvider;
+  if (credentials) {
+    if (!credentials?.memoized) {
+      credentialsProvider = memoizeIdentityProvider(credentials, isIdentityExpired, doesIdentityRequireRefresh);
+    } else {
+      credentialsProvider = credentials;
+    }
+  } else {
+    if (credentialDefaultProvider) {
+      credentialsProvider = normalizeProvider2(
+        credentialDefaultProvider(
+          Object.assign({}, config, {
+            parentClientConfig: config,
+          }),
+        ),
+      );
+    } else {
+      credentialsProvider = async () => {
+        throw new Error(
+          "@aws-sdk/core::resolveAwsSdkSigV4Config - `credentials` not provided and no credentialDefaultProvider was configured.",
+        );
+      };
+    }
+  }
+  credentialsProvider.memoized = true;
+  return credentialsProvider;
+}
+function bindCallerConfig(config, credentialsProvider) {
+  if (credentialsProvider.configBound) {
+    return credentialsProvider;
+  }
+  const fn = async (options) => credentialsProvider({ ...options, callerClientConfig: config });
+  fn.memoized = credentialsProvider.memoized;
+  fn.configBound = true;
+  return fn;
+}
 var import_signature_v4, resolveAwsSdkSigV4Config, resolveAWSSDKSigV4Config;
 var init_resolveAwsSdkSigV4Config = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/resolveAwsSdkSigV4Config.js"() {
@@ -5202,39 +7800,44 @@ var init_resolveAwsSdkSigV4Config = __esm({
     init_dist_es();
     import_signature_v4 = __toESM(require_dist_cjs18());
     resolveAwsSdkSigV4Config = (config) => {
-      let isUserSupplied = false;
-      let credentialsProvider;
-      if (config.credentials) {
-        isUserSupplied = true;
-        credentialsProvider = memoizeIdentityProvider(
-          config.credentials,
-          isIdentityExpired,
-          doesIdentityRequireRefresh,
-        );
-      }
-      if (!credentialsProvider) {
-        if (config.credentialDefaultProvider) {
-          credentialsProvider = normalizeProvider(
-            config.credentialDefaultProvider(
-              Object.assign({}, config, {
-                parentClientConfig: config,
-              }),
-            ),
-          );
-        } else {
-          credentialsProvider = async () => {
-            throw new Error("`credentials` is missing");
-          };
-        }
-      }
-      const boundCredentialsProvider = async () => credentialsProvider({ callerClientConfig: config });
+      let inputCredentials = config.credentials;
+      let isUserSupplied = !!config.credentials;
+      let resolvedCredentials = void 0;
+      Object.defineProperty(config, "credentials", {
+        set(credentials) {
+          if (credentials && credentials !== inputCredentials && credentials !== resolvedCredentials) {
+            isUserSupplied = true;
+          }
+          inputCredentials = credentials;
+          const memoizedProvider = normalizeCredentialProvider(config, {
+            credentials: inputCredentials,
+            credentialDefaultProvider: config.credentialDefaultProvider,
+          });
+          const boundProvider = bindCallerConfig(config, memoizedProvider);
+          if (isUserSupplied && !boundProvider.attributed) {
+            resolvedCredentials = async (options) =>
+              boundProvider(options).then((creds) => setCredentialFeature(creds, "CREDENTIALS_CODE", "e"));
+            resolvedCredentials.memoized = boundProvider.memoized;
+            resolvedCredentials.configBound = boundProvider.configBound;
+            resolvedCredentials.attributed = true;
+          } else {
+            resolvedCredentials = boundProvider;
+          }
+        },
+        get() {
+          return resolvedCredentials;
+        },
+        enumerable: true,
+        configurable: true,
+      });
+      config.credentials = inputCredentials;
       const { signingEscapePath = true, systemClockOffset = config.systemClockOffset || 0, sha256 } = config;
       let signer;
       if (config.signer) {
-        signer = normalizeProvider(config.signer);
+        signer = normalizeProvider2(config.signer);
       } else if (config.regionInfoProvider) {
         signer = () =>
-          normalizeProvider(config.region)()
+          normalizeProvider2(config.region)()
             .then(async (region) => [
               (await config.regionInfoProvider(region, {
                 useFipsEndpoint: await config.useFipsEndpoint(),
@@ -5248,7 +7851,7 @@ var init_resolveAwsSdkSigV4Config = __esm({
               config.signingName = config.signingName || signingService || config.serviceId;
               const params = {
                 ...config,
-                credentials: boundCredentialsProvider,
+                credentials: config.credentials,
                 region: config.signingRegion,
                 service: config.signingName,
                 sha256,
@@ -5264,7 +7867,7 @@ var init_resolveAwsSdkSigV4Config = __esm({
             {
               name: "sigv4",
               signingName: config.signingName || config.defaultSigningName,
-              signingRegion: await normalizeProvider(config.region)(),
+              signingRegion: await normalizeProvider2(config.region)(),
               properties: {},
             },
             authScheme,
@@ -5275,7 +7878,7 @@ var init_resolveAwsSdkSigV4Config = __esm({
           config.signingName = config.signingName || signingService || config.serviceId;
           const params = {
             ...config,
-            credentials: boundCredentialsProvider,
+            credentials: config.credentials,
             region: config.signingRegion,
             service: config.signingName,
             sha256,
@@ -5285,15 +7888,12 @@ var init_resolveAwsSdkSigV4Config = __esm({
           return new SignerCtor(params);
         };
       }
-      return {
-        ...config,
+      const resolvedConfig = Object.assign(config, {
         systemClockOffset,
         signingEscapePath,
-        credentials: isUserSupplied
-          ? async () => boundCredentialsProvider().then((creds) => setCredentialFeature(creds, "CREDENTIALS_CODE", "e"))
-          : boundCredentialsProvider,
         signer,
-      };
+      });
+      return resolvedConfig;
     };
     resolveAWSSDKSigV4Config = resolveAwsSdkSigV4Config;
   },
@@ -5304,6 +7904,7 @@ var init_aws_sdk = __esm({
   "build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/httpAuthSchemes/aws_sdk/index.js"() {
     init_AwsSdkSigV4Signer();
     init_AwsSdkSigV4ASigner();
+    init_NODE_AUTH_SCHEME_PREFERENCE_OPTIONS();
     init_resolveAwsSdkSigV4AConfig();
     init_resolveAwsSdkSigV4Config();
   },
@@ -5719,12 +8320,14 @@ var require_dist_cjs20 = __commonJS({
       }
       return to;
     };
+    var __reExport = (target, mod, secondTarget) => (
+      __copyProps2(target, mod, "default"), secondTarget && __copyProps2(secondTarget, mod, "default")
+    );
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
       Client: () => Client,
       Command: () => Command,
-      LazyJsonString: () => LazyJsonString,
       NoOpLogger: () => NoOpLogger2,
       SENSITIVE_STRING: () => SENSITIVE_STRING,
       ServiceException: () => ServiceException,
@@ -5732,54 +8335,20 @@ var require_dist_cjs20 = __commonJS({
       collectBody: () => import_protocols2.collectBody,
       convertMap: () => convertMap,
       createAggregatedClient: () => createAggregatedClient2,
-      dateToUtcString: () => dateToUtcString,
       decorateServiceException: () => decorateServiceException,
       emitWarningIfUnsupportedVersion: () => emitWarningIfUnsupportedVersion3,
-      expectBoolean: () => expectBoolean,
-      expectByte: () => expectByte,
-      expectFloat32: () => expectFloat32,
-      expectInt: () => expectInt,
-      expectInt32: () => expectInt32,
-      expectLong: () => expectLong,
-      expectNonNull: () => expectNonNull,
-      expectNumber: () => expectNumber,
-      expectObject: () => expectObject,
-      expectShort: () => expectShort,
-      expectString: () => expectString,
-      expectUnion: () => expectUnion2,
       extendedEncodeURIComponent: () => import_protocols2.extendedEncodeURIComponent,
       getArrayIfSingleItem: () => getArrayIfSingleItem,
       getDefaultClientConfiguration: () => getDefaultClientConfiguration,
       getDefaultExtensionConfiguration: () => getDefaultExtensionConfiguration2,
       getValueFromTextNode: () => getValueFromTextNode2,
-      handleFloat: () => handleFloat,
       isSerializableHeaderValue: () => isSerializableHeaderValue,
-      limitedParseDouble: () => limitedParseDouble,
-      limitedParseFloat: () => limitedParseFloat,
-      limitedParseFloat32: () => limitedParseFloat32,
       loadConfigsForDefaultMode: () => loadConfigsForDefaultMode2,
-      logger: () => logger,
       map: () => map,
-      parseBoolean: () => parseBoolean,
-      parseEpochTimestamp: () => parseEpochTimestamp,
-      parseRfc3339DateTime: () => parseRfc3339DateTime,
-      parseRfc3339DateTimeWithOffset: () => parseRfc3339DateTimeWithOffset,
-      parseRfc7231DateTime: () => parseRfc7231DateTime,
-      quoteHeader: () => quoteHeader,
       resolveDefaultRuntimeConfig: () => resolveDefaultRuntimeConfig2,
       resolvedPath: () => import_protocols2.resolvedPath,
       serializeDateTime: () => serializeDateTime,
       serializeFloat: () => serializeFloat,
-      splitEvery: () => splitEvery,
-      splitHeader: () => splitHeader,
-      strictParseByte: () => strictParseByte,
-      strictParseDouble: () => strictParseDouble,
-      strictParseFloat: () => strictParseFloat,
-      strictParseFloat32: () => strictParseFloat32,
-      strictParseInt: () => strictParseInt,
-      strictParseInt32: () => strictParseInt32,
-      strictParseLong: () => strictParseLong,
-      strictParseShort: () => strictParseShort,
       take: () => take,
       throwDefaultError: () => throwDefaultError,
       withBaseException: () => withBaseException,
@@ -5872,9 +8441,9 @@ var require_dist_cjs20 = __commonJS({
             this.middlewareStack.use(mw);
           }
           const stack = clientStack.concat(this.middlewareStack);
-          const { logger: logger2 } = configuration;
+          const { logger: logger3 } = configuration;
           const handlerExecutionContext = {
-            logger: logger2,
+            logger: logger3,
             clientName,
             commandName,
             inputFilterSensitiveLog,
@@ -5979,6 +8548,14 @@ var require_dist_cjs20 = __commonJS({
           return this;
         }
         /**
+         * Sets input/output schema for the operation.
+         */
+        sc(operation) {
+          this._operationSchema = operation;
+          this._smithyContext.operationSchema = operation;
+          return this;
+        }
+        /**
          * @returns a Command class with the classBuilder properties.
          */
         build() {
@@ -5996,6 +8573,7 @@ var require_dist_cjs20 = __commonJS({
                 this.deserialize = closure._deserializer;
                 this.input = input ?? {};
                 closure._init(this);
+                this.schema = closure._operationSchema;
               }
               /**
                * @public
@@ -6044,464 +8622,6 @@ var require_dist_cjs20 = __commonJS({
         Client2.prototype[methodName] = methodImpl;
       }
     }, "createAggregatedClient");
-    var parseBoolean = /* @__PURE__ */ __name((value) => {
-      switch (value) {
-        case "true":
-          return true;
-        case "false":
-          return false;
-        default:
-          throw new Error(`Unable to parse boolean value "${value}"`);
-      }
-    }, "parseBoolean");
-    var expectBoolean = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (typeof value === "number") {
-        if (value === 0 || value === 1) {
-          logger.warn(stackTraceWarning(`Expected boolean, got ${typeof value}: ${value}`));
-        }
-        if (value === 0) {
-          return false;
-        }
-        if (value === 1) {
-          return true;
-        }
-      }
-      if (typeof value === "string") {
-        const lower = value.toLowerCase();
-        if (lower === "false" || lower === "true") {
-          logger.warn(stackTraceWarning(`Expected boolean, got ${typeof value}: ${value}`));
-        }
-        if (lower === "false") {
-          return false;
-        }
-        if (lower === "true") {
-          return true;
-        }
-      }
-      if (typeof value === "boolean") {
-        return value;
-      }
-      throw new TypeError(`Expected boolean, got ${typeof value}: ${value}`);
-    }, "expectBoolean");
-    var expectNumber = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (typeof value === "string") {
-        const parsed = parseFloat(value);
-        if (!Number.isNaN(parsed)) {
-          if (String(parsed) !== String(value)) {
-            logger.warn(stackTraceWarning(`Expected number but observed string: ${value}`));
-          }
-          return parsed;
-        }
-      }
-      if (typeof value === "number") {
-        return value;
-      }
-      throw new TypeError(`Expected number, got ${typeof value}: ${value}`);
-    }, "expectNumber");
-    var MAX_FLOAT = Math.ceil(2 ** 127 * (2 - 2 ** -23));
-    var expectFloat32 = /* @__PURE__ */ __name((value) => {
-      const expected = expectNumber(value);
-      if (expected !== void 0 && !Number.isNaN(expected) && expected !== Infinity && expected !== -Infinity) {
-        if (Math.abs(expected) > MAX_FLOAT) {
-          throw new TypeError(`Expected 32-bit float, got ${value}`);
-        }
-      }
-      return expected;
-    }, "expectFloat32");
-    var expectLong = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (Number.isInteger(value) && !Number.isNaN(value)) {
-        return value;
-      }
-      throw new TypeError(`Expected integer, got ${typeof value}: ${value}`);
-    }, "expectLong");
-    var expectInt = expectLong;
-    var expectInt32 = /* @__PURE__ */ __name((value) => expectSizedInt(value, 32), "expectInt32");
-    var expectShort = /* @__PURE__ */ __name((value) => expectSizedInt(value, 16), "expectShort");
-    var expectByte = /* @__PURE__ */ __name((value) => expectSizedInt(value, 8), "expectByte");
-    var expectSizedInt = /* @__PURE__ */ __name((value, size) => {
-      const expected = expectLong(value);
-      if (expected !== void 0 && castInt(expected, size) !== expected) {
-        throw new TypeError(`Expected ${size}-bit integer, got ${value}`);
-      }
-      return expected;
-    }, "expectSizedInt");
-    var castInt = /* @__PURE__ */ __name((value, size) => {
-      switch (size) {
-        case 32:
-          return Int32Array.of(value)[0];
-        case 16:
-          return Int16Array.of(value)[0];
-        case 8:
-          return Int8Array.of(value)[0];
-      }
-    }, "castInt");
-    var expectNonNull = /* @__PURE__ */ __name((value, location) => {
-      if (value === null || value === void 0) {
-        if (location) {
-          throw new TypeError(`Expected a non-null value for ${location}`);
-        }
-        throw new TypeError("Expected a non-null value");
-      }
-      return value;
-    }, "expectNonNull");
-    var expectObject = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (typeof value === "object" && !Array.isArray(value)) {
-        return value;
-      }
-      const receivedType = Array.isArray(value) ? "array" : typeof value;
-      throw new TypeError(`Expected object, got ${receivedType}: ${value}`);
-    }, "expectObject");
-    var expectString = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (typeof value === "string") {
-        return value;
-      }
-      if (["boolean", "number", "bigint"].includes(typeof value)) {
-        logger.warn(stackTraceWarning(`Expected string, got ${typeof value}: ${value}`));
-        return String(value);
-      }
-      throw new TypeError(`Expected string, got ${typeof value}: ${value}`);
-    }, "expectString");
-    var expectUnion2 = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      const asObject = expectObject(value);
-      const setKeys = Object.entries(asObject)
-        .filter(([, v]) => v != null)
-        .map(([k]) => k);
-      if (setKeys.length === 0) {
-        throw new TypeError(`Unions must have exactly one non-null member. None were found.`);
-      }
-      if (setKeys.length > 1) {
-        throw new TypeError(`Unions must have exactly one non-null member. Keys ${setKeys} were not null.`);
-      }
-      return asObject;
-    }, "expectUnion");
-    var strictParseDouble = /* @__PURE__ */ __name((value) => {
-      if (typeof value == "string") {
-        return expectNumber(parseNumber(value));
-      }
-      return expectNumber(value);
-    }, "strictParseDouble");
-    var strictParseFloat = strictParseDouble;
-    var strictParseFloat32 = /* @__PURE__ */ __name((value) => {
-      if (typeof value == "string") {
-        return expectFloat32(parseNumber(value));
-      }
-      return expectFloat32(value);
-    }, "strictParseFloat32");
-    var NUMBER_REGEX = /(-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)|(-?Infinity)|(NaN)/g;
-    var parseNumber = /* @__PURE__ */ __name((value) => {
-      const matches = value.match(NUMBER_REGEX);
-      if (matches === null || matches[0].length !== value.length) {
-        throw new TypeError(`Expected real number, got implicit NaN`);
-      }
-      return parseFloat(value);
-    }, "parseNumber");
-    var limitedParseDouble = /* @__PURE__ */ __name((value) => {
-      if (typeof value == "string") {
-        return parseFloatString(value);
-      }
-      return expectNumber(value);
-    }, "limitedParseDouble");
-    var handleFloat = limitedParseDouble;
-    var limitedParseFloat = limitedParseDouble;
-    var limitedParseFloat32 = /* @__PURE__ */ __name((value) => {
-      if (typeof value == "string") {
-        return parseFloatString(value);
-      }
-      return expectFloat32(value);
-    }, "limitedParseFloat32");
-    var parseFloatString = /* @__PURE__ */ __name((value) => {
-      switch (value) {
-        case "NaN":
-          return NaN;
-        case "Infinity":
-          return Infinity;
-        case "-Infinity":
-          return -Infinity;
-        default:
-          throw new Error(`Unable to parse float value: ${value}`);
-      }
-    }, "parseFloatString");
-    var strictParseLong = /* @__PURE__ */ __name((value) => {
-      if (typeof value === "string") {
-        return expectLong(parseNumber(value));
-      }
-      return expectLong(value);
-    }, "strictParseLong");
-    var strictParseInt = strictParseLong;
-    var strictParseInt32 = /* @__PURE__ */ __name((value) => {
-      if (typeof value === "string") {
-        return expectInt32(parseNumber(value));
-      }
-      return expectInt32(value);
-    }, "strictParseInt32");
-    var strictParseShort = /* @__PURE__ */ __name((value) => {
-      if (typeof value === "string") {
-        return expectShort(parseNumber(value));
-      }
-      return expectShort(value);
-    }, "strictParseShort");
-    var strictParseByte = /* @__PURE__ */ __name((value) => {
-      if (typeof value === "string") {
-        return expectByte(parseNumber(value));
-      }
-      return expectByte(value);
-    }, "strictParseByte");
-    var stackTraceWarning = /* @__PURE__ */ __name((message) => {
-      return String(new TypeError(message).stack || message)
-        .split("\n")
-        .slice(0, 5)
-        .filter((s) => !s.includes("stackTraceWarning"))
-        .join("\n");
-    }, "stackTraceWarning");
-    var logger = {
-      warn: console.warn,
-    };
-    var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    function dateToUtcString(date) {
-      const year = date.getUTCFullYear();
-      const month = date.getUTCMonth();
-      const dayOfWeek = date.getUTCDay();
-      const dayOfMonthInt = date.getUTCDate();
-      const hoursInt = date.getUTCHours();
-      const minutesInt = date.getUTCMinutes();
-      const secondsInt = date.getUTCSeconds();
-      const dayOfMonthString = dayOfMonthInt < 10 ? `0${dayOfMonthInt}` : `${dayOfMonthInt}`;
-      const hoursString = hoursInt < 10 ? `0${hoursInt}` : `${hoursInt}`;
-      const minutesString = minutesInt < 10 ? `0${minutesInt}` : `${minutesInt}`;
-      const secondsString = secondsInt < 10 ? `0${secondsInt}` : `${secondsInt}`;
-      return `${DAYS[dayOfWeek]}, ${dayOfMonthString} ${MONTHS[month]} ${year} ${hoursString}:${minutesString}:${secondsString} GMT`;
-    }
-    __name(dateToUtcString, "dateToUtcString");
-    var RFC3339 = new RegExp(/^(\d{4})-(\d{2})-(\d{2})[tT](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?[zZ]$/);
-    var parseRfc3339DateTime = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (typeof value !== "string") {
-        throw new TypeError("RFC-3339 date-times must be expressed as strings");
-      }
-      const match = RFC3339.exec(value);
-      if (!match) {
-        throw new TypeError("Invalid RFC-3339 date-time value");
-      }
-      const [_, yearStr, monthStr, dayStr, hours, minutes, seconds, fractionalMilliseconds] = match;
-      const year = strictParseShort(stripLeadingZeroes(yearStr));
-      const month = parseDateValue(monthStr, "month", 1, 12);
-      const day = parseDateValue(dayStr, "day", 1, 31);
-      return buildDate(year, month, day, { hours, minutes, seconds, fractionalMilliseconds });
-    }, "parseRfc3339DateTime");
-    var RFC3339_WITH_OFFSET = new RegExp(
-      /^(\d{4})-(\d{2})-(\d{2})[tT](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(([-+]\d{2}\:\d{2})|[zZ])$/,
-    );
-    var parseRfc3339DateTimeWithOffset = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (typeof value !== "string") {
-        throw new TypeError("RFC-3339 date-times must be expressed as strings");
-      }
-      const match = RFC3339_WITH_OFFSET.exec(value);
-      if (!match) {
-        throw new TypeError("Invalid RFC-3339 date-time value");
-      }
-      const [_, yearStr, monthStr, dayStr, hours, minutes, seconds, fractionalMilliseconds, offsetStr] = match;
-      const year = strictParseShort(stripLeadingZeroes(yearStr));
-      const month = parseDateValue(monthStr, "month", 1, 12);
-      const day = parseDateValue(dayStr, "day", 1, 31);
-      const date = buildDate(year, month, day, { hours, minutes, seconds, fractionalMilliseconds });
-      if (offsetStr.toUpperCase() != "Z") {
-        date.setTime(date.getTime() - parseOffsetToMilliseconds(offsetStr));
-      }
-      return date;
-    }, "parseRfc3339DateTimeWithOffset");
-    var IMF_FIXDATE = new RegExp(
-      /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d{1,2}):(\d{2}):(\d{2})(?:\.(\d+))? GMT$/,
-    );
-    var RFC_850_DATE = new RegExp(
-      /^(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (\d{2})-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d{2}) (\d{1,2}):(\d{2}):(\d{2})(?:\.(\d+))? GMT$/,
-    );
-    var ASC_TIME = new RegExp(
-      /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( [1-9]|\d{2}) (\d{1,2}):(\d{2}):(\d{2})(?:\.(\d+))? (\d{4})$/,
-    );
-    var parseRfc7231DateTime = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      if (typeof value !== "string") {
-        throw new TypeError("RFC-7231 date-times must be expressed as strings");
-      }
-      let match = IMF_FIXDATE.exec(value);
-      if (match) {
-        const [_, dayStr, monthStr, yearStr, hours, minutes, seconds, fractionalMilliseconds] = match;
-        return buildDate(
-          strictParseShort(stripLeadingZeroes(yearStr)),
-          parseMonthByShortName(monthStr),
-          parseDateValue(dayStr, "day", 1, 31),
-          { hours, minutes, seconds, fractionalMilliseconds },
-        );
-      }
-      match = RFC_850_DATE.exec(value);
-      if (match) {
-        const [_, dayStr, monthStr, yearStr, hours, minutes, seconds, fractionalMilliseconds] = match;
-        return adjustRfc850Year(
-          buildDate(parseTwoDigitYear(yearStr), parseMonthByShortName(monthStr), parseDateValue(dayStr, "day", 1, 31), {
-            hours,
-            minutes,
-            seconds,
-            fractionalMilliseconds,
-          }),
-        );
-      }
-      match = ASC_TIME.exec(value);
-      if (match) {
-        const [_, monthStr, dayStr, hours, minutes, seconds, fractionalMilliseconds, yearStr] = match;
-        return buildDate(
-          strictParseShort(stripLeadingZeroes(yearStr)),
-          parseMonthByShortName(monthStr),
-          parseDateValue(dayStr.trimLeft(), "day", 1, 31),
-          { hours, minutes, seconds, fractionalMilliseconds },
-        );
-      }
-      throw new TypeError("Invalid RFC-7231 date-time value");
-    }, "parseRfc7231DateTime");
-    var parseEpochTimestamp = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return void 0;
-      }
-      let valueAsDouble;
-      if (typeof value === "number") {
-        valueAsDouble = value;
-      } else if (typeof value === "string") {
-        valueAsDouble = strictParseDouble(value);
-      } else if (typeof value === "object" && value.tag === 1) {
-        valueAsDouble = value.value;
-      } else {
-        throw new TypeError(
-          "Epoch timestamps must be expressed as floating point numbers or their string representation",
-        );
-      }
-      if (Number.isNaN(valueAsDouble) || valueAsDouble === Infinity || valueAsDouble === -Infinity) {
-        throw new TypeError("Epoch timestamps must be valid, non-Infinite, non-NaN numerics");
-      }
-      return new Date(Math.round(valueAsDouble * 1e3));
-    }, "parseEpochTimestamp");
-    var buildDate = /* @__PURE__ */ __name((year, month, day, time) => {
-      const adjustedMonth = month - 1;
-      validateDayOfMonth(year, adjustedMonth, day);
-      return new Date(
-        Date.UTC(
-          year,
-          adjustedMonth,
-          day,
-          parseDateValue(time.hours, "hour", 0, 23),
-          parseDateValue(time.minutes, "minute", 0, 59),
-          // seconds can go up to 60 for leap seconds
-          parseDateValue(time.seconds, "seconds", 0, 60),
-          parseMilliseconds(time.fractionalMilliseconds),
-        ),
-      );
-    }, "buildDate");
-    var parseTwoDigitYear = /* @__PURE__ */ __name((value) => {
-      const thisYear = /* @__PURE__ */ new Date().getUTCFullYear();
-      const valueInThisCentury = Math.floor(thisYear / 100) * 100 + strictParseShort(stripLeadingZeroes(value));
-      if (valueInThisCentury < thisYear) {
-        return valueInThisCentury + 100;
-      }
-      return valueInThisCentury;
-    }, "parseTwoDigitYear");
-    var FIFTY_YEARS_IN_MILLIS = 50 * 365 * 24 * 60 * 60 * 1e3;
-    var adjustRfc850Year = /* @__PURE__ */ __name((input) => {
-      if (input.getTime() - /* @__PURE__ */ new Date().getTime() > FIFTY_YEARS_IN_MILLIS) {
-        return new Date(
-          Date.UTC(
-            input.getUTCFullYear() - 100,
-            input.getUTCMonth(),
-            input.getUTCDate(),
-            input.getUTCHours(),
-            input.getUTCMinutes(),
-            input.getUTCSeconds(),
-            input.getUTCMilliseconds(),
-          ),
-        );
-      }
-      return input;
-    }, "adjustRfc850Year");
-    var parseMonthByShortName = /* @__PURE__ */ __name((value) => {
-      const monthIdx = MONTHS.indexOf(value);
-      if (monthIdx < 0) {
-        throw new TypeError(`Invalid month: ${value}`);
-      }
-      return monthIdx + 1;
-    }, "parseMonthByShortName");
-    var DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    var validateDayOfMonth = /* @__PURE__ */ __name((year, month, day) => {
-      let maxDays = DAYS_IN_MONTH[month];
-      if (month === 1 && isLeapYear(year)) {
-        maxDays = 29;
-      }
-      if (day > maxDays) {
-        throw new TypeError(`Invalid day for ${MONTHS[month]} in ${year}: ${day}`);
-      }
-    }, "validateDayOfMonth");
-    var isLeapYear = /* @__PURE__ */ __name((year) => {
-      return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
-    }, "isLeapYear");
-    var parseDateValue = /* @__PURE__ */ __name((value, type, lower, upper) => {
-      const dateVal = strictParseByte(stripLeadingZeroes(value));
-      if (dateVal < lower || dateVal > upper) {
-        throw new TypeError(`${type} must be between ${lower} and ${upper}, inclusive`);
-      }
-      return dateVal;
-    }, "parseDateValue");
-    var parseMilliseconds = /* @__PURE__ */ __name((value) => {
-      if (value === null || value === void 0) {
-        return 0;
-      }
-      return strictParseFloat32("0." + value) * 1e3;
-    }, "parseMilliseconds");
-    var parseOffsetToMilliseconds = /* @__PURE__ */ __name((value) => {
-      const directionStr = value[0];
-      let direction = 1;
-      if (directionStr == "+") {
-        direction = 1;
-      } else if (directionStr == "-") {
-        direction = -1;
-      } else {
-        throw new TypeError(`Offset direction, ${directionStr}, must be "+" or "-"`);
-      }
-      const hour = Number(value.substring(1, 3));
-      const minute = Number(value.substring(4, 6));
-      return direction * (hour * 60 + minute) * 60 * 1e3;
-    }, "parseOffsetToMilliseconds");
-    var stripLeadingZeroes = /* @__PURE__ */ __name((value) => {
-      let idx = 0;
-      while (idx < value.length - 1 && value.charAt(idx) === "0") {
-        idx++;
-      }
-      if (idx === 0) {
-        return value;
-      }
-      return value.slice(idx);
-    }, "stripLeadingZeroes");
     var _a4;
     var ServiceException =
       ((_a4 = class extends Error {
@@ -6630,12 +8750,11 @@ var require_dist_cjs20 = __commonJS({
         });
       }
       return {
-        _checksumAlgorithms: checksumAlgorithms,
         addChecksumAlgorithm(algo) {
-          this._checksumAlgorithms.push(algo);
+          checksumAlgorithms.push(algo);
         },
         checksumAlgorithms() {
-          return this._checksumAlgorithms;
+          return checksumAlgorithms;
         },
       };
     }, "getChecksumConfiguration");
@@ -6647,13 +8766,12 @@ var require_dist_cjs20 = __commonJS({
       return runtimeConfig;
     }, "resolveChecksumRuntimeConfig");
     var getRetryConfiguration = /* @__PURE__ */ __name((runtimeConfig) => {
-      let _retryStrategy = runtimeConfig.retryStrategy;
       return {
         setRetryStrategy(retryStrategy) {
-          _retryStrategy = retryStrategy;
+          runtimeConfig.retryStrategy = retryStrategy;
         },
         retryStrategy() {
-          return _retryStrategy;
+          return runtimeConfig.retryStrategy;
         },
       };
     }, "getRetryConfiguration");
@@ -6663,17 +8781,11 @@ var require_dist_cjs20 = __commonJS({
       return runtimeConfig;
     }, "resolveRetryRuntimeConfig");
     var getDefaultExtensionConfiguration2 = /* @__PURE__ */ __name((runtimeConfig) => {
-      return {
-        ...getChecksumConfiguration(runtimeConfig),
-        ...getRetryConfiguration(runtimeConfig),
-      };
+      return Object.assign(getChecksumConfiguration(runtimeConfig), getRetryConfiguration(runtimeConfig));
     }, "getDefaultExtensionConfiguration");
     var getDefaultClientConfiguration = getDefaultExtensionConfiguration2;
     var resolveDefaultRuntimeConfig2 = /* @__PURE__ */ __name((config) => {
-      return {
-        ...resolveChecksumRuntimeConfig(config),
-        ...resolveRetryRuntimeConfig(config),
-      };
+      return Object.assign(resolveChecksumRuntimeConfig(config), resolveRetryRuntimeConfig(config));
     }, "resolveDefaultRuntimeConfig");
     var getArrayIfSingleItem = /* @__PURE__ */ __name(
       (mayBeArray) => (Array.isArray(mayBeArray) ? mayBeArray : [mayBeArray]),
@@ -6693,29 +8805,6 @@ var require_dist_cjs20 = __commonJS({
     var isSerializableHeaderValue = /* @__PURE__ */ __name((value) => {
       return value != null;
     }, "isSerializableHeaderValue");
-    var LazyJsonString = /* @__PURE__ */ __name(function LazyJsonString2(val2) {
-      const str = Object.assign(new String(val2), {
-        deserializeJSON() {
-          return JSON.parse(String(val2));
-        },
-        toString() {
-          return String(val2);
-        },
-        toJSON() {
-          return String(val2);
-        },
-      });
-      return str;
-    }, "LazyJsonString");
-    LazyJsonString.from = (object) => {
-      if (object && typeof object === "object" && (object instanceof LazyJsonString || "deserializeJSON" in object)) {
-        return object;
-      } else if (typeof object === "string" || Object.getPrototypeOf(object) === String.prototype) {
-        return LazyJsonString(String(object));
-      }
-      return LazyJsonString(JSON.stringify(object));
-    };
-    LazyJsonString.fromObject = LazyJsonString.from;
     var _a5;
     var NoOpLogger2 =
       ((_a5 = class {
@@ -6822,13 +8911,6 @@ var require_dist_cjs20 = __commonJS({
     }, "applyInstruction");
     var nonNullish = /* @__PURE__ */ __name((_) => _ != null, "nonNullish");
     var pass = /* @__PURE__ */ __name((_) => _, "pass");
-    function quoteHeader(part) {
-      if (part.includes(",") || part.includes('"')) {
-        part = `"${part.replace(/"/g, '\\"')}"`;
-      }
-      return part;
-    }
-    __name(quoteHeader, "quoteHeader");
     var serializeFloat = /* @__PURE__ */ __name((value) => {
       if (value !== value) {
         return "NaN";
@@ -6865,70 +8947,7 @@ var require_dist_cjs20 = __commonJS({
       }
       return obj;
     }, "_json");
-    function splitEvery(value, delimiter, numDelimiters) {
-      if (numDelimiters <= 0 || !Number.isInteger(numDelimiters)) {
-        throw new Error("Invalid number of delimiters (" + numDelimiters + ") for splitEvery.");
-      }
-      const segments = value.split(delimiter);
-      if (numDelimiters === 1) {
-        return segments;
-      }
-      const compoundSegments = [];
-      let currentSegment = "";
-      for (let i = 0; i < segments.length; i++) {
-        if (currentSegment === "") {
-          currentSegment = segments[i];
-        } else {
-          currentSegment += delimiter + segments[i];
-        }
-        if ((i + 1) % numDelimiters === 0) {
-          compoundSegments.push(currentSegment);
-          currentSegment = "";
-        }
-      }
-      if (currentSegment !== "") {
-        compoundSegments.push(currentSegment);
-      }
-      return compoundSegments;
-    }
-    __name(splitEvery, "splitEvery");
-    var splitHeader = /* @__PURE__ */ __name((value) => {
-      const z = value.length;
-      const values = [];
-      let withinQuotes = false;
-      let prevChar = void 0;
-      let anchor = 0;
-      for (let i = 0; i < z; ++i) {
-        const char = value[i];
-        switch (char) {
-          case `"`:
-            if (prevChar !== "\\") {
-              withinQuotes = !withinQuotes;
-            }
-            break;
-          case ",":
-            if (!withinQuotes) {
-              values.push(value.slice(anchor, i));
-              anchor = i + 1;
-            }
-            break;
-          default:
-        }
-        prevChar = char;
-      }
-      values.push(value.slice(anchor));
-      return values.map((v) => {
-        v = v.trim();
-        const z2 = v.length;
-        if (z2 < 2) {
-          return v;
-        }
-        if (v[0] === `"` && v[z2 - 1] === `"`) {
-          v = v.slice(1, z2 - 1);
-        }
-        return v.replace(/\\"/g, '"');
-      });
-    }, "splitHeader");
+    __reExport(src_exports, (init_serde(), __toCommonJS(serde_exports)), module2.exports);
   },
 });
 
@@ -7738,15 +9757,10 @@ var require_strnum = __commonJS({
     module2,
   ) {
     var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
-    var numRegex = /^([\-\+])?(0*)(\.[0-9]+([eE]\-?[0-9]+)?|[0-9]+(\.[0-9]+([eE]\-?[0-9]+)?)?)$/;
-    if (!Number.parseInt && window.parseInt) {
-      Number.parseInt = window.parseInt;
-    }
-    if (!Number.parseFloat && window.parseFloat) {
-      Number.parseFloat = window.parseFloat;
-    }
+    var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
     var consider = {
       hex: true,
+      // oct: false,
       leadingZeros: true,
       decimalPoint: ".",
       eNotation: true,
@@ -7757,24 +9771,37 @@ var require_strnum = __commonJS({
       if (!str || typeof str !== "string") return str;
       let trimmedStr = str.trim();
       if (options.skipLike !== void 0 && options.skipLike.test(trimmedStr)) return str;
+      else if (str === "0") return 0;
       else if (options.hex && hexRegex.test(trimmedStr)) {
-        return Number.parseInt(trimmedStr, 16);
+        return parse_int(trimmedStr, 16);
+      } else if (trimmedStr.search(/[eE]/) !== -1) {
+        const notation = trimmedStr.match(/^([-\+])?(0*)([0-9]*(\.[0-9]*)?[eE][-\+]?[0-9]+)$/);
+        if (notation) {
+          if (options.leadingZeros) {
+            trimmedStr = (notation[1] || "") + notation[3];
+          } else {
+            if (notation[2] === "0" && notation[3][0] === ".") {
+            } else {
+              return str;
+            }
+          }
+          return options.eNotation ? Number(trimmedStr) : str;
+        } else {
+          return str;
+        }
       } else {
         const match = numRegex.exec(trimmedStr);
         if (match) {
           const sign = match[1];
           const leadingZeros = match[2];
           let numTrimmedByZeros = trimZeros(match[3]);
-          const eNotation = match[4] || match[6];
           if (!options.leadingZeros && leadingZeros.length > 0 && sign && trimmedStr[2] !== ".") return str;
           else if (!options.leadingZeros && leadingZeros.length > 0 && !sign && trimmedStr[1] !== ".") return str;
+          else if (options.leadingZeros && leadingZeros === str) return 0;
           else {
             const num = Number(trimmedStr);
             const numStr = "" + num;
             if (numStr.search(/[eE]/) !== -1) {
-              if (options.eNotation) return num;
-              else return str;
-            } else if (eNotation) {
               if (options.eNotation) return num;
               else return str;
             } else if (trimmedStr.indexOf(".") !== -1) {
@@ -7784,13 +9811,10 @@ var require_strnum = __commonJS({
               else return str;
             }
             if (leadingZeros) {
-              if (numTrimmedByZeros === numStr) return num;
-              else if (sign + numTrimmedByZeros === numStr) return num;
-              else return str;
+              return numTrimmedByZeros === numStr || sign + numTrimmedByZeros === numStr ? num : str;
+            } else {
+              return trimmedStr === numStr || trimmedStr === sign + numStr ? num : str;
             }
-            if (trimmedStr === numStr) return num;
-            else if (trimmedStr === sign + numStr) return num;
-            return str;
           }
         } else {
           return str;
@@ -7806,6 +9830,12 @@ var require_strnum = __commonJS({
         return numStr;
       }
       return numStr;
+    }
+    function parse_int(numStr, base) {
+      if (parseInt) return parseInt(numStr, base);
+      else if (Number.parseInt) return Number.parseInt(numStr, base);
+      else if (window && window.parseInt) return window.parseInt(numStr, base);
+      else throw new Error("parseInt, Number.parseInt, window.parseInt are not supported");
     }
     module2.exports = toNumber;
   },
@@ -8937,6 +10967,7 @@ __export(dist_es_exports2, {
   AWSSDKSigV4Signer: () => AWSSDKSigV4Signer,
   AwsSdkSigV4ASigner: () => AwsSdkSigV4ASigner,
   AwsSdkSigV4Signer: () => AwsSdkSigV4Signer,
+  NODE_AUTH_SCHEME_PREFERENCE_OPTIONS: () => NODE_AUTH_SCHEME_PREFERENCE_OPTIONS,
   NODE_SIGV4A_CONFIG_OPTIONS: () => NODE_SIGV4A_CONFIG_OPTIONS,
   _toBool: () => _toBool,
   _toNum: () => _toNum,
@@ -8992,15 +11023,15 @@ var require_dist_cjs21 = __commonJS({
       return to;
     };
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
+    var index_exports = {};
+    __export2(index_exports, {
       DEFAULT_UA_APP_ID: () => DEFAULT_UA_APP_ID,
       getUserAgentMiddlewareOptions: () => getUserAgentMiddlewareOptions,
       getUserAgentPlugin: () => getUserAgentPlugin2,
       resolveUserAgentConfig: () => resolveUserAgentConfig2,
       userAgentMiddleware: () => userAgentMiddleware,
     });
-    module2.exports = __toCommonJS2(src_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_core6 = (init_dist_es(), __toCommonJS(dist_es_exports));
     var DEFAULT_UA_APP_ID = void 0;
     function isValidUserAgentAppId(appId) {
@@ -9012,26 +11043,26 @@ var require_dist_cjs21 = __commonJS({
     __name(isValidUserAgentAppId, "isValidUserAgentAppId");
     function resolveUserAgentConfig2(input) {
       const normalizedAppIdProvider = (0, import_core6.normalizeProvider)(input.userAgentAppId ?? DEFAULT_UA_APP_ID);
-      return {
-        ...input,
-        customUserAgent: typeof input.customUserAgent === "string" ? [[input.customUserAgent]] : input.customUserAgent,
-        userAgentAppId: async () => {
+      const { customUserAgent } = input;
+      return Object.assign(input, {
+        customUserAgent: typeof customUserAgent === "string" ? [[customUserAgent]] : customUserAgent,
+        userAgentAppId: /* @__PURE__ */ __name(async () => {
           const appId = await normalizedAppIdProvider();
           if (!isValidUserAgentAppId(appId)) {
-            const logger = input.logger?.constructor?.name === "NoOpLogger" || !input.logger ? console : input.logger;
+            const logger3 = input.logger?.constructor?.name === "NoOpLogger" || !input.logger ? console : input.logger;
             if (typeof appId !== "string") {
-              logger?.warn("userAgentAppId must be a string or undefined.");
+              logger3?.warn("userAgentAppId must be a string or undefined.");
             } else if (appId.length > 50) {
-              logger?.warn("The provided userAgentAppId exceeds the maximum length of 50 characters.");
+              logger3?.warn("The provided userAgentAppId exceeds the maximum length of 50 characters.");
             }
           }
           return appId;
-        },
-      };
+        }, "userAgentAppId"),
+      });
     }
     __name(resolveUserAgentConfig2, "resolveUserAgentConfig");
     var import_util_endpoints = require_dist_cjs16();
-    var import_protocol_http9 = require_dist_cjs4();
+    var import_protocol_http13 = require_dist_cjs3();
     var import_core22 = (init_dist_es2(), __toCommonJS(dist_es_exports2));
     var ACCOUNT_ID_ENDPOINT_REGEX = /\d{12}\.ddb/;
     async function checkFeatures(context, config, args) {
@@ -9108,7 +11139,7 @@ var require_dist_cjs21 = __commonJS({
     var userAgentMiddleware = /* @__PURE__ */ __name(
       (options) => (next, context) => async (args) => {
         const { request } = args;
-        if (!import_protocol_http9.HttpRequest.isInstance(request)) {
+        if (!import_protocol_http13.HttpRequest.isInstance(request)) {
           return next(args);
         }
         const { headers } = request;
@@ -9185,9 +11216,9 @@ var require_dist_cjs21 = __commonJS({
     };
     var getUserAgentPlugin2 = /* @__PURE__ */ __name(
       (config) => ({
-        applyToStack: (clientStack) => {
+        applyToStack: /* @__PURE__ */ __name((clientStack) => {
           clientStack.add(userAgentMiddleware(config), getUserAgentMiddlewareOptions);
-        },
+        }, "applyToStack"),
       }),
       "getUserAgentPlugin",
     );
@@ -9221,8 +11252,8 @@ var require_dist_cjs22 = __commonJS({
       return to;
     };
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
+    var index_exports = {};
+    __export2(index_exports, {
       NODE_APP_ID_CONFIG_OPTIONS: () => NODE_APP_ID_CONFIG_OPTIONS2,
       UA_APP_ID_ENV_NAME: () => UA_APP_ID_ENV_NAME,
       UA_APP_ID_INI_NAME: () => UA_APP_ID_INI_NAME,
@@ -9230,7 +11261,7 @@ var require_dist_cjs22 = __commonJS({
       crtAvailability: () => crtAvailability,
       defaultUserAgent: () => defaultUserAgent,
     });
-    module2.exports = __toCommonJS2(src_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_os = require("os");
     var import_process = require("process");
     var crtAvailability = {
@@ -9277,8 +11308,14 @@ var require_dist_cjs22 = __commonJS({
     var UA_APP_ID_INI_NAME = "sdk_ua_app_id";
     var UA_APP_ID_INI_NAME_DEPRECATED = "sdk-ua-app-id";
     var NODE_APP_ID_CONFIG_OPTIONS2 = {
-      environmentVariableSelector: (env2) => env2[UA_APP_ID_ENV_NAME],
-      configFileSelector: (profile) => profile[UA_APP_ID_INI_NAME] ?? profile[UA_APP_ID_INI_NAME_DEPRECATED],
+      environmentVariableSelector: /* @__PURE__ */ __name(
+        (env2) => env2[UA_APP_ID_ENV_NAME],
+        "environmentVariableSelector",
+      ),
+      configFileSelector: /* @__PURE__ */ __name(
+        (profile) => profile[UA_APP_ID_INI_NAME] ?? profile[UA_APP_ID_INI_NAME_DEPRECATED],
+        "configFileSelector",
+      ),
       default: import_middleware_user_agent2.DEFAULT_UA_APP_ID,
     };
   },
@@ -9316,7 +11353,7 @@ var require_dist_cjs23 = __commonJS({
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_util_buffer_from = require_dist_cjs6();
-    var import_util_utf82 = require_dist_cjs7();
+    var import_util_utf84 = require_dist_cjs7();
     var import_buffer = require("buffer");
     var import_crypto5 = require("crypto");
     var _a;
@@ -9328,7 +11365,7 @@ var require_dist_cjs23 = __commonJS({
           this.reset();
         }
         update(toHash, encoding) {
-          this.hash.update((0, import_util_utf82.toUint8Array)(castSourceData(toHash, encoding)));
+          this.hash.update((0, import_util_utf84.toUint8Array)(castSourceData(toHash, encoding)));
         }
         digest() {
           return Promise.resolve(this.hash.digest());
@@ -9758,6 +11795,7 @@ var require_dist_cjs24 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
+      isBrowserNetworkError: () => isBrowserNetworkError,
       isClockSkewCorrectedError: () => isClockSkewCorrectedError,
       isClockSkewError: () => isClockSkewError,
       isRetryableByTrait: () => isRetryableByTrait,
@@ -9794,6 +11832,7 @@ var require_dist_cjs24 = __commonJS({
     var TRANSIENT_ERROR_CODES = ["TimeoutError", "RequestTimeout", "RequestTimeoutException"];
     var TRANSIENT_ERROR_STATUS_CODES = [500, 502, 503, 504];
     var NODEJS_TIMEOUT_ERROR_CODES = ["ECONNRESET", "ECONNREFUSED", "EPIPE", "ETIMEDOUT"];
+    var NODEJS_NETWORK_ERROR_CODES = ["EHOSTUNREACH", "ENETUNREACH", "ENOTFOUND"];
     var isRetryableByTrait = /* @__PURE__ */ __name((error) => error.$retryable !== void 0, "isRetryableByTrait");
     var isClockSkewError = /* @__PURE__ */ __name(
       (error) => CLOCK_SKEW_ERROR_CODES.includes(error.name),
@@ -9803,6 +11842,25 @@ var require_dist_cjs24 = __commonJS({
       (error) => error.$metadata?.clockSkewCorrected,
       "isClockSkewCorrectedError",
     );
+    var isBrowserNetworkError = /* @__PURE__ */ __name((error) => {
+      const errorMessages = /* @__PURE__ */ new Set([
+        "Failed to fetch",
+        // Chrome
+        "NetworkError when attempting to fetch resource",
+        // Firefox
+        "The Internet connection appears to be offline",
+        // Safari 16
+        "Load failed",
+        // Safari 17+
+        "Network request failed",
+        // `cross-fetch`
+      ]);
+      const isValid = error && error instanceof TypeError;
+      if (!isValid) {
+        return false;
+      }
+      return errorMessages.has(error.message);
+    }, "isBrowserNetworkError");
     var isThrottlingError = /* @__PURE__ */ __name(
       (error) =>
         error.$metadata?.httpStatusCode === 429 ||
@@ -9815,7 +11873,9 @@ var require_dist_cjs24 = __commonJS({
         isClockSkewCorrectedError(error) ||
         TRANSIENT_ERROR_CODES.includes(error.name) ||
         NODEJS_TIMEOUT_ERROR_CODES.includes(error?.code || "") ||
+        NODEJS_NETWORK_ERROR_CODES.includes(error?.code || "") ||
         TRANSIENT_ERROR_STATUS_CODES.includes(error.$metadata?.httpStatusCode || 0) ||
+        isBrowserNetworkError(error) ||
         (error.cause !== void 0 && depth <= 10 && isTransientError(error.cause, depth + 1)),
       "isTransientError",
     );
@@ -10227,7 +12287,7 @@ var require_dist_cjs26 = __commonJS({
       retryMiddlewareOptions: () => retryMiddlewareOptions,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_protocol_http9 = require_dist_cjs4();
+    var import_protocol_http13 = require_dist_cjs3();
     var import_uuid = (init_esm_node(), __toCommonJS(esm_node_exports));
     var import_util_retry2 = require_dist_cjs25();
     var getDefaultRetryQuota = /* @__PURE__ */ __name((initialRetryTokens, options) => {
@@ -10313,12 +12373,12 @@ var require_dist_cjs26 = __commonJS({
           let totalDelay = 0;
           const maxAttempts = await this.getMaxAttempts();
           const { request } = args;
-          if (import_protocol_http9.HttpRequest.isInstance(request)) {
+          if (import_protocol_http13.HttpRequest.isInstance(request)) {
             request.headers[import_util_retry2.INVOCATION_ID_HEADER] = (0, import_uuid.v4)();
           }
           while (true) {
             try {
-              if (import_protocol_http9.HttpRequest.isInstance(request)) {
+              if (import_protocol_http13.HttpRequest.isInstance(request)) {
                 request.headers[import_util_retry2.REQUEST_HEADER] = `attempt=${attempts + 1}; max=${maxAttempts}`;
               }
               if (options?.beforeRequest) {
@@ -10362,7 +12422,7 @@ var require_dist_cjs26 = __commonJS({
       __name(_a, "StandardRetryStrategy"),
       _a);
     var getDelayFromRetryAfterHeader = /* @__PURE__ */ __name((response) => {
-      if (!import_protocol_http9.HttpResponse.isInstance(response)) return;
+      if (!import_protocol_http13.HttpResponse.isInstance(response)) return;
       const retryAfterHeaderName = Object.keys(response.headers).find((key) => key.toLowerCase() === "retry-after");
       if (!retryAfterHeaderName) return;
       const retryAfter = response.headers[retryAfterHeaderName];
@@ -10393,7 +12453,7 @@ var require_dist_cjs26 = __commonJS({
       }),
       __name(_a2, "AdaptiveRetryStrategy"),
       _a2);
-    var import_util_middleware4 = require_dist_cjs2();
+    var import_util_middleware6 = require_dist_cjs2();
     var ENV_MAX_ATTEMPTS = "AWS_MAX_ATTEMPTS";
     var CONFIG_MAX_ATTEMPTS = "max_attempts";
     var NODE_MAX_ATTEMPT_CONFIG_OPTIONS2 = {
@@ -10418,24 +12478,23 @@ var require_dist_cjs26 = __commonJS({
       default: import_util_retry2.DEFAULT_MAX_ATTEMPTS,
     };
     var resolveRetryConfig2 = /* @__PURE__ */ __name((input) => {
-      const { retryStrategy } = input;
-      const maxAttempts = (0, import_util_middleware4.normalizeProvider)(
-        input.maxAttempts ?? import_util_retry2.DEFAULT_MAX_ATTEMPTS,
+      const { retryStrategy, retryMode: _retryMode, maxAttempts: _maxAttempts } = input;
+      const maxAttempts = (0, import_util_middleware6.normalizeProvider)(
+        _maxAttempts ?? import_util_retry2.DEFAULT_MAX_ATTEMPTS,
       );
-      return {
-        ...input,
+      return Object.assign(input, {
         maxAttempts,
         retryStrategy: async () => {
           if (retryStrategy) {
             return retryStrategy;
           }
-          const retryMode = await (0, import_util_middleware4.normalizeProvider)(input.retryMode)();
+          const retryMode = await (0, import_util_middleware6.normalizeProvider)(_retryMode)();
           if (retryMode === import_util_retry2.RETRY_MODES.ADAPTIVE) {
             return new import_util_retry2.AdaptiveRetryStrategy(maxAttempts);
           }
           return new import_util_retry2.StandardRetryStrategy(maxAttempts);
         },
-      };
+      });
     }, "resolveRetryConfig");
     var ENV_RETRY_MODE = "AWS_RETRY_MODE";
     var CONFIG_RETRY_MODE = "retry_mode";
@@ -10447,7 +12506,7 @@ var require_dist_cjs26 = __commonJS({
     var omitRetryHeadersMiddleware = /* @__PURE__ */ __name(
       () => (next) => async (args) => {
         const { request } = args;
-        if (import_protocol_http9.HttpRequest.isInstance(request)) {
+        if (import_protocol_http13.HttpRequest.isInstance(request)) {
           delete request.headers[import_util_retry2.INVOCATION_ID_HEADER];
           delete request.headers[import_util_retry2.REQUEST_HEADER];
         }
@@ -10483,7 +12542,7 @@ var require_dist_cjs26 = __commonJS({
           let attempts = 0;
           let totalRetryDelay = 0;
           const { request } = args;
-          const isRequest = import_protocol_http9.HttpRequest.isInstance(request);
+          const isRequest = import_protocol_http13.HttpRequest.isInstance(request);
           if (isRequest) {
             request.headers[import_util_retry2.INVOCATION_ID_HEADER] = (0, import_uuid.v4)();
           }
@@ -10571,7 +12630,7 @@ var require_dist_cjs26 = __commonJS({
       "getRetryPlugin",
     );
     var getRetryAfterHint = /* @__PURE__ */ __name((response) => {
-      if (!import_protocol_http9.HttpResponse.isInstance(response)) return;
+      if (!import_protocol_http13.HttpResponse.isInstance(response)) return;
       const retryAfterHeaderName = Object.keys(response.headers).find((key) => key.toLowerCase() === "retry-after");
       if (!retryAfterHeaderName) return;
       const retryAfter = response.headers[retryAfterHeaderName];
@@ -10933,9 +12992,9 @@ var require_dist_cjs28 = __commonJS({
     }
     __name(getSelectorName, "getSelectorName");
     var fromEnv = /* @__PURE__ */ __name(
-      (envVarSelector, logger) => async () => {
+      (envVarSelector, options) => async () => {
         try {
-          const config = envVarSelector(process.env);
+          const config = envVarSelector(process.env, options);
           if (config === void 0) {
             throw new Error();
           }
@@ -10943,7 +13002,7 @@ var require_dist_cjs28 = __commonJS({
         } catch (e) {
           throw new import_property_provider2.CredentialsProviderError(
             e.message || `Not found in ENV: ${getSelectorName(envVarSelector.toString())}`,
-            { logger },
+            { logger: options?.logger },
           );
         }
       },
@@ -10987,14 +13046,17 @@ var require_dist_cjs28 = __commonJS({
       "fromStatic",
     );
     var loadConfig = /* @__PURE__ */ __name(
-      ({ environmentVariableSelector, configFileSelector, default: defaultValue }, configuration = {}) =>
-        (0, import_property_provider2.memoize)(
+      ({ environmentVariableSelector, configFileSelector, default: defaultValue }, configuration = {}) => {
+        const { signingName, logger: logger3 } = configuration;
+        const envOptions = { signingName, logger: logger3 };
+        return (0, import_property_provider2.memoize)(
           (0, import_property_provider2.chain)(
-            fromEnv(environmentVariableSelector),
+            fromEnv(environmentVariableSelector, envOptions),
             fromSharedConfigFiles(configFileSelector, configuration),
             fromStatic(defaultValue),
           ),
-        ),
+        );
+      },
       "loadConfig",
     );
   },
@@ -11300,18 +13362,17 @@ var require_dist_cjs33 = __commonJS({
         ),
       default: false,
     };
-    var import_util_middleware4 = require_dist_cjs2();
+    var import_util_middleware6 = require_dist_cjs2();
     var resolveCustomEndpointsConfig2 = /* @__PURE__ */ __name((input) => {
-      const { endpoint, urlParser } = input;
-      return {
-        ...input,
-        tls: input.tls ?? true,
-        endpoint: (0, import_util_middleware4.normalizeProvider)(
+      const { tls, endpoint, urlParser, useDualstackEndpoint } = input;
+      return Object.assign(input, {
+        tls: tls ?? true,
+        endpoint: (0, import_util_middleware6.normalizeProvider)(
           typeof endpoint === "string" ? urlParser(endpoint) : endpoint,
         ),
         isCustomEndpoint: true,
-        useDualstackEndpoint: (0, import_util_middleware4.normalizeProvider)(input.useDualstackEndpoint ?? false),
-      };
+        useDualstackEndpoint: (0, import_util_middleware6.normalizeProvider)(useDualstackEndpoint ?? false),
+      });
     }, "resolveCustomEndpointsConfig");
     var getEndpointFromRegion = /* @__PURE__ */ __name(async (input) => {
       const { tls = true } = input;
@@ -11329,19 +13390,18 @@ var require_dist_cjs33 = __commonJS({
       return input.urlParser(`${tls ? "https:" : "http:"}//${hostname}`);
     }, "getEndpointFromRegion");
     var resolveEndpointsConfig = /* @__PURE__ */ __name((input) => {
-      const useDualstackEndpoint = (0, import_util_middleware4.normalizeProvider)(input.useDualstackEndpoint ?? false);
-      const { endpoint, useFipsEndpoint, urlParser } = input;
-      return {
-        ...input,
-        tls: input.tls ?? true,
+      const useDualstackEndpoint = (0, import_util_middleware6.normalizeProvider)(input.useDualstackEndpoint ?? false);
+      const { endpoint, useFipsEndpoint, urlParser, tls } = input;
+      return Object.assign(input, {
+        tls: tls ?? true,
         endpoint: endpoint
-          ? (0, import_util_middleware4.normalizeProvider)(
+          ? (0, import_util_middleware6.normalizeProvider)(
               typeof endpoint === "string" ? urlParser(endpoint) : endpoint,
             )
           : () => getEndpointFromRegion({ ...input, useDualstackEndpoint, useFipsEndpoint }),
         isCustomEndpoint: !!endpoint,
         useDualstackEndpoint,
-      };
+      });
     }, "resolveEndpointsConfig");
     var REGION_ENV_NAME = "AWS_REGION";
     var REGION_INI_NAME = "region";
@@ -11373,8 +13433,7 @@ var require_dist_cjs33 = __commonJS({
       if (!region) {
         throw new Error("Region is missing");
       }
-      return {
-        ...input,
+      return Object.assign(input, {
         region: async () => {
           if (typeof region === "string") {
             return getRealRegion(region);
@@ -11389,7 +13448,7 @@ var require_dist_cjs33 = __commonJS({
           }
           return typeof useFipsEndpoint !== "function" ? Promise.resolve(!!useFipsEndpoint) : useFipsEndpoint();
         },
-      };
+      });
     }, "resolveRegionConfig");
     var getHostnameFromVariants = /* @__PURE__ */ __name(
       (variants = [], { useFipsEndpoint, useDualstackEndpoint }) =>
@@ -11629,7 +13688,7 @@ var require_dist_cjs34 = __commonJS({
       "http:": true,
       "https:": true,
     };
-    var getCmdsUri = /* @__PURE__ */ __name(async ({ logger }) => {
+    var getCmdsUri = /* @__PURE__ */ __name(async ({ logger: logger3 }) => {
       if (process.env[ENV_CMDS_RELATIVE_URI]) {
         return {
           hostname: CMDS_IP,
@@ -11643,7 +13702,7 @@ var require_dist_cjs34 = __commonJS({
             `${parsed.hostname} is not a valid container metadata service hostname`,
             {
               tryNextLink: false,
-              logger,
+              logger: logger3,
             },
           );
         }
@@ -11652,7 +13711,7 @@ var require_dist_cjs34 = __commonJS({
             `${parsed.protocol} is not a valid container metadata service protocol`,
             {
               tryNextLink: false,
-              logger,
+              logger: logger3,
             },
           );
         }
@@ -11665,7 +13724,7 @@ var require_dist_cjs34 = __commonJS({
         `The container metadata credential provider cannot be used unless the ${ENV_CMDS_RELATIVE_URI} or ${ENV_CMDS_FULL_URI} environment variable is set`,
         {
           tryNextLink: false,
-          logger,
+          logger: logger3,
         },
       );
     }, "getCmdsUri");
@@ -11731,12 +13790,12 @@ var require_dist_cjs34 = __commonJS({
     var STATIC_STABILITY_REFRESH_INTERVAL_SECONDS = 5 * 60;
     var STATIC_STABILITY_REFRESH_INTERVAL_JITTER_WINDOW_SECONDS = 5 * 60;
     var STATIC_STABILITY_DOC_URL = "https://docs.aws.amazon.com/sdkref/latest/guide/feature-static-credentials.html";
-    var getExtendedInstanceMetadataCredentials = /* @__PURE__ */ __name((credentials, logger) => {
+    var getExtendedInstanceMetadataCredentials = /* @__PURE__ */ __name((credentials, logger3) => {
       const refreshInterval =
         STATIC_STABILITY_REFRESH_INTERVAL_SECONDS +
         Math.floor(Math.random() * STATIC_STABILITY_REFRESH_INTERVAL_JITTER_WINDOW_SECONDS);
       const newExpiration = new Date(Date.now() + refreshInterval * 1e3);
-      logger.warn(
+      logger3.warn(
         `Attempting credential expiration extension due to a credential service availability issue. A refresh of these credentials will be attempted after ${new Date(newExpiration)}.
 For more information, please visit: ` + STATIC_STABILITY_DOC_URL,
       );
@@ -11748,19 +13807,19 @@ For more information, please visit: ` + STATIC_STABILITY_DOC_URL,
       };
     }, "getExtendedInstanceMetadataCredentials");
     var staticStabilityProvider = /* @__PURE__ */ __name((provider, options = {}) => {
-      const logger = options?.logger || console;
+      const logger3 = options?.logger || console;
       let pastCredentials;
       return async () => {
         let credentials;
         try {
           credentials = await provider();
           if (credentials.expiration && credentials.expiration.getTime() < Date.now()) {
-            credentials = getExtendedInstanceMetadataCredentials(credentials, logger);
+            credentials = getExtendedInstanceMetadataCredentials(credentials, logger3);
           }
         } catch (e) {
           if (pastCredentials) {
-            logger.warn("Credential renew failed: ", e);
-            credentials = getExtendedInstanceMetadataCredentials(pastCredentials, logger);
+            logger3.warn("Credential renew failed: ", e);
+            credentials = getExtendedInstanceMetadataCredentials(pastCredentials, logger3);
           } else {
             throw e;
           }
@@ -11780,7 +13839,7 @@ For more information, please visit: ` + STATIC_STABILITY_DOC_URL,
     );
     var getInstanceMetadataProvider = /* @__PURE__ */ __name((init = {}) => {
       let disableFetchToken = false;
-      const { logger, profile } = init;
+      const { logger: logger3, profile } = init;
       const { timeout, maxRetries } = providerConfigFromInit(init);
       const getCredentials = /* @__PURE__ */ __name(async (maxRetries2, options) => {
         const isImdsV1Fallback = disableFetchToken || options.headers?.[X_AWS_EC2_METADATA_TOKEN] == null;
@@ -11856,7 +13915,7 @@ For more information, please visit: ` + STATIC_STABILITY_DOC_URL,
       return async () => {
         const endpoint = await getInstanceMetadataEndpoint();
         if (disableFetchToken) {
-          logger?.debug("AWS SDK Instance Metadata", "using v1 fallback (no token fetch)");
+          logger3?.debug("AWS SDK Instance Metadata", "using v1 fallback (no token fetch)");
           return getCredentials(maxRetries, { ...endpoint, timeout });
         } else {
           let token;
@@ -11870,7 +13929,7 @@ For more information, please visit: ` + STATIC_STABILITY_DOC_URL,
             } else if (error.message === "TimeoutError" || [403, 404, 405].includes(error.statusCode)) {
               disableFetchToken = true;
             }
-            logger?.debug("AWS SDK Instance Metadata", "using v1 fallback (initial)");
+            logger3?.debug("AWS SDK Instance Metadata", "using v1 fallback (initial)");
             return getCredentials(maxRetries, { ...endpoint, timeout });
           }
           return getCredentials(maxRetries, {
@@ -12072,22 +14131,22 @@ var require_dist_cjs36 = __commonJS({
       return to;
     };
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
+    var index_exports = {};
+    __export2(index_exports, {
       getHostHeaderPlugin: () => getHostHeaderPlugin2,
       hostHeaderMiddleware: () => hostHeaderMiddleware,
       hostHeaderMiddlewareOptions: () => hostHeaderMiddlewareOptions,
       resolveHostHeaderConfig: () => resolveHostHeaderConfig2,
     });
-    module2.exports = __toCommonJS2(src_exports);
-    var import_protocol_http9 = require_dist_cjs4();
+    module2.exports = __toCommonJS2(index_exports);
+    var import_protocol_http13 = require_dist_cjs3();
     function resolveHostHeaderConfig2(input) {
       return input;
     }
     __name(resolveHostHeaderConfig2, "resolveHostHeaderConfig");
     var hostHeaderMiddleware = /* @__PURE__ */ __name(
       (options) => (next) => async (args) => {
-        if (!import_protocol_http9.HttpRequest.isInstance(args.request)) return next(args);
+        if (!import_protocol_http13.HttpRequest.isInstance(args.request)) return next(args);
         const { request } = args;
         const { handlerProtocol = "" } = options.requestHandler.metadata || {};
         if (handlerProtocol.indexOf("h2") >= 0 && !request.headers[":authority"]) {
@@ -12111,9 +14170,9 @@ var require_dist_cjs36 = __commonJS({
     };
     var getHostHeaderPlugin2 = /* @__PURE__ */ __name(
       (options) => ({
-        applyToStack: (clientStack) => {
+        applyToStack: /* @__PURE__ */ __name((clientStack) => {
           clientStack.add(hostHeaderMiddleware(options), hostHeaderMiddlewareOptions);
-        },
+        }, "applyToStack"),
       }),
       "getHostHeaderPlugin",
     );
@@ -12147,23 +14206,23 @@ var require_dist_cjs37 = __commonJS({
       return to;
     };
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
+    var index_exports = {};
+    __export2(index_exports, {
       getLoggerPlugin: () => getLoggerPlugin2,
       loggerMiddleware: () => loggerMiddleware,
       loggerMiddlewareOptions: () => loggerMiddlewareOptions,
     });
-    module2.exports = __toCommonJS2(src_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var loggerMiddleware = /* @__PURE__ */ __name(
       () => (next, context) => async (args) => {
         try {
           const response = await next(args);
-          const { clientName, commandName, logger, dynamoDbDocumentClientOptions = {} } = context;
+          const { clientName, commandName, logger: logger3, dynamoDbDocumentClientOptions = {} } = context;
           const { overrideInputFilterSensitiveLog, overrideOutputFilterSensitiveLog } = dynamoDbDocumentClientOptions;
           const inputFilterSensitiveLog = overrideInputFilterSensitiveLog ?? context.inputFilterSensitiveLog;
           const outputFilterSensitiveLog = overrideOutputFilterSensitiveLog ?? context.outputFilterSensitiveLog;
           const { $metadata, ...outputWithoutMetadata } = response.output;
-          logger?.info?.({
+          logger3?.info?.({
             clientName,
             commandName,
             input: inputFilterSensitiveLog(args.input),
@@ -12172,10 +14231,10 @@ var require_dist_cjs37 = __commonJS({
           });
           return response;
         } catch (error) {
-          const { clientName, commandName, logger, dynamoDbDocumentClientOptions = {} } = context;
+          const { clientName, commandName, logger: logger3, dynamoDbDocumentClientOptions = {} } = context;
           const { overrideInputFilterSensitiveLog } = dynamoDbDocumentClientOptions;
           const inputFilterSensitiveLog = overrideInputFilterSensitiveLog ?? context.inputFilterSensitiveLog;
-          logger?.error?.({
+          logger3?.error?.({
             clientName,
             commandName,
             input: inputFilterSensitiveLog(args.input),
@@ -12195,9 +14254,9 @@ var require_dist_cjs37 = __commonJS({
     };
     var getLoggerPlugin2 = /* @__PURE__ */ __name(
       (options) => ({
-        applyToStack: (clientStack) => {
+        applyToStack: /* @__PURE__ */ __name((clientStack) => {
           clientStack.add(loggerMiddleware(), loggerMiddlewareOptions);
-        },
+        }, "applyToStack"),
       }),
       "getLoggerPlugin",
     );
@@ -12231,25 +14290,27 @@ var require_dist_cjs38 = __commonJS({
       return to;
     };
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var src_exports = {};
-    __export2(src_exports, {
+    var index_exports = {};
+    __export2(index_exports, {
       addRecursionDetectionMiddlewareOptions: () => addRecursionDetectionMiddlewareOptions,
       getRecursionDetectionPlugin: () => getRecursionDetectionPlugin2,
       recursionDetectionMiddleware: () => recursionDetectionMiddleware,
     });
-    module2.exports = __toCommonJS2(src_exports);
-    var import_protocol_http9 = require_dist_cjs4();
+    module2.exports = __toCommonJS2(index_exports);
+    var import_protocol_http13 = require_dist_cjs3();
     var TRACE_ID_HEADER_NAME = "X-Amzn-Trace-Id";
     var ENV_LAMBDA_FUNCTION_NAME = "AWS_LAMBDA_FUNCTION_NAME";
     var ENV_TRACE_ID = "_X_AMZN_TRACE_ID";
     var recursionDetectionMiddleware = /* @__PURE__ */ __name(
       (options) => (next) => async (args) => {
         const { request } = args;
-        if (
-          !import_protocol_http9.HttpRequest.isInstance(request) ||
-          options.runtime !== "node" ||
-          request.headers.hasOwnProperty(TRACE_ID_HEADER_NAME)
-        ) {
+        if (!import_protocol_http13.HttpRequest.isInstance(request) || options.runtime !== "node") {
+          return next(args);
+        }
+        const traceIdHeader =
+          Object.keys(request.headers ?? {}).find((h) => h.toLowerCase() === TRACE_ID_HEADER_NAME.toLowerCase()) ??
+          TRACE_ID_HEADER_NAME;
+        if (request.headers.hasOwnProperty(traceIdHeader)) {
           return next(args);
         }
         const functionName = process.env[ENV_LAMBDA_FUNCTION_NAME];
@@ -12277,9 +14338,9 @@ var require_dist_cjs38 = __commonJS({
     };
     var getRecursionDetectionPlugin2 = /* @__PURE__ */ __name(
       (options) => ({
-        applyToStack: (clientStack) => {
+        applyToStack: /* @__PURE__ */ __name((clientStack) => {
           clientStack.add(recursionDetectionMiddleware(options), addRecursionDetectionMiddlewareOptions);
-        },
+        }, "applyToStack"),
       }),
       "getRecursionDetectionPlugin",
     );
@@ -12319,12 +14380,12 @@ var require_dist_cjs39 = __commonJS({
       getContentLengthPlugin: () => getContentLengthPlugin2,
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_protocol_http9 = require_dist_cjs4();
+    var import_protocol_http13 = require_dist_cjs3();
     var CONTENT_LENGTH_HEADER = "content-length";
     function contentLengthMiddleware(bodyLengthChecker) {
       return (next) => async (args) => {
         const request = args.request;
-        if (import_protocol_http9.HttpRequest.isInstance(request)) {
+        if (import_protocol_http13.HttpRequest.isInstance(request)) {
           const { body, headers } = request;
           if (
             body &&
@@ -12403,9 +14464,9 @@ var defaultWeatherHttpAuthSchemeProvider = (authParameters) => {
   return options;
 };
 var resolveHttpAuthSchemeConfig = (config) => {
-  return {
-    ...config,
-  };
+  return Object.assign(config, {
+    authSchemePreference: (0, import_util_middleware.normalizeProvider)(config.authSchemePreference ?? []),
+  });
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/package.json
@@ -12429,35 +14490,35 @@ var package_default = {
   dependencies: {
     "@aws-crypto/sha256-browser": "5.2.0",
     "@aws-crypto/sha256-js": "5.2.0",
-    "@aws-sdk/middleware-host-header": "3.731.0",
-    "@aws-sdk/middleware-logger": "3.731.0",
-    "@aws-sdk/middleware-recursion-detection": "3.731.0",
-    "@aws-sdk/middleware-user-agent": "3.731.0",
-    "@aws-sdk/types": "3.731.0",
-    "@aws-sdk/util-user-agent-browser": "3.731.0",
-    "@aws-sdk/util-user-agent-node": "3.731.0",
-    "@smithy/config-resolver": "^4.0.1",
-    "@smithy/core": "^3.1.1",
-    "@smithy/fetch-http-handler": "^5.0.1",
-    "@smithy/hash-node": "^4.0.1",
-    "@smithy/invalid-dependency": "^4.0.1",
-    "@smithy/middleware-content-length": "^4.0.1",
-    "@smithy/middleware-retry": "^4.0.3",
-    "@smithy/middleware-serde": "^4.0.1",
-    "@smithy/middleware-stack": "^4.0.1",
-    "@smithy/node-config-provider": "^4.0.1",
-    "@smithy/node-http-handler": "^4.0.2",
-    "@smithy/protocol-http": "^5.0.1",
-    "@smithy/smithy-client": "^4.1.2",
-    "@smithy/types": "^4.1.0",
-    "@smithy/url-parser": "^4.0.1",
+    "@aws-sdk/middleware-host-header": "3.804.0",
+    "@aws-sdk/middleware-logger": "3.804.0",
+    "@aws-sdk/middleware-recursion-detection": "3.804.0",
+    "@aws-sdk/middleware-user-agent": "3.806.0",
+    "@aws-sdk/types": "3.804.0",
+    "@aws-sdk/util-user-agent-browser": "3.804.0",
+    "@aws-sdk/util-user-agent-node": "3.806.0",
+    "@smithy/config-resolver": "^4.1.1",
+    "@smithy/core": "^3.3.1",
+    "@smithy/fetch-http-handler": "^5.0.2",
+    "@smithy/hash-node": "^4.0.2",
+    "@smithy/invalid-dependency": "^4.0.2",
+    "@smithy/middleware-content-length": "^4.0.2",
+    "@smithy/middleware-retry": "^4.1.4",
+    "@smithy/middleware-serde": "^4.0.3",
+    "@smithy/middleware-stack": "^4.0.2",
+    "@smithy/node-config-provider": "^4.1.0",
+    "@smithy/node-http-handler": "^4.0.4",
+    "@smithy/protocol-http": "^5.1.0",
+    "@smithy/smithy-client": "^4.2.3",
+    "@smithy/types": "^4.2.0",
+    "@smithy/url-parser": "^4.0.2",
     "@smithy/util-base64": "^4.0.0",
     "@smithy/util-body-length-browser": "^4.0.0",
     "@smithy/util-body-length-node": "^4.0.0",
-    "@smithy/util-defaults-mode-browser": "^4.0.3",
-    "@smithy/util-defaults-mode-node": "^4.0.3",
-    "@smithy/util-middleware": "^4.0.1",
-    "@smithy/util-retry": "^4.0.1",
+    "@smithy/util-defaults-mode-browser": "^4.0.11",
+    "@smithy/util-defaults-mode-node": "^4.0.11",
+    "@smithy/util-middleware": "^4.0.2",
+    "@smithy/util-retry": "^4.0.3",
     "@smithy/util-utf8": "^4.0.0",
     tslib: "^2.6.2",
   },
@@ -12467,7 +14528,7 @@ var package_default = {
     concurrently: "7.0.0",
     "downlevel-dts": "0.10.1",
     rimraf: "^3.0.0",
-    typescript: "~5.2.2",
+    typescript: "~5.8.3",
   },
   engines: {
     node: ">=18.0.0",
@@ -12499,13 +14560,13 @@ var import_util_retry = __toESM(require_dist_cjs25());
 init_dist_es();
 var import_smithy_client4 = __toESM(require_dist_cjs20());
 var import_url_parser = __toESM(require_dist_cjs31());
-var import_util_base64 = __toESM(require_dist_cjs8());
-var import_util_utf8 = __toESM(require_dist_cjs7());
+var import_util_base643 = __toESM(require_dist_cjs8());
+var import_util_utf83 = __toESM(require_dist_cjs7());
 var getRuntimeConfig = (config) => {
   return {
     apiVersion: "2006-03-01",
-    base64Decoder: config?.base64Decoder ?? import_util_base64.fromBase64,
-    base64Encoder: config?.base64Encoder ?? import_util_base64.toBase64,
+    base64Decoder: config?.base64Decoder ?? import_util_base643.fromBase64,
+    base64Encoder: config?.base64Encoder ?? import_util_base643.toBase64,
     disableHostPrefix: config?.disableHostPrefix ?? false,
     extensions: config?.extensions ?? [],
     httpAuthSchemeProvider: config?.httpAuthSchemeProvider ?? defaultWeatherHttpAuthSchemeProvider,
@@ -12518,8 +14579,8 @@ var getRuntimeConfig = (config) => {
     ],
     logger: config?.logger ?? new import_smithy_client4.NoOpLogger(),
     urlParser: config?.urlParser ?? import_url_parser.parseUrl,
-    utf8Decoder: config?.utf8Decoder ?? import_util_utf8.fromUtf8,
-    utf8Encoder: config?.utf8Encoder ?? import_util_utf8.toUtf8,
+    utf8Decoder: config?.utf8Decoder ?? import_util_utf83.fromUtf8,
+    utf8Encoder: config?.utf8Encoder ?? import_util_utf83.toUtf8,
   };
 };
 
@@ -12532,7 +14593,7 @@ var getRuntimeConfig2 = (config) => {
   const defaultsMode = (0, import_util_defaults_mode_node.resolveDefaultsModeConfig)(config);
   const defaultConfigProvider = () => defaultsMode().then(import_smithy_client5.loadConfigsForDefaultMode);
   const clientSharedValues = getRuntimeConfig(config);
-  const profileConfig = { profile: config?.profile };
+  const loaderConfig = { profile: config?.profile, logger: clientSharedValues.logger };
   return {
     ...clientSharedValues,
     ...config,
@@ -12559,10 +14620,7 @@ var getRuntimeConfig2 = (config) => {
     streamCollector: config?.streamCollector ?? import_node_http_handler.streamCollector,
     userAgentAppId:
       config?.userAgentAppId ??
-      (0, import_node_config_provider.loadConfig)(
-        import_util_user_agent_node.NODE_APP_ID_CONFIG_OPTIONS,
-        profileConfig,
-      ),
+      (0, import_node_config_provider.loadConfig)(import_util_user_agent_node.NODE_APP_ID_CONFIG_OPTIONS, loaderConfig),
   };
 };
 
@@ -12598,22 +14656,21 @@ var resolveHttpAuthRuntimeConfig = (config) => {
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/runtimeExtensions.js
-var import_protocol_http8 = __toESM(require_dist_cjs4());
+var import_protocol_http12 = __toESM(require_dist_cjs3());
 var import_smithy_client7 = __toESM(require_dist_cjs20());
-var asPartial = (t) => t;
 var resolveRuntimeExtensions = (runtimeConfig, extensions) => {
-  const extensionConfiguration = {
-    ...asPartial((0, import_smithy_client7.getDefaultExtensionConfiguration)(runtimeConfig)),
-    ...asPartial((0, import_protocol_http8.getHttpHandlerExtensionConfiguration)(runtimeConfig)),
-    ...asPartial(getHttpAuthExtensionConfiguration(runtimeConfig)),
-  };
+  const extensionConfiguration = Object.assign(
+    (0, import_smithy_client7.getDefaultExtensionConfiguration)(runtimeConfig),
+    (0, import_protocol_http12.getHttpHandlerExtensionConfiguration)(runtimeConfig),
+    getHttpAuthExtensionConfiguration(runtimeConfig),
+  );
   extensions.forEach((extension) => extension.configure(extensionConfiguration));
-  return {
-    ...runtimeConfig,
-    ...(0, import_smithy_client7.resolveDefaultRuntimeConfig)(extensionConfiguration),
-    ...(0, import_protocol_http8.resolveHttpHandlerRuntimeConfig)(extensionConfiguration),
-    ...resolveHttpAuthRuntimeConfig(extensionConfiguration),
-  };
+  return Object.assign(
+    runtimeConfig,
+    (0, import_smithy_client7.resolveDefaultRuntimeConfig)(extensionConfiguration),
+    (0, import_protocol_http12.resolveHttpHandlerRuntimeConfig)(extensionConfiguration),
+    resolveHttpAuthRuntimeConfig(extensionConfiguration),
+  );
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/WeatherClient.js
@@ -12629,14 +14686,15 @@ var import_smithy_client8 = __toESM(require_dist_cjs20());
 var WeatherClient = class extends import_smithy_client8.Client {
   constructor(...[configuration]) {
     let _config_0 = getRuntimeConfig2(configuration || {});
+    super(_config_0);
+    __publicField(this, "config");
+    this.initConfig = _config_0;
     let _config_1 = (0, import_middleware_user_agent.resolveUserAgentConfig)(_config_0);
     let _config_2 = (0, import_config_resolver.resolveCustomEndpointsConfig)(_config_1);
     let _config_3 = (0, import_middleware_retry2.resolveRetryConfig)(_config_2);
     let _config_4 = (0, import_middleware_host_header.resolveHostHeaderConfig)(_config_3);
     let _config_5 = resolveHttpAuthSchemeConfig(_config_4);
     let _config_6 = resolveRuntimeExtensions(_config_5, configuration?.extensions || []);
-    super(_config_6);
-    __publicField(this, "config");
     this.config = _config_6;
     this.middlewareStack.use((0, import_middleware_user_agent.getUserAgentPlugin)(this.config));
     this.middlewareStack.use((0, import_middleware_retry2.getRetryPlugin)(this.config));
@@ -12658,7 +14716,7 @@ var WeatherClient = class extends import_smithy_client8.Client {
 };
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/GetCityCommand.js
-var import_middleware_serde2 = __toESM(require_dist_cjs3());
+var import_middleware_serde2 = __toESM(require_dist_cjs4());
 var import_smithy_client9 = __toESM(require_dist_cjs20());
 var GetCityCommand = class extends import_smithy_client9.Command.classBuilder()
   .m(function (Command, cs, config, o) {
@@ -12676,7 +14734,7 @@ var GetCityCommand = class extends import_smithy_client9.Command.classBuilder()
   .build() {};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/GetCurrentTimeCommand.js
-var import_middleware_serde3 = __toESM(require_dist_cjs3());
+var import_middleware_serde3 = __toESM(require_dist_cjs4());
 var import_smithy_client10 = __toESM(require_dist_cjs20());
 var GetCurrentTimeCommand = class extends import_smithy_client10.Command.classBuilder()
   .m(function (Command, cs, config, o) {
@@ -12694,7 +14752,7 @@ var GetCurrentTimeCommand = class extends import_smithy_client10.Command.classBu
   .build() {};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/GetForecastCommand.js
-var import_middleware_serde4 = __toESM(require_dist_cjs3());
+var import_middleware_serde4 = __toESM(require_dist_cjs4());
 var import_smithy_client11 = __toESM(require_dist_cjs20());
 var GetForecastCommand = class extends import_smithy_client11.Command.classBuilder()
   .m(function (Command, cs, config, o) {
@@ -12712,7 +14770,7 @@ var GetForecastCommand = class extends import_smithy_client11.Command.classBuild
   .build() {};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/ListCitiesCommand.js
-var import_middleware_serde5 = __toESM(require_dist_cjs3());
+var import_middleware_serde5 = __toESM(require_dist_cjs4());
 var import_smithy_client12 = __toESM(require_dist_cjs20());
 var ListCitiesCommand = class extends import_smithy_client12.Command.classBuilder()
   .m(function (Command, cs, config, o) {

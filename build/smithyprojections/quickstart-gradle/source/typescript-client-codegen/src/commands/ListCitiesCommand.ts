@@ -66,6 +66,7 @@ export interface ListCitiesCommandOutput extends ListCitiesOutput, __MetadataBea
  * @throws {@link WeatherServiceException}
  * <p>Base exception class for all service exceptions from Weather service.</p>
  *
+ *
  */
 export class ListCitiesCommand extends $Command.classBuilder<ListCitiesCommandInput, ListCitiesCommandOutput, WeatherClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
       .m(function (this: any, Command: any, cs: any, config: WeatherClientResolvedConfig, o: any) {

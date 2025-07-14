@@ -59,6 +59,7 @@ export interface GetForecastCommandOutput extends GetForecastOutput, __MetadataB
  * @throws {@link WeatherServiceException}
  * <p>Base exception class for all service exceptions from Weather service.</p>
  *
+ *
  */
 export class GetForecastCommand extends $Command.classBuilder<GetForecastCommandInput, GetForecastCommandOutput, WeatherClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
       .m(function (this: any, Command: any, cs: any, config: WeatherClientResolvedConfig, o: any) {

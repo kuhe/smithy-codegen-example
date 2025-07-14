@@ -32,7 +32,7 @@ export const getRuntimeConfig = (config: WeatherClientConfig) => {
   const defaultsMode = resolveDefaultsModeConfig(config);
   const defaultConfigProvider = () => defaultsMode().then(loadConfigsForDefaultMode);
   const clientSharedValues = getSharedRuntimeConfig(config);
-  const profileConfig = { profile: config?.profile };return {
+  const loaderConfig = { profile: config?.profile, logger: clientSharedValues.logger };return {
     ...clientSharedValues,
     ...config,
     runtime: "node",
@@ -44,6 +44,6 @@ export const getRuntimeConfig = (config: WeatherClientConfig) => {
     retryMode: config?.retryMode ?? loadNodeConfig({...NODE_RETRY_MODE_CONFIG_OPTIONS,default: async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE,}, config),
     sha256: config?.sha256 ?? Hash.bind(null, "sha256"),
     streamCollector: config?.streamCollector ?? streamCollector,
-    userAgentAppId: config?.userAgentAppId ?? loadNodeConfig(NODE_APP_ID_CONFIG_OPTIONS, profileConfig),
+    userAgentAppId: config?.userAgentAppId ?? loadNodeConfig(NODE_APP_ID_CONFIG_OPTIONS, loaderConfig),
   };
 };
