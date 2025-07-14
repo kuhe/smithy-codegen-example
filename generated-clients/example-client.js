@@ -91,6 +91,16 @@ var resolveHttpAuthSchemeConfig = (config) => {
   });
 };
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/endpoint/EndpointParameters.js
+var resolveClientEndpointParameters = (options) => {
+  return Object.assign(options, {
+    defaultSigningName: "",
+  });
+};
+var commonParams = {
+  endpoint: { type: "builtInParams", name: "endpoint" },
+};
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/package.json
 var package_default = {
   name: "@smithy/typescript-example-client",
@@ -112,35 +122,37 @@ var package_default = {
   dependencies: {
     "@aws-crypto/sha256-browser": "5.2.0",
     "@aws-crypto/sha256-js": "5.2.0",
-    "@aws-sdk/middleware-host-header": "3.804.0",
-    "@aws-sdk/middleware-logger": "3.804.0",
-    "@aws-sdk/middleware-recursion-detection": "3.804.0",
-    "@aws-sdk/middleware-user-agent": "3.806.0",
-    "@aws-sdk/types": "3.804.0",
-    "@aws-sdk/util-user-agent-browser": "3.804.0",
-    "@aws-sdk/util-user-agent-node": "3.806.0",
-    "@smithy/config-resolver": "^4.1.1",
-    "@smithy/core": "^3.3.1",
-    "@smithy/fetch-http-handler": "^5.0.2",
-    "@smithy/hash-node": "^4.0.2",
-    "@smithy/invalid-dependency": "^4.0.2",
-    "@smithy/middleware-content-length": "^4.0.2",
-    "@smithy/middleware-retry": "^4.1.4",
-    "@smithy/middleware-serde": "^4.0.3",
-    "@smithy/middleware-stack": "^4.0.2",
-    "@smithy/node-config-provider": "^4.1.0",
-    "@smithy/node-http-handler": "^4.0.4",
-    "@smithy/protocol-http": "^5.1.0",
-    "@smithy/smithy-client": "^4.2.3",
-    "@smithy/types": "^4.2.0",
-    "@smithy/url-parser": "^4.0.2",
+    "@aws-sdk/middleware-host-header": "3.840.0",
+    "@aws-sdk/middleware-logger": "3.840.0",
+    "@aws-sdk/middleware-recursion-detection": "3.840.0",
+    "@aws-sdk/middleware-user-agent": "3.844.0",
+    "@aws-sdk/types": "3.840.0",
+    "@aws-sdk/util-user-agent-browser": "3.840.0",
+    "@aws-sdk/util-user-agent-node": "3.844.0",
+    "@smithy/config-resolver": "^4.1.4",
+    "@smithy/core": "^3.7.0",
+    "@smithy/fetch-http-handler": "^5.1.0",
+    "@smithy/hash-node": "^4.0.4",
+    "@smithy/invalid-dependency": "^4.0.4",
+    "@smithy/middleware-content-length": "^4.0.4",
+    "@smithy/middleware-endpoint": "^4.1.14",
+    "@smithy/middleware-retry": "^4.1.15",
+    "@smithy/middleware-serde": "^4.0.8",
+    "@smithy/middleware-stack": "^4.0.4",
+    "@smithy/node-config-provider": "^4.1.3",
+    "@smithy/node-http-handler": "^4.1.0",
+    "@smithy/protocol-http": "^5.1.2",
+    "@smithy/smithy-client": "^4.4.6",
+    "@smithy/types": "^4.3.1",
+    "@smithy/url-parser": "^4.0.4",
     "@smithy/util-base64": "^4.0.0",
     "@smithy/util-body-length-browser": "^4.0.0",
     "@smithy/util-body-length-node": "^4.0.0",
-    "@smithy/util-defaults-mode-browser": "^4.0.11",
-    "@smithy/util-defaults-mode-node": "^4.0.11",
-    "@smithy/util-middleware": "^4.0.2",
-    "@smithy/util-retry": "^4.0.3",
+    "@smithy/util-defaults-mode-browser": "^4.0.22",
+    "@smithy/util-defaults-mode-node": "^4.0.22",
+    "@smithy/util-endpoints": "^3.0.6",
+    "@smithy/util-middleware": "^4.0.4",
+    "@smithy/util-retry": "^4.0.6",
     "@smithy/util-utf8": "^4.0.0",
     tslib: "^2.6.2",
   },
@@ -3426,6 +3438,548 @@ var AdaptiveRetryStrategy = class {
   }
 };
 
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/endpoint/ruleset.js
+var ruleSet = {
+  version: "1.0",
+  parameters: {
+    endpoint: {
+      type: "string",
+      builtIn: "SDK::Endpoint",
+      documentation: "Endpoint used for making requests. Should be formatted as a URI.",
+    },
+  },
+  rules: [
+    {
+      conditions: [
+        {
+          fn: "isSet",
+          argv: [
+            {
+              ref: "endpoint",
+            },
+          ],
+        },
+      ],
+      endpoint: {
+        url: {
+          ref: "endpoint",
+        },
+      },
+      type: "endpoint",
+    },
+    {
+      conditions: [],
+      error: "(default endpointRuleSet) endpoint is not set - you must configure an endpoint.",
+      type: "error",
+    },
+  ],
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/cache/EndpointCache.js
+var EndpointCache = class {
+  constructor({ size, params }) {
+    this.data = /* @__PURE__ */ new Map();
+    this.parameters = [];
+    this.capacity = size ?? 50;
+    if (params) {
+      this.parameters = params;
+    }
+  }
+  get(endpointParams, resolver) {
+    const key = this.hash(endpointParams);
+    if (key === false) {
+      return resolver();
+    }
+    if (!this.data.has(key)) {
+      if (this.data.size > this.capacity + 10) {
+        const keys = this.data.keys();
+        let i = 0;
+        while (true) {
+          const { value, done } = keys.next();
+          this.data.delete(value);
+          if (done || ++i > 10) {
+            break;
+          }
+        }
+      }
+      this.data.set(key, resolver());
+    }
+    return this.data.get(key);
+  }
+  size() {
+    return this.data.size;
+  }
+  hash(endpointParams) {
+    let buffer = "";
+    const { parameters } = this;
+    if (parameters.length === 0) {
+      return false;
+    }
+    for (const param of parameters) {
+      const val = String(endpointParams[param] ?? "");
+      if (val.includes("|;")) {
+        return false;
+      }
+      buffer += val + "|;";
+    }
+    return buffer;
+  }
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/isIpAddress.js
+var IP_V4_REGEX = new RegExp(
+  `^(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}$`,
+);
+var isIpAddress = (value) => IP_V4_REGEX.test(value) || (value.startsWith("[") && value.endsWith("]"));
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/isValidHostLabel.js
+var VALID_HOST_LABEL_REGEX = new RegExp(`^(?!.*-$)(?!-)[a-zA-Z0-9-]{1,63}$`);
+var isValidHostLabel = (value, allowSubDomains = false) => {
+  if (!allowSubDomains) {
+    return VALID_HOST_LABEL_REGEX.test(value);
+  }
+  const labels = value.split(".");
+  for (const label of labels) {
+    if (!isValidHostLabel(label)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/customEndpointFunctions.js
+var customEndpointFunctions = {};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/debug/debugId.js
+var debugId = "endpoints";
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/debug/toDebugString.js
+function toDebugString(input) {
+  if (typeof input !== "object" || input == null) {
+    return input;
+  }
+  if ("ref" in input) {
+    return `$${toDebugString(input.ref)}`;
+  }
+  if ("fn" in input) {
+    return `${input.fn}(${(input.argv || []).map(toDebugString).join(", ")})`;
+  }
+  return JSON.stringify(input, null, 2);
+}
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/types/EndpointError.js
+var EndpointError = class extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "EndpointError";
+  }
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/booleanEquals.js
+var booleanEquals = (value1, value2) => value1 === value2;
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/getAttrPathList.js
+var getAttrPathList = (path) => {
+  const parts = path.split(".");
+  const pathList = [];
+  for (const part of parts) {
+    const squareBracketIndex = part.indexOf("[");
+    if (squareBracketIndex !== -1) {
+      if (part.indexOf("]") !== part.length - 1) {
+        throw new EndpointError(`Path: '${path}' does not end with ']'`);
+      }
+      const arrayIndex = part.slice(squareBracketIndex + 1, -1);
+      if (Number.isNaN(parseInt(arrayIndex))) {
+        throw new EndpointError(`Invalid array index: '${arrayIndex}' in path: '${path}'`);
+      }
+      if (squareBracketIndex !== 0) {
+        pathList.push(part.slice(0, squareBracketIndex));
+      }
+      pathList.push(arrayIndex);
+    } else {
+      pathList.push(part);
+    }
+  }
+  return pathList;
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/getAttr.js
+var getAttr = (value, path) =>
+  getAttrPathList(path).reduce((acc, index) => {
+    if (typeof acc !== "object") {
+      throw new EndpointError(`Index '${index}' in '${path}' not found in '${JSON.stringify(value)}'`);
+    } else if (Array.isArray(acc)) {
+      return acc[parseInt(index)];
+    }
+    return acc[index];
+  }, value);
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/isSet.js
+var isSet = (value) => value != null;
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/not.js
+var not = (value) => !value;
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/parseURL.js
+var DEFAULT_PORTS = {
+  [EndpointURLScheme.HTTP]: 80,
+  [EndpointURLScheme.HTTPS]: 443,
+};
+var parseURL = (value) => {
+  const whatwgURL = (() => {
+    try {
+      if (value instanceof URL) {
+        return value;
+      }
+      if (typeof value === "object" && "hostname" in value) {
+        const { hostname: hostname2, port, protocol: protocol2 = "", path = "", query = {} } = value;
+        const url = new URL(`${protocol2}//${hostname2}${port ? `:${port}` : ""}${path}`);
+        url.search = Object.entries(query)
+          .map(([k, v]) => `${k}=${v}`)
+          .join("&");
+        return url;
+      }
+      return new URL(value);
+    } catch (error) {
+      return null;
+    }
+  })();
+  if (!whatwgURL) {
+    console.error(`Unable to parse ${JSON.stringify(value)} as a whatwg URL.`);
+    return null;
+  }
+  const urlString = whatwgURL.href;
+  const { host, hostname, pathname, protocol, search } = whatwgURL;
+  if (search) {
+    return null;
+  }
+  const scheme = protocol.slice(0, -1);
+  if (!Object.values(EndpointURLScheme).includes(scheme)) {
+    return null;
+  }
+  const isIp = isIpAddress(hostname);
+  const inputContainsDefaultPort =
+    urlString.includes(`${host}:${DEFAULT_PORTS[scheme]}`) ||
+    (typeof value === "string" && value.includes(`${host}:${DEFAULT_PORTS[scheme]}`));
+  const authority = `${host}${inputContainsDefaultPort ? `:${DEFAULT_PORTS[scheme]}` : ``}`;
+  return {
+    scheme,
+    authority,
+    path: pathname,
+    normalizedPath: pathname.endsWith("/") ? pathname : `${pathname}/`,
+    isIp,
+  };
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/stringEquals.js
+var stringEquals = (value1, value2) => value1 === value2;
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/substring.js
+var substring = (input, start, stop, reverse) => {
+  if (start >= stop || input.length < stop) {
+    return null;
+  }
+  if (!reverse) {
+    return input.substring(start, stop);
+  }
+  return input.substring(input.length - stop, input.length - start);
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/uriEncode.js
+var uriEncode = (value) =>
+  encodeURIComponent(value).replace(/[!*'()]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/endpointFunctions.js
+var endpointFunctions = {
+  booleanEquals,
+  getAttr,
+  isSet,
+  isValidHostLabel,
+  not,
+  parseURL,
+  stringEquals,
+  substring,
+  uriEncode,
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateTemplate.js
+var evaluateTemplate = (template, options) => {
+  const evaluatedTemplateArr = [];
+  const templateContext = {
+    ...options.endpointParams,
+    ...options.referenceRecord,
+  };
+  let currentIndex = 0;
+  while (currentIndex < template.length) {
+    const openingBraceIndex = template.indexOf("{", currentIndex);
+    if (openingBraceIndex === -1) {
+      evaluatedTemplateArr.push(template.slice(currentIndex));
+      break;
+    }
+    evaluatedTemplateArr.push(template.slice(currentIndex, openingBraceIndex));
+    const closingBraceIndex = template.indexOf("}", openingBraceIndex);
+    if (closingBraceIndex === -1) {
+      evaluatedTemplateArr.push(template.slice(openingBraceIndex));
+      break;
+    }
+    if (template[openingBraceIndex + 1] === "{" && template[closingBraceIndex + 1] === "}") {
+      evaluatedTemplateArr.push(template.slice(openingBraceIndex + 1, closingBraceIndex));
+      currentIndex = closingBraceIndex + 2;
+    }
+    const parameterName = template.substring(openingBraceIndex + 1, closingBraceIndex);
+    if (parameterName.includes("#")) {
+      const [refName, attrName] = parameterName.split("#");
+      evaluatedTemplateArr.push(getAttr(templateContext[refName], attrName));
+    } else {
+      evaluatedTemplateArr.push(templateContext[parameterName]);
+    }
+    currentIndex = closingBraceIndex + 1;
+  }
+  return evaluatedTemplateArr.join("");
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/getReferenceValue.js
+var getReferenceValue = ({ ref }, options) => {
+  const referenceRecord = {
+    ...options.endpointParams,
+    ...options.referenceRecord,
+  };
+  return referenceRecord[ref];
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateExpression.js
+var evaluateExpression = (obj, keyName, options) => {
+  if (typeof obj === "string") {
+    return evaluateTemplate(obj, options);
+  } else if (obj["fn"]) {
+    return callFunction(obj, options);
+  } else if (obj["ref"]) {
+    return getReferenceValue(obj, options);
+  }
+  throw new EndpointError(`'${keyName}': ${String(obj)} is not a string, function or reference.`);
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/callFunction.js
+var callFunction = ({ fn, argv }, options) => {
+  const evaluatedArgs = argv.map((arg) =>
+    ["boolean", "number"].includes(typeof arg) ? arg : evaluateExpression(arg, "arg", options),
+  );
+  const fnSegments = fn.split(".");
+  if (fnSegments[0] in customEndpointFunctions && fnSegments[1] != null) {
+    return customEndpointFunctions[fnSegments[0]][fnSegments[1]](...evaluatedArgs);
+  }
+  return endpointFunctions[fn](...evaluatedArgs);
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateCondition.js
+var evaluateCondition = ({ assign, ...fnArgs }, options) => {
+  if (assign && assign in options.referenceRecord) {
+    throw new EndpointError(`'${assign}' is already defined in Reference Record.`);
+  }
+  const value = callFunction(fnArgs, options);
+  options.logger?.debug?.(`${debugId} evaluateCondition: ${toDebugString(fnArgs)} = ${toDebugString(value)}`);
+  return {
+    result: value === "" ? true : !!value,
+    ...(assign != null && { toAssign: { name: assign, value } }),
+  };
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateConditions.js
+var evaluateConditions = (conditions = [], options) => {
+  const conditionsReferenceRecord = {};
+  for (const condition of conditions) {
+    const { result, toAssign } = evaluateCondition(condition, {
+      ...options,
+      referenceRecord: {
+        ...options.referenceRecord,
+        ...conditionsReferenceRecord,
+      },
+    });
+    if (!result) {
+      return { result };
+    }
+    if (toAssign) {
+      conditionsReferenceRecord[toAssign.name] = toAssign.value;
+      options.logger?.debug?.(`${debugId} assign: ${toAssign.name} := ${toDebugString(toAssign.value)}`);
+    }
+  }
+  return { result: true, referenceRecord: conditionsReferenceRecord };
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/getEndpointHeaders.js
+var getEndpointHeaders = (headers, options) =>
+  Object.entries(headers).reduce(
+    (acc, [headerKey, headerVal]) => ({
+      ...acc,
+      [headerKey]: headerVal.map((headerValEntry) => {
+        const processedExpr = evaluateExpression(headerValEntry, "Header value entry", options);
+        if (typeof processedExpr !== "string") {
+          throw new EndpointError(`Header '${headerKey}' value '${processedExpr}' is not a string`);
+        }
+        return processedExpr;
+      }),
+    }),
+    {},
+  );
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/getEndpointProperty.js
+var getEndpointProperty = (property, options) => {
+  if (Array.isArray(property)) {
+    return property.map((propertyEntry) => getEndpointProperty(propertyEntry, options));
+  }
+  switch (typeof property) {
+    case "string":
+      return evaluateTemplate(property, options);
+    case "object":
+      if (property === null) {
+        throw new EndpointError(`Unexpected endpoint property: ${property}`);
+      }
+      return getEndpointProperties(property, options);
+    case "boolean":
+      return property;
+    default:
+      throw new EndpointError(`Unexpected endpoint property type: ${typeof property}`);
+  }
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/getEndpointProperties.js
+var getEndpointProperties = (properties, options) =>
+  Object.entries(properties).reduce(
+    (acc, [propertyKey, propertyVal]) => ({
+      ...acc,
+      [propertyKey]: getEndpointProperty(propertyVal, options),
+    }),
+    {},
+  );
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/getEndpointUrl.js
+var getEndpointUrl = (endpointUrl, options) => {
+  const expression = evaluateExpression(endpointUrl, "Endpoint URL", options);
+  if (typeof expression === "string") {
+    try {
+      return new URL(expression);
+    } catch (error) {
+      console.error(`Failed to construct URL with ${expression}`, error);
+      throw error;
+    }
+  }
+  throw new EndpointError(`Endpoint URL must be a string, got ${typeof expression}`);
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateEndpointRule.js
+var evaluateEndpointRule = (endpointRule, options) => {
+  const { conditions, endpoint } = endpointRule;
+  const { result, referenceRecord } = evaluateConditions(conditions, options);
+  if (!result) {
+    return;
+  }
+  const endpointRuleOptions = {
+    ...options,
+    referenceRecord: { ...options.referenceRecord, ...referenceRecord },
+  };
+  const { url, properties, headers } = endpoint;
+  options.logger?.debug?.(`${debugId} Resolving endpoint from template: ${toDebugString(endpoint)}`);
+  return {
+    ...(headers != void 0 && {
+      headers: getEndpointHeaders(headers, endpointRuleOptions),
+    }),
+    ...(properties != void 0 && {
+      properties: getEndpointProperties(properties, endpointRuleOptions),
+    }),
+    url: getEndpointUrl(url, endpointRuleOptions),
+  };
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateErrorRule.js
+var evaluateErrorRule = (errorRule, options) => {
+  const { conditions, error } = errorRule;
+  const { result, referenceRecord } = evaluateConditions(conditions, options);
+  if (!result) {
+    return;
+  }
+  throw new EndpointError(
+    evaluateExpression(error, "Error", {
+      ...options,
+      referenceRecord: { ...options.referenceRecord, ...referenceRecord },
+    }),
+  );
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateTreeRule.js
+var evaluateTreeRule = (treeRule, options) => {
+  const { conditions, rules } = treeRule;
+  const { result, referenceRecord } = evaluateConditions(conditions, options);
+  if (!result) {
+    return;
+  }
+  return evaluateRules(rules, {
+    ...options,
+    referenceRecord: { ...options.referenceRecord, ...referenceRecord },
+  });
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/evaluateRules.js
+var evaluateRules = (rules, options) => {
+  for (const rule of rules) {
+    if (rule.type === "endpoint") {
+      const endpointOrUndefined = evaluateEndpointRule(rule, options);
+      if (endpointOrUndefined) {
+        return endpointOrUndefined;
+      }
+    } else if (rule.type === "error") {
+      evaluateErrorRule(rule, options);
+    } else if (rule.type === "tree") {
+      const endpointOrUndefined = evaluateTreeRule(rule, options);
+      if (endpointOrUndefined) {
+        return endpointOrUndefined;
+      }
+    } else {
+      throw new EndpointError(`Unknown endpoint rule: ${rule}`);
+    }
+  }
+  throw new EndpointError(`Rules evaluation failed`);
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/resolveEndpoint.js
+var resolveEndpoint = (ruleSetObject, options) => {
+  const { endpointParams, logger } = options;
+  const { parameters, rules } = ruleSetObject;
+  options.logger?.debug?.(`${debugId} Initial EndpointParams: ${toDebugString(endpointParams)}`);
+  const paramsWithDefault = Object.entries(parameters)
+    .filter(([, v]) => v.default != null)
+    .map(([k, v]) => [k, v.default]);
+  if (paramsWithDefault.length > 0) {
+    for (const [paramKey, paramDefaultValue] of paramsWithDefault) {
+      endpointParams[paramKey] = endpointParams[paramKey] ?? paramDefaultValue;
+    }
+  }
+  const requiredParams = Object.entries(parameters)
+    .filter(([, v]) => v.required)
+    .map(([k]) => k);
+  for (const requiredParam of requiredParams) {
+    if (endpointParams[requiredParam] == null) {
+      throw new EndpointError(`Missing required parameter: '${requiredParam}'`);
+    }
+  }
+  const endpoint = evaluateRules(rules, { endpointParams, logger, referenceRecord: {} });
+  options.logger?.debug?.(`${debugId} Resolved endpoint: ${toDebugString(endpoint)}`);
+  return endpoint;
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/endpoint/endpointResolver.js
+var cache = new EndpointCache({
+  size: 50,
+  params: ["endpoint"],
+});
+var defaultEndpointResolver = (endpointParams, context = {}) => {
+  return cache.get(endpointParams, () =>
+    resolveEndpoint(ruleSet, {
+      endpointParams,
+      logger: context.logger,
+    }),
+  );
+};
+
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/resolveAuthOptions.js
 var resolveAuthOptions = (candidateAuthOptions, authSchemePreference) => {
   if (!authSchemePreference || authSchemePreference.length === 0) {
@@ -3491,6 +4045,30 @@ var httpAuthSchemeMiddleware = (config, mwOptions) => (next, context) => async (
   }
   return next(args);
 };
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-auth-scheme/getHttpAuthSchemeEndpointRuleSetPlugin.js
+var httpAuthSchemeEndpointRuleSetMiddlewareOptions = {
+  step: "serialize",
+  tags: ["HTTP_AUTH_SCHEME"],
+  name: "httpAuthSchemeMiddleware",
+  override: true,
+  relation: "before",
+  toMiddleware: "endpointV2Middleware",
+};
+var getHttpAuthSchemeEndpointRuleSetPlugin = (
+  config,
+  { httpAuthSchemeParametersProvider, identityProviderConfigProvider },
+) => ({
+  applyToStack: (clientStack) => {
+    clientStack.addRelativeTo(
+      httpAuthSchemeMiddleware(config, {
+        httpAuthSchemeParametersProvider,
+        identityProviderConfigProvider,
+      }),
+      httpAuthSchemeEndpointRuleSetMiddlewareOptions,
+    );
+  },
+});
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-serde/dist-es/deserializerMiddleware.js
 var deserializerMiddleware = (options, deserializer) => (next, context) => async (args) => {
@@ -3591,17 +4169,6 @@ var httpAuthSchemeMiddlewareOptions = {
   relation: "before",
   toMiddleware: serializerMiddlewareOption.name,
 };
-var getHttpAuthSchemePlugin = (config, { httpAuthSchemeParametersProvider, identityProviderConfigProvider }) => ({
-  applyToStack: (clientStack) => {
-    clientStack.addRelativeTo(
-      httpAuthSchemeMiddleware(config, {
-        httpAuthSchemeParametersProvider,
-        identityProviderConfigProvider,
-      }),
-      httpAuthSchemeMiddlewareOptions,
-    );
-  },
-});
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/middleware-http-signing/httpSigningMiddleware.js
 var defaultErrorHandler = (signingProperties) => (error) => {
@@ -4202,6 +4769,18 @@ LazyJsonString.from = (object) => {
   return LazyJsonString(JSON.stringify(object));
 };
 LazyJsonString.fromObject = LazyJsonString.from;
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/setFeature.js
+function setFeature(context, feature, value) {
+  if (!context.__smithy_context) {
+    context.__smithy_context = {
+      features: {},
+    };
+  } else if (!context.__smithy_context.features) {
+    context.__smithy_context.features = {};
+  }
+  context.__smithy_context.features[feature] = value;
+}
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/core/dist-es/util-identity-and-auth/DefaultIdentityProviderConfig.js
 var DefaultIdentityProviderConfig = class {
@@ -4832,6 +5411,7 @@ var getRuntimeConfig = (config) => {
     base64Decoder: config?.base64Decoder ?? fromBase64,
     base64Encoder: config?.base64Encoder ?? toBase64,
     disableHostPrefix: config?.disableHostPrefix ?? false,
+    endpointProvider: config?.endpointProvider ?? defaultEndpointResolver,
     extensions: config?.extensions ?? [],
     httpAuthSchemeProvider: config?.httpAuthSchemeProvider ?? defaultWeatherHttpAuthSchemeProvider,
     httpAuthSchemes: config?.httpAuthSchemes ?? [
@@ -5136,36 +5716,6 @@ function resolveUserAgentConfig(input) {
   });
 }
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/isIpAddress.js
-var IP_V4_REGEX = new RegExp(
-  `^(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}$`,
-);
-var isIpAddress = (value) => IP_V4_REGEX.test(value) || (value.startsWith("[") && value.endsWith("]"));
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/isValidHostLabel.js
-var VALID_HOST_LABEL_REGEX = new RegExp(`^(?!.*-$)(?!-)[a-zA-Z0-9-]{1,63}$`);
-var isValidHostLabel = (value, allowSubDomains = false) => {
-  if (!allowSubDomains) {
-    return VALID_HOST_LABEL_REGEX.test(value);
-  }
-  const labels = value.split(".");
-  for (const label of labels) {
-    if (!isValidHostLabel(label)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/utils/customEndpointFunctions.js
-var customEndpointFunctions = {};
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-endpoints/dist-es/lib/parseURL.js
-var DEFAULT_PORTS = {
-  [EndpointURLScheme.HTTP]: 80,
-  [EndpointURLScheme.HTTPS]: 443,
-};
-
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/util-endpoints/dist-es/lib/aws/isVirtualHostableS3Bucket.js
 var isVirtualHostableS3Bucket = (value, allowSubDomains = false) => {
   if (allowSubDomains) {
@@ -5229,6 +5779,9 @@ var partitions_default = {
         },
         "ap-east-1": {
           description: "Asia Pacific (Hong Kong)",
+        },
+        "ap-east-2": {
+          description: "Asia Pacific (Taipei)",
         },
         "ap-northeast-1": {
           description: "Asia Pacific (Tokyo)",
@@ -5523,7 +6076,7 @@ var awsEndpointFunctions = {
 customEndpointFunctions.aws = awsEndpointFunctions;
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@aws-sdk/core/dist-es/submodules/client/setFeature.js
-function setFeature(context, feature, value) {
+function setFeature2(context, feature, value) {
   if (!context.__aws_sdk_context) {
     context.__aws_sdk_context = {
       features: {},
@@ -5539,34 +6092,34 @@ var ACCOUNT_ID_ENDPOINT_REGEX = /\d{12}\.ddb/;
 async function checkFeatures(context, config, args) {
   const request = args.request;
   if (request?.headers?.["smithy-protocol"] === "rpc-v2-cbor") {
-    setFeature(context, "PROTOCOL_RPC_V2_CBOR", "M");
+    setFeature2(context, "PROTOCOL_RPC_V2_CBOR", "M");
   }
   if (typeof config.retryStrategy === "function") {
     const retryStrategy = await config.retryStrategy();
     if (typeof retryStrategy.acquireInitialRetryToken === "function") {
       if (retryStrategy.constructor?.name?.includes("Adaptive")) {
-        setFeature(context, "RETRY_MODE_ADAPTIVE", "F");
+        setFeature2(context, "RETRY_MODE_ADAPTIVE", "F");
       } else {
-        setFeature(context, "RETRY_MODE_STANDARD", "E");
+        setFeature2(context, "RETRY_MODE_STANDARD", "E");
       }
     } else {
-      setFeature(context, "RETRY_MODE_LEGACY", "D");
+      setFeature2(context, "RETRY_MODE_LEGACY", "D");
     }
   }
   if (typeof config.accountIdEndpointMode === "function") {
     const endpointV2 = context.endpointV2;
     if (String(endpointV2?.url?.hostname).match(ACCOUNT_ID_ENDPOINT_REGEX)) {
-      setFeature(context, "ACCOUNT_ID_ENDPOINT", "O");
+      setFeature2(context, "ACCOUNT_ID_ENDPOINT", "O");
     }
     switch (await config.accountIdEndpointMode?.()) {
       case "disabled":
-        setFeature(context, "ACCOUNT_ID_MODE_DISABLED", "Q");
+        setFeature2(context, "ACCOUNT_ID_MODE_DISABLED", "Q");
         break;
       case "preferred":
-        setFeature(context, "ACCOUNT_ID_MODE_PREFERRED", "P");
+        setFeature2(context, "ACCOUNT_ID_MODE_PREFERRED", "P");
         break;
       case "required":
-        setFeature(context, "ACCOUNT_ID_MODE_REQUIRED", "R");
+        setFeature2(context, "ACCOUNT_ID_MODE_REQUIRED", "R");
         break;
     }
   }
@@ -5574,10 +6127,10 @@ async function checkFeatures(context, config, args) {
   if (identity?.$source) {
     const credentials = identity;
     if (credentials.accountId) {
-      setFeature(context, "RESOLVED_ACCOUNT_ID", "T");
+      setFeature2(context, "RESOLVED_ACCOUNT_ID", "T");
     }
     for (const [key, value] of Object.entries(credentials.$source ?? {})) {
-      setFeature(context, key, value);
+      setFeature2(context, key, value);
     }
   }
 }
@@ -5688,24 +6241,6 @@ var getUserAgentPlugin = (config) => ({
   },
 });
 
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/util-config-provider/dist-es/types.js
-var SelectorType;
-(function (SelectorType2) {
-  SelectorType2["ENV"] = "env";
-  SelectorType2["CONFIG"] = "shared config entry";
-})(SelectorType || (SelectorType = {}));
-
-// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/config-resolver/dist-es/endpointsConfig/resolveCustomEndpointsConfig.js
-var resolveCustomEndpointsConfig = (input) => {
-  const { tls, endpoint, urlParser, useDualstackEndpoint } = input;
-  return Object.assign(input, {
-    tls: tls ?? true,
-    endpoint: normalizeProvider(typeof endpoint === "string" ? urlParser(endpoint) : endpoint),
-    isCustomEndpoint: true,
-    useDualstackEndpoint: normalizeProvider(useDualstackEndpoint ?? false),
-  });
-};
-
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-content-length/dist-es/index.js
 var CONTENT_LENGTH_HEADER = "content-length";
 function contentLengthMiddleware(bodyLengthChecker) {
@@ -5745,6 +6280,256 @@ var getContentLengthPlugin = (options) => ({
     clientStack.add(contentLengthMiddleware(options.bodyLengthChecker), contentLengthMiddlewareOptions);
   },
 });
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/service-customizations/s3.js
+var resolveParamsForS3 = async (endpointParams) => {
+  const bucket = endpointParams?.Bucket || "";
+  if (typeof endpointParams.Bucket === "string") {
+    endpointParams.Bucket = bucket.replace(/#/g, encodeURIComponent("#")).replace(/\?/g, encodeURIComponent("?"));
+  }
+  if (isArnBucketName(bucket)) {
+    if (endpointParams.ForcePathStyle === true) {
+      throw new Error("Path-style addressing cannot be used with ARN buckets");
+    }
+  } else if (
+    !isDnsCompatibleBucketName(bucket) ||
+    (bucket.indexOf(".") !== -1 && !String(endpointParams.Endpoint).startsWith("http:")) ||
+    bucket.toLowerCase() !== bucket ||
+    bucket.length < 3
+  ) {
+    endpointParams.ForcePathStyle = true;
+  }
+  if (endpointParams.DisableMultiRegionAccessPoints) {
+    endpointParams.disableMultiRegionAccessPoints = true;
+    endpointParams.DisableMRAP = true;
+  }
+  return endpointParams;
+};
+var DOMAIN_PATTERN = /^[a-z0-9][a-z0-9\.\-]{1,61}[a-z0-9]$/;
+var IP_ADDRESS_PATTERN = /(\d+\.){3}\d+/;
+var DOTS_PATTERN = /\.\./;
+var isDnsCompatibleBucketName = (bucketName) =>
+  DOMAIN_PATTERN.test(bucketName) && !IP_ADDRESS_PATTERN.test(bucketName) && !DOTS_PATTERN.test(bucketName);
+var isArnBucketName = (bucketName) => {
+  const [arn, partition2, service, , , bucket] = bucketName.split(":");
+  const isArn = arn === "arn" && bucketName.split(":").length >= 6;
+  const isValidArn = Boolean(isArn && partition2 && service && bucket);
+  if (isArn && !isValidArn) {
+    throw new Error(`Invalid ARN: ${bucketName} was an invalid ARN.`);
+  }
+  return isValidArn;
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/adaptors/createConfigValueProvider.js
+var createConfigValueProvider = (configKey, canonicalEndpointParamKey, config) => {
+  const configProvider = async () => {
+    const configValue = config[configKey] ?? config[canonicalEndpointParamKey];
+    if (typeof configValue === "function") {
+      return configValue();
+    }
+    return configValue;
+  };
+  if (configKey === "credentialScope" || canonicalEndpointParamKey === "CredentialScope") {
+    return async () => {
+      const credentials = typeof config.credentials === "function" ? await config.credentials() : config.credentials;
+      const configValue = credentials?.credentialScope ?? credentials?.CredentialScope;
+      return configValue;
+    };
+  }
+  if (configKey === "accountId" || canonicalEndpointParamKey === "AccountId") {
+    return async () => {
+      const credentials = typeof config.credentials === "function" ? await config.credentials() : config.credentials;
+      const configValue = credentials?.accountId ?? credentials?.AccountId;
+      return configValue;
+    };
+  }
+  if (configKey === "endpoint" || canonicalEndpointParamKey === "endpoint") {
+    return async () => {
+      if (config.isCustomEndpoint === false) {
+        return void 0;
+      }
+      const endpoint = await configProvider();
+      if (endpoint && typeof endpoint === "object") {
+        if ("url" in endpoint) {
+          return endpoint.url.href;
+        }
+        if ("hostname" in endpoint) {
+          const { protocol, hostname, port, path } = endpoint;
+          return `${protocol}//${hostname}${port ? ":" + port : ""}${path}`;
+        }
+      }
+      return endpoint;
+    };
+  }
+  return configProvider;
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/adaptors/getEndpointFromConfig.browser.js
+var getEndpointFromConfig = async (serviceId) => void 0;
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/adaptors/toEndpointV1.js
+var toEndpointV1 = (endpoint) => {
+  if (typeof endpoint === "object") {
+    if ("url" in endpoint) {
+      return parseUrl(endpoint.url);
+    }
+    return endpoint;
+  }
+  return parseUrl(endpoint);
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/adaptors/getEndpointFromInstructions.js
+var getEndpointFromInstructions = async (commandInput, instructionsSupplier, clientConfig, context) => {
+  if (!clientConfig.isCustomEndpoint) {
+    let endpointFromConfig;
+    if (clientConfig.serviceConfiguredEndpoint) {
+      endpointFromConfig = await clientConfig.serviceConfiguredEndpoint();
+    } else {
+      endpointFromConfig = await getEndpointFromConfig(clientConfig.serviceId);
+    }
+    if (endpointFromConfig) {
+      clientConfig.endpoint = () => Promise.resolve(toEndpointV1(endpointFromConfig));
+    }
+  }
+  const endpointParams = await resolveParams(commandInput, instructionsSupplier, clientConfig);
+  if (typeof clientConfig.endpointProvider !== "function") {
+    throw new Error("config.endpointProvider is not set.");
+  }
+  const endpoint = clientConfig.endpointProvider(endpointParams, context);
+  return endpoint;
+};
+var resolveParams = async (commandInput, instructionsSupplier, clientConfig) => {
+  const endpointParams = {};
+  const instructions = instructionsSupplier?.getEndpointParameterInstructions?.() || {};
+  for (const [name, instruction] of Object.entries(instructions)) {
+    switch (instruction.type) {
+      case "staticContextParams":
+        endpointParams[name] = instruction.value;
+        break;
+      case "contextParams":
+        endpointParams[name] = commandInput[instruction.name];
+        break;
+      case "clientContextParams":
+      case "builtInParams":
+        endpointParams[name] = await createConfigValueProvider(instruction.name, name, clientConfig)();
+        break;
+      case "operationContextParams":
+        endpointParams[name] = instruction.get(commandInput);
+        break;
+      default:
+        throw new Error("Unrecognized endpoint parameter instruction: " + JSON.stringify(instruction));
+    }
+  }
+  if (Object.keys(instructions).length === 0) {
+    Object.assign(endpointParams, clientConfig);
+  }
+  if (String(clientConfig.serviceId).toLowerCase() === "s3") {
+    await resolveParamsForS3(endpointParams);
+  }
+  return endpointParams;
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/endpointMiddleware.js
+var endpointMiddleware = ({ config, instructions }) => {
+  return (next, context) => async (args) => {
+    if (config.isCustomEndpoint) {
+      setFeature(context, "ENDPOINT_OVERRIDE", "N");
+    }
+    const endpoint = await getEndpointFromInstructions(
+      args.input,
+      {
+        getEndpointParameterInstructions() {
+          return instructions;
+        },
+      },
+      { ...config },
+      context,
+    );
+    context.endpointV2 = endpoint;
+    context.authSchemes = endpoint.properties?.authSchemes;
+    const authScheme = context.authSchemes?.[0];
+    if (authScheme) {
+      context["signing_region"] = authScheme.signingRegion;
+      context["signing_service"] = authScheme.signingName;
+      const smithyContext = getSmithyContext(context);
+      const httpAuthOption = smithyContext?.selectedHttpAuthScheme?.httpAuthOption;
+      if (httpAuthOption) {
+        httpAuthOption.signingProperties = Object.assign(
+          httpAuthOption.signingProperties || {},
+          {
+            signing_region: authScheme.signingRegion,
+            signingRegion: authScheme.signingRegion,
+            signing_service: authScheme.signingName,
+            signingName: authScheme.signingName,
+            signingRegionSet: authScheme.signingRegionSet,
+          },
+          authScheme.properties,
+        );
+      }
+    }
+    return next({
+      ...args,
+    });
+  };
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/getEndpointPlugin.js
+var endpointMiddlewareOptions = {
+  step: "serialize",
+  tags: ["ENDPOINT_PARAMETERS", "ENDPOINT_V2", "ENDPOINT"],
+  name: "endpointV2Middleware",
+  override: true,
+  relation: "before",
+  toMiddleware: serializerMiddlewareOption.name,
+};
+var getEndpointPlugin = (config, instructions) => ({
+  applyToStack: (clientStack) => {
+    clientStack.addRelativeTo(
+      endpointMiddleware({
+        config,
+        instructions,
+      }),
+      endpointMiddlewareOptions,
+    );
+  },
+});
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/resolveEndpointConfig.js
+var resolveEndpointConfig = (input) => {
+  const tls = input.tls ?? true;
+  const { endpoint, useDualstackEndpoint, useFipsEndpoint } = input;
+  const customEndpointProvider =
+    endpoint != null ? async () => toEndpointV1(await normalizeProvider(endpoint)()) : void 0;
+  const isCustomEndpoint = !!endpoint;
+  const resolvedConfig = Object.assign(input, {
+    endpoint: customEndpointProvider,
+    tls,
+    isCustomEndpoint,
+    useDualstackEndpoint: normalizeProvider(useDualstackEndpoint ?? false),
+    useFipsEndpoint: normalizeProvider(useFipsEndpoint ?? false),
+  });
+  let configuredEndpointPromise = void 0;
+  resolvedConfig.serviceConfiguredEndpoint = async () => {
+    if (input.serviceId && !configuredEndpointPromise) {
+      configuredEndpointPromise = getEndpointFromConfig(input.serviceId);
+    }
+    return configuredEndpointPromise;
+  };
+  return resolvedConfig;
+};
+
+// build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/@smithy/middleware-endpoint/dist-es/resolveEndpointRequiredConfig.js
+var resolveEndpointRequiredConfig = (input) => {
+  const { endpoint } = input;
+  if (endpoint === void 0) {
+    input.endpoint = async () => {
+      throw new Error(
+        "@smithy/middleware-endpoint: (default endpointRuleSet) endpoint is not set - you must configure an endpoint.",
+      );
+    };
+  }
+  return input;
+};
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/node_modules/uuid/dist/esm-browser/rng.js
 var getRandomValues;
@@ -5954,13 +6739,15 @@ var WeatherClient = class extends Client {
     let _config_0 = getRuntimeConfig2(configuration || {});
     super(_config_0);
     this.initConfig = _config_0;
-    let _config_1 = resolveUserAgentConfig(_config_0);
-    let _config_2 = resolveCustomEndpointsConfig(_config_1);
+    let _config_1 = resolveClientEndpointParameters(_config_0);
+    let _config_2 = resolveUserAgentConfig(_config_1);
     let _config_3 = resolveRetryConfig(_config_2);
     let _config_4 = resolveHostHeaderConfig(_config_3);
-    let _config_5 = resolveHttpAuthSchemeConfig(_config_4);
-    let _config_6 = resolveRuntimeExtensions(_config_5, configuration?.extensions || []);
-    this.config = _config_6;
+    let _config_5 = resolveEndpointConfig(_config_4);
+    let _config_6 = resolveEndpointRequiredConfig(_config_5);
+    let _config_7 = resolveHttpAuthSchemeConfig(_config_6);
+    let _config_8 = resolveRuntimeExtensions(_config_7, configuration?.extensions || []);
+    this.config = _config_8;
     this.middlewareStack.use(getUserAgentPlugin(this.config));
     this.middlewareStack.use(getRetryPlugin(this.config));
     this.middlewareStack.use(getContentLengthPlugin(this.config));
@@ -5968,7 +6755,7 @@ var WeatherClient = class extends Client {
     this.middlewareStack.use(getLoggerPlugin(this.config));
     this.middlewareStack.use(getRecursionDetectionPlugin(this.config));
     this.middlewareStack.use(
-      getHttpAuthSchemePlugin(this.config, {
+      getHttpAuthSchemeEndpointRuleSetPlugin(this.config, {
         httpAuthSchemeParametersProvider: defaultWeatherHttpAuthSchemeParametersProvider,
         identityProviderConfigProvider: async (config) => new DefaultIdentityProviderConfig({}),
       }),
@@ -5982,8 +6769,12 @@ var WeatherClient = class extends Client {
 
 // build/smithyprojections/quickstart-gradle/source/typescript-client-codegen/dist-es/commands/GetCityCommand.js
 var GetCityCommand = class extends Command.classBuilder()
+  .ep(commonParams)
   .m(function (Command2, cs, config, o) {
-    return [getSerdePlugin(config, this.serialize, this.deserialize)];
+    return [
+      getSerdePlugin(config, this.serialize, this.deserialize),
+      getEndpointPlugin(config, Command2.getEndpointParameterInstructions()),
+    ];
   })
   .s("Weather", "GetCity", {})
   .n("WeatherClient", "GetCityCommand")
